@@ -1,0 +1,11 @@
+TODO: 
+* Ajax-Requests für Events
+* User-Rollen (admin/manager/bearbeiter/viewer)
+* Hübsches CSS
+* Einträge erstellen/löschen/bearbeiten
+
+
+DONE: 
+* Logins
+* Admin-Bereich
+* Kalenderansicht

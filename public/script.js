@@ -103,11 +103,12 @@ function germanDay(calendar) {
     
     return gday;
 }
- 
+
 // simple calendar
 function calendar() {
   // show info on init
   showInfo();
+  requestEvents();
  
   // vars
   var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"),
@@ -217,8 +218,8 @@ function calendar() {
  
 //   Get Json data
 function getjson(url, callback) {
-  var self = this,
-    ajax = new XMLHttpRequest();
+  var ajax = new XMLHttpRequest();
+  
   ajax.open("GET", url, true);
   ajax.onreadystatechange = function () {
     if (ajax.readyState == 4) {
@@ -232,4 +233,44 @@ function getjson(url, callback) {
   };
   ajax.send();
 }
- 
+
+
+function requestEvents() {
+        
+    // Create a new XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+
+    // Set the request URL and method
+    var url = 'requests.php'; // Replace with the actual server endpoint URL
+    var method = 'POST';
+
+    // Set up the request
+    xhr.open(method, url, true);
+
+    // Set the request header if needed
+    // xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // Set the request payload
+    var data = 'username=' + userId;
+
+    // Define the success callback function
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Request succeeded
+        console.log(xhr.responseText);
+      } else {
+        // Request failed
+        console.log('Error:', xhr.status);
+      }
+    };
+
+    // Define the error callback function
+    xhr.onerror = function() {
+      console.log('Request failed.');
+    };
+
+    // Send the request
+    xhr.send(data);
+}
+
+
