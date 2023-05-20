@@ -12,6 +12,11 @@ if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
     exit;
 }
 
+function getEvents() {
+    
+    
+}
+
 $connection = connect(); 
 $connection->close();
 

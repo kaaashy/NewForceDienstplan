@@ -11,16 +11,11 @@ function connect()
     $dbInfo = getDatabaseInfo(); 
     
     // Create connection
-    $connection = new mysqli($dbInfo->serverName, $dbInfo->userName, $dbInfo->password, $dbInfo->dbName);
+    $dsn = "mysql:host={$dbInfo->serverName};dbname={$dbInfo->dbName};charset=utf8mb4";
+    $pdo = new PDO($dsn, $dbInfo->userName, $dbInfo->password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Check connection
-    if ($connection->connect_error) {
-      die("Connection failed: " . $connection->connect_error);
-    }
-
-    echo "Connected successfully";
-
-    return $connection;
+    return $pdo;
 }
 
 function initializeDatabase()
@@ -28,55 +23,55 @@ function initializeDatabase()
     $dbInfo = getDatabaseInfo(); 
     
     // Create connection
-    $connection = new mysqli($dbInfo->serverName, $dbInfo->userName, $dbInfo->password);
-
-    // Check connection
-    if ($connection->connect_error) {
-      die("initialize(): Connection failed: " . $connection->connect_error);
-    }
+    $dsn = "mysql:host={$dbInfo->serverName};charset=utf8mb4";
+    $pdo = new PDO($dsn, $dbInfo->userName, $dbInfo->password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     echo "initialize(): Connected successfully";
 
     $existsQuery = "SHOW DATABASES LIKE '$dbInfo->dbName'";
-    $result = $connection->query($existsQuery);
+    $result = $pdo->query($existsQuery);
     
     // first, drop database if it exists
-    if ($result && $result->num_rows > 0) {
+    if ($result && $result->rowCount() > 0) {
         echo "Database '$dbInfo->dbName' found, deleting";
         
         $dropDB = "DROP DATABASE $dbInfo->dbName";
-        $connection->query($dropDB);
+        $pdo->query($dropDB);
     }
     
     // recreate database
     $createDBQuery = "CREATE DATABASE $dbInfo->dbName";
-    if ($connection->query($createDBQuery) === TRUE) {
+    if ($pdo->query($createDBQuery) === TRUE) {
       echo "Database $dbInfo->dbName created successfully";
-    } else {
-      echo "Error creating database: " . $connection->error;
     }
-    
-    $connection->close(); 
 }
 
 function initializeTables()
 {
-    $connection = connect(); 
+    $pdo = connect(); 
     
     $createEventsTable = "CREATE TABLE Events (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        type VARCHAR(50) NOT NULL,
-        title VARCHAR(50) NOT NULL,
+        
+        type VARCHAR(255),
+        title VARCHAR(255),
         description TEXT,
+        additional_details TEXT,
         date DATE,
         time TIME,
-        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        venue VARCHAR(255),
+        address VARCHAR(255),
+        
+        auto_created BOOL,
+        created_by INT UNSIGNED,
+        updated_by INT UNSIGNED,
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
-    if ($connection->query($createEventsTable) === TRUE) {
+    if ($pdo->query($createEventsTable) === TRUE) {
       echo "Table Events created successfully";
-    } else {
-      echo "Error creating table: " . $connection->error;
-    }
+    } 
     
     $createUsersTable = "CREATE TABLE Users (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -84,19 +79,16 @@ function initializeTables()
         password VARCHAR(255) NOT NULL,
         salt VARCHAR(50) NOT NULL,
 
-        displayname VARCHAR(50),
-        firstname VARCHAR(50),
-        lastname VARCHAR(50),
+        display_name VARCHAR(50),
+        first_name VARCHAR(50),
+        last_name VARCHAR(50),
 
-        Creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
-    if ($connection->query($createUsersTable) === TRUE) {
+    if ($pdo->query($createUsersTable) === TRUE) {
       echo "Table Events created successfully";
-    } else {
-      echo "Error creating table: " . $connection->error;
-    }
-
-    $connection->close(); 
+    } 
 }
 
 function initialize()
@@ -105,6 +97,16 @@ function initialize()
     initializeTables(); 
     
     addUser("admin", "AdminPW");
+    
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-05");           
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-05", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
+    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-05-07", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-06");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-06", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
 }
 
 function generateSalt($length = 16) {
@@ -126,7 +128,7 @@ function generateSalt($length = 16) {
 function addUser($username, $password)
 {
     // Create a connection
-    $connection = connect();
+    $pdo = connect();
     
     // Generate a salt
     $salt = generateSalt();
@@ -134,18 +136,12 @@ function addUser($username, $password)
     $hashedPassword = hash('sha256', $password . $salt);
 
     // Prepare and execute the SQL statement
-    $stmt = $connection->prepare('INSERT INTO Users (username, password, salt) VALUES (?, ?, ?)');
-    $stmt->bind_param('sss', $username, $hashedPassword, $salt);
+    $stmt = $pdo->prepare('INSERT INTO Users (username, password, salt) VALUES (:username, :password, :salt)');
+    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':password', $hashedPassword);
+    $stmt->bindValue(':salt', $salt);
     $stmt->execute();
 
-    if ($stmt->affected_rows === 1) {
-        echo 'User created successfully.';
-    } else {
-        echo 'Error creating user.';
-    }
-
-    $stmt->close();
-    $connection->close();
 }
 
 function deleteUser($username) {
@@ -155,11 +151,11 @@ function deleteUser($username) {
         return; 
     }
     
-    $connection = connect();
+    $pdo = connect();
 
     // Prepare and execute the SQL statement
-    $stmt = $connection->prepare('DELETE FROM Users WHERE username = ?');
-    $stmt->bind_param('s', $username);
+    $stmt = $pdo->prepare('DELETE FROM Users WHERE username = :username');
+    $stmt->bindValue(':username', $username);
     $stmt->execute();
 
     if ($stmt->affected_rows === 1) {
@@ -168,39 +164,90 @@ function deleteUser($username) {
         echo 'Error deleting user.';
     }
 
-    $stmt->close();
-    $connection->close();
 }
+
+function addEvent($type, $title, $date)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('INSERT INTO Events (type, title, date) VALUES (:type, :title, :date)');
+    $stmt->bindValue(':type', $type);
+    $stmt->bindValue(':title', $title);
+    $stmt->bindValue(':date', $date);
+
+    $stmt->execute();
+
+    return $pdo->lastInsertId();
+}
+
+function updateEvent($event_id, $type, $title, $description, $details, $date, $time, $venue, $address)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Events
+            SET description = :description,
+                type = :type,
+                title = :title,
+                additional_details = :additional_details,
+                date = :date,
+                time = :time,
+                venue = :venue,
+                address = :address
+            WHERE id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $event_id);
+    $stmt->bindParam(':type', $type);
+    $stmt->bindParam(':title', $title);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':additional_details', $details);
+    $stmt->bindParam(':date', $date);
+    $stmt->bindParam(':time', $time);
+    $stmt->bindParam(':venue', $venue);
+    $stmt->bindParam(':address', $address);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Event updated successfully.";
+    } else {
+        echo "Error updating event.";
+    }
+
+}
+
 
 function checkLogin($username, $password)
 {
-    $connection = connect();
+    $pdo = connect();
 
     // Retrieve the salt from the database
-    $sql = "SELECT password, salt FROM Users WHERE username = ?";
-    $stmt = $connection->prepare($sql);
-    $stmt->bind_param('s', $username);
+    $sql = "SELECT password, salt FROM Users WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':username', $username);
     $stmt->execute();
-    $stmt->store_result();
-
+    
     $result = false;
-    if ($stmt->num_rows === 1) {
-        $hashedPassword = "";
-        $salt = "";
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row)
+    {
+        $hashedPassword = $row["password"];
+        $salt = $row["salt"];
         
-        $stmt->bind_result($hashedPassword, $salt);
-        $stmt->fetch();
-
         // Verify the password
         $hashedInput = hash('sha256', $password . $salt);
         
         $result = ($hashedInput === $hashedPassword);
     }
 
-    $stmt->close();
-    $connection->close();
     
     return $result;
 }
+
+
 
 ?>
