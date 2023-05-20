@@ -11,15 +11,15 @@ body {
   position: relative;
   background: #efefef;
 }
-/* for demo */
+
 .wrapper {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  width: 320px;
-  height: 480px;
+  width: 640px;
+  height: 640px;
   background: #fff;
   margin: 1em auto;
   border: 4px solid #e2e2e2;
@@ -70,9 +70,9 @@ tbody.days_cal tr td a {
   text-decoration: none;
   background: #fff;
   color: #888;
-  height: 3.2rem;
+  height: 5rem;
   width: 100%;
-  line-height: 3.2rem;
+  line-height: 2.0rem;
   display: block;
 }
 tbody.days_cal tr td {
@@ -85,17 +85,17 @@ tbody.days_cal tr td {
 }
 .event {
   color: #85baff !important;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
-.today_cal.event {
-  background: #ff8d8d !important;
+.today.event {
+  background: #b0c9ff !important;
   color: #fff !important;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
-.today_cal.event:hover,
+.today.event:hover,
 .event:hover {
   opacity: 0.5;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
 .week_event {
   color: #85baff;
@@ -113,7 +113,7 @@ tbody.days_cal tr td {
   opacity: 0;
   visibility: hidden;
   transform: scale(0, 0);
-  transition: all 0.8s ease;
+  transition: all 0.025s ease;
 }
  
 #calendar_data h3 {
@@ -169,7 +169,7 @@ tbody.days_cal tr td {
   opacity: 1 !important;
   visibility: visible !important;
   transform: scale(1, 1) !important;
-  transition: all 0.2s ease;
+  transition: all 0.05s ease;
 }
  
 .hideEvent {

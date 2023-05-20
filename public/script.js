@@ -8,52 +8,87 @@ function _(s) {
  
 // show info
 function showInfo(event) {
-  return false;
-  // link
-  var url = "https://codepen.io/nakome/pen/EWBMzm.css";
   
-  // get json
-  getjson(url, function (obj) {
+    let obj = {
+        "5/7/2023" : {
+            type : "Veranstaltung",
+            title : "Großputz",
+            time : "16:00",
+            venue : "NewForce",
+            location : "Buckenhofer Weg 69",
+            desc : "Wir putzen ihr Spasten",
+            more : "Mehr Info gibts net"
+        },
+        "5/6/2023" : {
+            type : "Veranstaltung",
+            title : "Blasts In Brucklyn",
+            time : "20:00",
+            venue : "NewForce",
+            location : "Buckenhofer Weg 69",
+            desc : "Blasts In Brucklyn",
+            more : "Fette Blasts"
+        },
+        "5/5/2023" : {
+            type : "Veranstaltung",
+            title : "Masters Of Metal",
+            time : "20:00",
+            venue : "NewForce",
+            location : "Buckenhofer Weg 69",
+            desc : "Heavy, Pagan, Power",
+            more : "Fette Blasts"
+        }
+
+    }; 
+    
+    console.log(event);
+
     for (var key in obj) {
-      // if has envent add class
-      if (_('[data-id="' + key + '"]')) {
-        _('[data-id="' + key + '"]').classList.add("event");
-      }
-      if (event === key) {
-        _("#calendar_data").classList.toggle("show_data");
-        // template info
-        var data =
-          '<a href="#" class="hideEvent" ' +
-          'onclick="return hideEvent();">&times;</a>' +
-          "<h3>" +
-          obj[key].type +
-          "</h3>" +
-          "<dl>" +
-          "<dt><dfn>Title:</dfn></dt><dd>" +
-          obj[key].title +
-          "</dd>" +
-          "<dt><dfn>Hour:</dfn></dt><dd>" +
-          obj[key].time +
-          "</dd>" +
-          "<dt><dfn>Venue:</dfn></dt><dd>" +
-          obj[key].venue +
-          "</dd>" +
-          "<dt><dfn>Location:</dfn></dt><dd>" +
-          obj[key].location +
-          "</dd>" +
-          "<dt><dfn>Description:</dfn></dt><dd>" +
-          obj[key].desc +
-          "</dd>" +
-          '<dt><dfn>More Info:</dfn></dt><dd><a href="' +
-          obj[key].more +
-          '" title="More info">Here</a></dd>' +
-          "</dl>";
- 
-        return (_("#calendar_data").innerHTML = data);
-      }
+        console.log(key);
+           
+        // if has envent add class
+        if (_('[data-id="' + key + '"]')) {
+            _('[data-id="' + key + '"]').classList.add("event");
+            
+            console.log("data id");
+        }
+        
+        if (event === key) {
+            _("#calendar_data").classList.toggle("show_data");
+            
+            value = obj[key];
+            // template info
+            var data =
+                '<a href="#" class="hideEvent" ' +
+                'onclick="return hideEvent();">&times;</a>' +
+                "<h3>" +
+                value.type +
+                "</h3>" +
+                "<dl>" +
+                "<dt><dfn>Title:</dfn></dt><dd>" +
+                value.title +
+                "</dd>" +
+                "<dt><dfn>Hour:</dfn></dt><dd>" +
+                value.time +
+                "</dd>" +
+                "<dt><dfn>Venue:</dfn></dt><dd>" +
+                value.venue +
+                "</dd>" +
+                "<dt><dfn>Location:</dfn></dt><dd>" +
+                value.location +
+                "</dd>" +
+                "<dt><dfn>Description:</dfn></dt><dd>" +
+                value.desc +
+                "</dd>" +
+                '<dt><dfn>More Info:</dfn></dt><dd><a href="' +
+                value.more +
+                '" title="More info">Here</a></dd>' +
+                "</dl>";
+
+            return (_("#calendar_data").innerHTML = data);
+        }
     }
-  });
-  return false;
+
+    return false;
 }
 // toggle event show or hide
 function hideEvent() {
@@ -140,15 +175,15 @@ function calendar() {
       if (week_day === 0) {
         html += "</tr>";
       }
+      
       if (week_day !== 7) {
         // this day
         var day = Calendar.getDate();
-        var info =
-          Calendar.getMonth() + 1 + "/" + day + "/" + Calendar.getFullYear();
+        var info = Calendar.getMonth() + 1 + "/" + day + "/" + Calendar.getFullYear();
  
         if (today === Calendar.getDate()) {
           html +=
-            '<td><a class="today_cal" href="#" data-id="' +
+            '<td><a class="today" href="#" data-id="' +
             info +
             '" onclick="return showInfo(\'' +
             info +
@@ -176,6 +211,7 @@ function calendar() {
  
     Calendar.setDate(Calendar.getDate() + 1);
   } // end for loop
+  
   return html;
 }
  

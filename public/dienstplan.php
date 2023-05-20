@@ -1,3 +1,14 @@
+
+<?php
+
+session_start(); 
+
+include 'pages.php';
+
+ensureLoggedIn(); 
+
+?>
+
 <!DOCTYPE html>
 <!--
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -9,9 +20,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <title>Dienstplan NewForce</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php jsUserId(); ?>
     <script src="script.js" defer></script>
   </head>
   <body>
+    <a href="admin.php">Admin</a>
+      
     <div class="wrapper">
         <div id="calendar"></div>
         <div id="calendar_data"></div>
