@@ -1,5 +1,18 @@
-// Start
+
+eventData = {};
+
+requestEvents(5, 2023, function(data) {
+    console.log("received data");
+    
+    // after querying events, rebuild calendar
+    eventData = data;
+    _("#calendar").innerHTML = calendar();
+});
+
+// Start, this builds an empty calendar
 _("#calendar").innerHTML = calendar();
+ 
+ 
  
 // short querySelector
 function _(s) {
@@ -8,41 +21,10 @@ function _(s) {
  
 // show info
 function showInfo(event) {
-  
-    let obj = {
-        "5/7/2023" : {
-            type : "Veranstaltung",
-            title : "Großputz",
-            time : "16:00",
-            venue : "NewForce",
-            location : "Buckenhofer Weg 69",
-            desc : "Wir putzen ihr Spasten",
-            more : "Mehr Info gibts net"
-        },
-        "5/6/2023" : {
-            type : "Veranstaltung",
-            title : "Blasts In Brucklyn",
-            time : "20:00",
-            venue : "NewForce",
-            location : "Buckenhofer Weg 69",
-            desc : "Blasts In Brucklyn",
-            more : "Fette Blasts"
-        },
-        "5/5/2023" : {
-            type : "Veranstaltung",
-            title : "Masters Of Metal",
-            time : "20:00",
-            venue : "NewForce",
-            location : "Buckenhofer Weg 69",
-            desc : "Heavy, Pagan, Power",
-            more : "Fette Blasts"
-        }
-
-    }; 
     
     console.log(event);
 
-    for (var key in obj) {
+    for (var key in eventData) {
         console.log(key);
            
         // if has envent add class
@@ -55,7 +37,7 @@ function showInfo(event) {
         if (event === key) {
             _("#calendar_data").classList.toggle("show_data");
             
-            value = obj[key];
+            value = eventData[key];
             // template info
             var data =
                 '<a href="#" class="hideEvent" ' +
@@ -107,8 +89,6 @@ function germanDay(calendar) {
 // simple calendar
 function calendar() {
   // show info on init
-  showInfo();
-  requestEvents();
  
   // vars
   var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"),

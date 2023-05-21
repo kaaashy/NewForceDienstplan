@@ -243,7 +243,6 @@ function checkLogin($username, $password)
         
         $result = ($hashedInput === $hashedPassword);
     }
-
     
     return $result;
 }
