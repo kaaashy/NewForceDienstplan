@@ -70,7 +70,7 @@ function initializeTables()
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     if ($pdo->query($createEventsTable) === TRUE) {
-      echo "Table Events created successfully";
+        echo "Table Events created successfully";
     } 
     
     $createUsersTable = "CREATE TABLE Users (
@@ -87,8 +87,33 @@ function initializeTables()
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     if ($pdo->query($createUsersTable) === TRUE) {
-      echo "Table Events created successfully";
-    } 
+        echo "Table Events created successfully";
+    }
+    
+    $createSchedulesTable = "CREATE TABLE Schedule (
+        user_id INT UNSIGNED,
+        event_id INT UNSIGNED,
+        deliberate BOOL,
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, event_id)
+    )";
+    if ($pdo->query($createSchedulesTable) === TRUE) {
+        echo "Table Duties created successfully";
+    }
+    
+    $createOutlineScheduleTable = "CREATE TABLE OutlineSchedule (
+        user_id INT UNSIGNED,
+        day INT UNSIGNED,
+        
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, day)
+    )";
+    if ($pdo->query($createOutlineScheduleTable) === TRUE) {
+        echo "Table Duties created successfully";
+    }
+
 }
 
 function initialize()
@@ -105,7 +130,39 @@ function initialize()
     addUser("Andi", "Andi");
     addUser("Domi", "Domi");
     addUser("Max", "Max");
-        
+    
+    // set Tascha for Do, Sa
+    updateOutlineDay(2, 3, true);
+    updateOutlineDay(2, 5, true);
+    
+    // set Oli for Fr
+    updateOutlineDay(3, 4, true);
+    
+    // set Sophia for Do, Sa
+    updateOutlineDay(4, 3, true);
+    updateOutlineDay(4, 5, true);
+    
+    // set Lina for Fr, Sa
+    updateOutlineDay(5, 4, true);
+    updateOutlineDay(5, 5, true);
+    
+    // set Tom for Do, Fr
+    updateOutlineDay(6, 3, true);
+    updateOutlineDay(6, 4, true);
+    
+    // set Andi for Fr, Sa
+    updateOutlineDay(7, 4, true);
+    updateOutlineDay(7, 5, true);
+    
+    // set Domi for Do, Fr
+    updateOutlineDay(8, 3, true);
+    updateOutlineDay(8, 4, true);
+    
+    // set Max for Fr, Sa
+    updateOutlineDay(9, 4, true);
+    updateOutlineDay(9, 5, true);
+
+    
     $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
     updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-05-07", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
@@ -133,6 +190,7 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
+   
 }
 
 function generateSalt($length = 16) {
@@ -247,6 +305,63 @@ function updateEvent($event_id, $type, $title, $description, $details, $date, $t
     }
 }
 
+function updateOutlineDay($userId, $day, $active)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    if ($active) {
+        $sql = "INSERT IGNORE INTO OutlineSchedule (user_id, day)
+            VALUES (:id, :day);";
+    } else {
+        $sql = "DELETE IGNORE FROM OutlineSchedule
+            WHERE user_id = :id AND day = :day;";
+    }
+    
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $userId);
+    $stmt->bindParam(':day', $day);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Outline schedule updated successfully.";
+    } else {
+        echo "Error updating outline schedule.";
+    }
+}
+
+function updateEventSchedule($userId, $eventId, $deliberate, $active)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    if ($active) {
+        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+            VALUES (:user_id, :event_id, :deliberate)
+            ON DUPLICATE KEY UPDATE deliberate = :deliberate;";
+    } else {
+        $sql = "DELETE IGNORE FROM Schedule
+            WHERE user_id = :id AND event_id = :event_id;";
+    }
+    
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $userId);
+    $stmt->bindParam(':day', $eventId);
+    $stmt->bindParam(':deliberate', $deliberate);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Schedule updated successfully.";
+    } else {
+        echo "Error updating schedule.";
+    }
+}
+
+
 function deleteEvent($id)
 {
     // Create a connection
@@ -314,7 +429,7 @@ function getEvents($month, $year) {
 function getUsers() {    
     $pdo = connect();
 
-    // Retrieve the salt from the database
+    // Retrieve the data from the database
     $sql = "SELECT id, display_name, first_name, last_name
             FROM Users;";
     
@@ -323,6 +438,23 @@ function getUsers() {
        
     $rows = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Retrieve the outline schedule
+        $sql = "SELECT day
+                FROM OutlineSchedule
+                WHERE user_id = :user_id;";
+
+        $stmt2 = $pdo->prepare($sql);
+        $stmt2->bindValue("user_id", $row["id"]);
+        $stmt2->execute();
+        
+        for ($i = 0; $i < 7; $i++) {
+            $row["day_".$i] = false;
+        }
+        
+        while ($dayRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            $row["day_".$dayRow["day"]] = true;
+        }
+        
         $rows[] = $row;
     }
     
