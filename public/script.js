@@ -148,7 +148,7 @@ function showEventAdder(dateStr, id) {
         +   '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
         + '</div>'
         + '<div class="input_line">'
-        +   '<textarea id="description" name="description" value="" rows="8" value="' + description + '" ></textarea>'
+        +   '<textarea id="description" name="description" placeholder="Beschreibung" rows="8" value="' + description + '" ></textarea>'
         + '</div>'
 
         + '<input type="hidden" id="id" name="id" value="' + id + '">'

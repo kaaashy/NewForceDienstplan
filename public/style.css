@@ -221,6 +221,13 @@ input.create_event {
 input.delete_event {
     float: right;
     height: 2rem;
+    background-color: #fcc;
+    border: 1px solid #700;
+    border-radius: 4px;
+}
+input.delete_event:hover {
+    background-color: #ffdddd;
+    border: 1px solid #800;
 }
 
 .input_line textarea {
