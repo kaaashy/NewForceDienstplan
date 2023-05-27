@@ -3,9 +3,38 @@
 
 session_start(); 
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 include 'pages.php';
+include 'initdb.php';
 
 ensureLoggedIn(); 
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['newevent'])) {
+        
+        $type = "Veranstaltung";
+        $details = "";
+        
+        $date = filter_input(INPUT_POST, 'date');
+        $title = filter_input(INPUT_POST, 'title');
+        $description = filter_input(INPUT_POST, 'description');
+        $time = filter_input(INPUT_POST, 'time');
+        $venue = filter_input(INPUT_POST, 'venue');
+        $address = filter_input(INPUT_POST, 'address');
+        
+        if (!$date) {die();}
+
+        $id = addEvent($type, $title, $date);           
+        updateEvent($id, $type, $title, $description, $details, $date, $time, $venue, $address);
+        
+    } else if (isset($_POST['deleteevent'])) {
+        $id = filter_input(INPUT_POST, 'id');
+        deleteEvent($id);
+    }
+}
 
 ?>
 

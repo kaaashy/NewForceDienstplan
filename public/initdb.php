@@ -217,9 +217,23 @@ function updateEvent($event_id, $type, $title, $description, $details, $date, $t
     } else {
         echo "Error updating event.";
     }
-
 }
 
+function deleteEvent($id)
+{
+    // Create a connection
+    $pdo = connect();
+
+    $stmt = $pdo->prepare('DELETE FROM Events WHERE id = :id');
+    $stmt->bindValue(':id', $id);
+    $stmt->execute();
+
+    if ($stmt->affected_rows === 1) {
+        echo 'Event deleted successfully.';
+    } else {
+        echo 'Error deleting event.';
+    }
+}
 
 function checkLogin($username, $password)
 {
@@ -245,6 +259,29 @@ function checkLogin($username, $password)
     }
     
     return $result;
+}
+
+function getEvents($month, $year) {    
+    $pdo = connect();
+
+    // Retrieve the salt from the database
+    $sql = "SELECT *
+            FROM Events
+            WHERE MONTH(date) = :month
+            AND YEAR(date) = :year;";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':month', $month);
+    $stmt->bindValue(':year', $year);
+    $stmt->execute();
+    
+    $rows = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+        $rows[] = $row;
+    }
+    
+    echo json_encode($rows);
 }
 
 

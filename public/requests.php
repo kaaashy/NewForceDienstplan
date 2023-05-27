@@ -12,29 +12,6 @@ if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
     exit;
 }
 
-function getEvents($month, $year) {    
-    $pdo = connect();
-
-    // Retrieve the salt from the database
-    $sql = "SELECT *
-            FROM Events
-            WHERE MONTH(date) = :month
-            AND YEAR(date) = :year;";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':month', $month);
-    $stmt->bindValue(':year', $year);
-    $stmt->execute();
-    
-    $rows = array();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
-        $rows[] = $row;
-    }
-    
-    echo json_encode($rows);
-}
-
 if (isset($_POST['month']) && isset($_POST['year'])) {
     $month = $_POST['month'];
     $year = $_POST['year'];

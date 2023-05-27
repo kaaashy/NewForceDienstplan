@@ -30,35 +30,39 @@ function showInfo(event) {
 
         if (value.date === event) {
             _("#calendar_data").classList.toggle("show_data");
-            
+            console.log(value);
             // template info
-            var data =
-                '<a href="#" class="hideEvent" ' +
-                'onclick="return hideEvent();">&times;</a>' +
-                "<h3>" +
-                value.type +
-                "</h3>" +
-                "<dl>" +
-                "<dt><dfn>Titel:</dfn></dt><dd>" +
-                value.title +
-                "</dd>" +
-                "<dt><dfn>Uhrzeit:</dfn></dt><dd>" +
-                value.time +
-                "</dd>" +
-                "<dt><dfn>Venue:</dfn></dt><dd>" +
-                value.venue +
-                "</dd>" +
-                "<dt><dfn>Address:</dfn></dt><dd>" +
-                value.address +
-                "</dd>" +
-                "<dt><dfn>Description:</dfn></dt><dd>" +
-                value.description +
-                "</dd>" +
-                '<dt><dfn>More Info:</dfn></dt><dd><a href="' +
-                value.additional_details +
-                '" title="More info">Here</a></dd>' +
-                "</dl>";
-
+            var data = '<a href="#" class="hideEvent" '
+                + 'onclick="return hideEvent();">&times;</a>'
+                + "<h3>"
+                + value.type
+                + "</h3>"
+                + "<dl>"
+                + "<dt><dfn>Titel:</dfn></dt><dd>"
+                + value.title
+                + "</dd>"
+                + "<dt><dfn>Uhrzeit:</dfn></dt><dd>"
+                + value.time
+                + "</dd>"
+                + "<dt><dfn>Venue:</dfn></dt><dd>"
+                + value.venue
+                + "</dd>"
+                + "<dt><dfn>Address:</dfn></dt><dd>"
+                + value.address
+                + "</dd>"
+                + "<dt><dfn>Description:</dfn></dt><dd>"
+                + (value.description !== "" ? value.description : "[Keine Beschreibung]")
+                + "</dd>"
+                + '<dt><dfn>More Info:</dfn></dt><dd><a href="'
+                + value.additional_details
+                + '" title="More info">Here</a></dd>'
+        
+                + '<form method="POST" action="">'
+                + '<input type="hidden" id="id" name="id" value="'+value.id+'">'
+                + '<input class="create_event" type="submit" name="deleteevent" value="Veranstaltung Löschen">'
+                + '</form>';
+                + "</dl>";
+        
             return (_("#calendar_data").innerHTML = data);
         }
     }
