@@ -25,8 +25,6 @@ function _(s) {
 // show info
 function showInfo(event) {
     
-    console.log("event:" + event);
-
     for (var key in eventData) {
         var value = eventData[key];
 
@@ -41,10 +39,10 @@ function showInfo(event) {
                 value.type +
                 "</h3>" +
                 "<dl>" +
-                "<dt><dfn>Title:</dfn></dt><dd>" +
+                "<dt><dfn>Titel:</dfn></dt><dd>" +
                 value.title +
                 "</dd>" +
-                "<dt><dfn>Hour:</dfn></dt><dd>" +
+                "<dt><dfn>Uhrzeit:</dfn></dt><dd>" +
                 value.time +
                 "</dd>" +
                 "<dt><dfn>Venue:</dfn></dt><dd>" +
@@ -66,6 +64,49 @@ function showInfo(event) {
     }
 
     return false;
+}
+
+function showEventAdder(dateStr) {
+    _("#calendar_data").classList.toggle("show_data");
+
+    // template info
+    var data = '<a href="#" class="hideEvent" ' 
+        + 'onclick="return hideEvent();">&times;</a>' 
+        + '<h3>Neue Veranstaltung</h3>'
+        
+        + '<div class="create_event_wrapper">'
+        + '<form method="POST" action="">'
+        + '<div class="input_line">'
+        +   '<label for="title">Titel:</label>'
+        +   '<input type="text" id="title" name="title" placeholder="Titel" required>'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<label for="date">Datum:</label>'
+        +   '<input type="date" id="date" name="date" value="'+ dateStr +'" required>'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<label for="time">Uhrzeit:</label>'
+        +   '<input type="time" id="time" name="time" value="20:00" required>'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<label for="venue">Ort:</label>'
+        +   '<input type="text" id="venue" name="venue" value="New Force" placeholder="Ort">'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<label for="address">Adresse:</label>'
+        +   '<input type="text" id="address" name="address" placeholder="Adresse" value="Buckenhofer Weg 69, 91058 Erlangen">'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<textarea id="description" name="description" value="" rows="8" placeholder="Beschreibung"></textarea>'
+        + '</div>'
+
+        + '<div class="input_line">'
+        + '<input class="create_event" type="submit" name="newevent" value="Veranstaltung Anlegen">'
+        + '</div>'
+        + '</div>'
+        + '</form>';
+
+    return (_("#calendar_data").innerHTML = data);
 }
 
 function addEvents(eventData) {
