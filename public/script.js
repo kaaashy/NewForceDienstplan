@@ -23,41 +23,44 @@ function _(s) {
 }
  
 // show info
-function showInfo(event) {
+function showInfo(eventId) {
     
     for (var key in eventData) {
-        var value = eventData[key];
+        var event = eventData[key];
 
-        if (value.date === event) {
-            _("#calendar_data").classList.toggle("show_data");
-            console.log(value);
+        if (event.id === eventId) {
+            if (!_("#calendar_data").classList.contains("show_data")) {
+                _("#calendar_data").classList.add("show_data");
+            }
+            
+            console.log(event);
             // template info
             var data = '<a href="#" class="hideEvent" '
                 + 'onclick="return hideEvent();">&times;</a>'
                 + "<h3>"
-                + value.type
+                + event.type
                 + "</h3>"
                 + "<dl>"
                 + "<dt><dfn>Titel:</dfn></dt><dd>"
-                + value.title
+                + event.title
                 + "</dd>"
                 + "<dt><dfn>Uhrzeit:</dfn></dt><dd>"
-                + value.time
+                + event.time
                 + "</dd>"
                 + "<dt><dfn>Venue:</dfn></dt><dd>"
-                + value.venue
+                + event.venue
                 + "</dd>"
                 + "<dt><dfn>Address:</dfn></dt><dd>"
-                + value.address
+                + event.address
                 + "</dd>"
                 + "<dt><dfn>Description:</dfn></dt><dd>"
-                + (value.description !== "" ? value.description : "[Keine Beschreibung]")
+                + (event.description !== "" ? event.description : "[Keine Beschreibung]")
                 + "</dd>"
         
-                + '<dd><a href="#" title="&#xFE0F; Bearbeiten"> &#x270F; Bearbeiten</a></dd>'
+                + '<dd><a href="#" title="&#xFE0F; Bearbeiten" onclick="return showEventAdder(\'\', ' + event.id + ');"> &#x270F; Bearbeiten</a></dd>'
 
                 + '<form method="POST" action="">'
-                + '<input type="hidden" id="id" name="id" value="'+value.id+'">'
+                + '<input type="hidden" id="id" name="id" value="'+event.id+'">'
                 + '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Veranstaltung Löschen">'
                 + '</form>';
                 + "</dl>";
@@ -69,42 +72,73 @@ function showInfo(event) {
     return false;
 }
 
-function showEventAdder(dateStr) {
-    _("#calendar_data").classList.toggle("show_data");
+function showEventAdder(dateStr, id) {
+    if (!_("#calendar_data").classList.contains("show_data")) {
+        _("#calendar_data").classList.add("show_data");
+    }
+
+    var headline = "Neue Veranstaltung";
+    var title = ""; 
+    var date = dateStr; 
+    var time = "20:00"; 
+    var venue = "New Force"; 
+    var address = "Buckenhofer Weg 69, 91058 Erlangen";
+    var description = ""; 
+    var buttonCaption = "Veranstaltung Anlegen";
+
+    if (id && eventData) {
+        for (var key in eventData) {
+            var event = eventData[key];
+
+            if (event.id === id) {
+                title = event.title;
+                date = event.date;
+                time = event.time;
+                venue = event.venue;
+                address = event.address;
+                description = event.description;
+                buttonCaption = "Änderungen Speichern";
+                headline = title;
+            }
+        }
+    } else {
+        id = "";
+    }
 
     // template info
     var data = '<a href="#" class="hideEvent" ' 
         + 'onclick="return hideEvent();">&times;</a>' 
-        + '<h3>Neue Veranstaltung</h3>'
+        + '<h3>' + headline + '</h3>'
         
         + '<div class="create_event_wrapper">'
         + '<form method="POST" action="">'
         + '<div class="input_line">'
         +   '<label for="title">Titel:</label>'
-        +   '<input type="text" id="title" name="title" placeholder="Titel" required>'
+        +   '<input type="text" id="title" name="title" placeholder="Titel" value="'+ title +'" required>'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="date">Datum:</label>'
-        +   '<input type="date" id="date" name="date" value="'+ dateStr +'" required>'
+        +   '<input type="date" id="date" name="date" value="' + date + '" required>'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="time">Uhrzeit:</label>'
-        +   '<input type="time" id="time" name="time" value="20:00" required>'
+        +   '<input type="time" id="time" name="time" value="' + time + '" required>'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="venue">Ort:</label>'
-        +   '<input type="text" id="venue" name="venue" value="New Force" placeholder="Ort">'
+        +   '<input type="text" id="venue" name="venue" value="' + venue + '" placeholder="Ort">'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="address">Adresse:</label>'
-        +   '<input type="text" id="address" name="address" placeholder="Adresse" value="Buckenhofer Weg 69, 91058 Erlangen">'
+        +   '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
         + '</div>'
         + '<div class="input_line">'
-        +   '<textarea id="description" name="description" value="" rows="8" placeholder="Beschreibung"></textarea>'
+        +   '<textarea id="description" name="description" value="" rows="8" value="' + description + '" ></textarea>'
         + '</div>'
 
+        + '<input type="hidden" id="id" name="id" value="' + id + '">'
         + '<div class="input_line">'
-        + '<input class="create_event" type="submit" name="newevent" value="Veranstaltung Anlegen">'
+        + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '">'
         + '</div>'
         + '</div>'
         + '</form>';
@@ -115,29 +149,25 @@ function showEventAdder(dateStr) {
 function addEvents(eventData) {
     
     for (var key in eventData) {
-        var value = eventData[key];
-        var dateStr = value.date;
+        var event = eventData[key];
         
         // if has event add class
-        if (_('[data-id="' + value.date + '"]')) {
+        if (_('[data-id="' + event.date + '"]')) {
             
             var div = document.createElement("div");
             div.classList.add("calendar_event");
-            div.innerHTML = '<a href="#" onclick="return showInfo(\'' + dateStr + "')\">"
-                        + value.title
+            div.innerHTML = '<a href="#" onclick="return showInfo(' + event.id + ")\">"
+                        + event.title
                         + "</a>";
                 
-            _('[data-id="' + value.date + '"]').appendChild(div);
+            _('[data-id="' + event.date + '"]').appendChild(div);
         }
     }
     
-    for (var i = 1; i <= 31; ++i) {
-        var Calendar = new Date();
-        var year = Calendar.getFullYear();
-        var month = Calendar.getMonth();
-        
-        var dateStr = Calendar.getFullYear() 
-                + "-" + String(Calendar.getMonth() + 1).padStart(2, '0') 
+    var date = new Date();
+    for (var i = 1; i <= 31; ++i) {        
+        var dateStr = date.getFullYear() 
+                + "-" + String(date.getMonth() + 1).padStart(2, '0') 
                 + "-" + String(i).padStart(2, '0');
 
         if (_('[data-id="' + dateStr + '"]')) {
@@ -159,7 +189,7 @@ function addEvents(eventData) {
 
 // toggle event show or hide
 function hideEvent() {
-  _("#calendar_data").classList.toggle("show_data");
+  _("#calendar_data").classList.remove("show_data");
 }
  
 function germanDay(calendar) {

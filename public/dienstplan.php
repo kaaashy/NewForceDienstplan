@@ -24,10 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $time = filter_input(INPUT_POST, 'time');
         $venue = filter_input(INPUT_POST, 'venue');
         $address = filter_input(INPUT_POST, 'address');
+        $id = filter_input(INPUT_POST, 'id');
         
         if (!$date) {die();}
-
-        $id = addEvent($type, $title, $date);           
+        
+        if (!$id)
+            $id = addEvent($type, $title, $date);
+        
         updateEvent($id, $type, $title, $description, $details, $date, $time, $venue, $address);
         
     } else if (isset($_POST['deleteevent'])) {
