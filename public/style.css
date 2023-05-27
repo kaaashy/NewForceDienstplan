@@ -241,42 +241,6 @@ input.delete_event:hover {
     justify-content: flex-end;
 }
 
-#calendar_data dl {
-  padding: 0.5em;
-  margin-left: 0;
-  display: block;
-  height: calc(100% - 4rem);
-}
-
-#calendar_data dt {
-  float: left;
-  clear: left;
-  width: 5rem;
-  text-align: left;
-  font-size: 0.8rem;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: 300;
-  color: #43b0ef;
-  background: #fff;
-  padding: 0.2rem;
-}
-
-#calendar_data dd {
-  margin: 0 0 1rem 5rem;
-  padding: 0 0.5rem 0.5rem 0.5rem;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-size: 0.8rem;
-  line-height: 1.2rem;
-  color: #adadad;
-  border-bottom: 1px solid #eaeaea;
-}
-
-#calendar_data dd:last-child {
-  border: none;
-}
- 
 #calendar_data a:not(.hideEvent) {
   color: #43aeef;
   border: 0.1rem solid #43aeef;
@@ -288,6 +252,58 @@ input.delete_event:hover {
   visibility: visible !important;
   transform: scale(1, 1) !important;
   transition: all 0.05s ease;
+}
+
+#calendar_data .userlist {
+    margin: auto;
+    width: 90%;
+}
+#calendar_data .userlist td {
+    margin: auto;
+    width: 50%;
+    color: #666;
+}
+#calendar_data .userlist th {
+    margin: auto;
+    width: 50%;
+    color: #666;
+    text-align: center;
+}
+
+.deliberate_event_user {
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 5px; 
+    margin-right: 5px;
+    padding: 5px;
+
+    text-decoration: none;
+    font-family: sans-serif;
+    
+    background: #666; 
+    font-size: 0.75rem;
+    color: white;
+    border: none;
+}
+
+.event_user {
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 5px; 
+    margin-right: 5px;
+    padding: 5px;
+
+    text-decoration: none;
+    font-family: sans-serif;
+    
+    background: #aaa; 
+    font-size: 0.75rem;
+    color: white;
+    border: none;
 }
 
 .hideEvent {

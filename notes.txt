@@ -3,9 +3,11 @@ TODO:
 * Rahmendienstplan
 * MA eintragen und austragen
 * Warnungen bei nicht-genügend-MA im Event
-
 * User-Rollen (admin/manager/bearbeiter/viewer)
 * Email-Notifications
+* User deaktivieren
+* User aus Veranstaltungen entfernen
+* Rahmendienstplanänderungen an Veranstaltungen aktualisieren
 * Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
 * Hübsches CSS für Profile
 * Hübsches CSS für Admin-Bereich

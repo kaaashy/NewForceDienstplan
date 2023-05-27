@@ -192,7 +192,7 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    updateEventSchedule(1, $id, true, true);
+    updateEventSchedule(2, $id, true, true);
     updateEventSchedule(5, $id, true, true);
     updateEventSchedule(4, $id, true, true);
     updateEventSchedule(4, $id, true, true);

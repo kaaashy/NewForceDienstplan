@@ -29,7 +29,13 @@ function refresh() {
 
     requestUsers(function(data) {
         console.log("received users");
-        userData = data;
+        userData = {};
+        for (var i in data) {
+            var user = data[i];
+            userData[user.id] = user;
+        }
+        
+        console.log(userData);
     });
 
     // build the calendar
@@ -57,7 +63,9 @@ function showEvent(dateStr, id) {
     var description = ""; 
     var buttonCaption = "Veranstaltung Anlegen";
     var deleteButton = "";
-            
+    var eventUsers = "";
+    var nonEventUsers = "";
+    
     if (id && eventData) {
         for (var key in eventData) {
             var event = eventData[key];
@@ -72,6 +80,32 @@ function showEvent(dateStr, id) {
                 buttonCaption = "Änderungen Speichern";
                 headline = title;
                 deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen">';
+                
+                var remainingUsers = new Set();
+                for (var id in userData) {
+                    remainingUsers.add(userData[id].id);
+                }
+                
+                for (var i in event.users) {
+                    var eventUser = event.users[i]; 
+                    var user = userData[eventUser.user_id];
+                    remainingUsers.delete(eventUser.user_id);
+                    
+                    if (user) {
+                        if (eventUser.deliberate) {
+                            eventUsers += '<div class="deliberate_event_user">' + user.display_name + '</div>';
+                        } else {
+                            eventUsers += '<div class="event_user">' + user.display_name + '</div>';
+                        }
+                    }
+                }
+                
+                for (const id of remainingUsers) {
+                    var user = userData[id];
+                    if (user) {
+                        nonEventUsers += '<div class="deliberate_event_user">' + user.display_name + '</div>';
+                    }
+                }
             }
         }
     } else {
@@ -108,6 +142,18 @@ function showEvent(dateStr, id) {
         + '<div class="input_line">'
         +   '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">'+ description +'</textarea>'
         + '</div>'
+        
+        + '<table class="userlist">'
+        + '<tr>'
+        + '<th>Eingetragen</th>'
+        + '<th>Existent</th>'
+        + '</tr>'
+        + '<tr>'
+        + '<td>' + eventUsers + '</td>'
+        + '<td>' + nonEventUsers + '</td>'
+        + '</tr>'
+        + '</table>'
+
 
         + '<input type="hidden" id="id" name="id" value="' + id + '">'
         + '<div class="input_line">'
