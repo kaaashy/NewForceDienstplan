@@ -56,6 +56,29 @@ table {
   text-transform: uppercase;
 }
 
+.goto_today {
+    padding: 15px;
+    font-size: 1.25rem;
+    border-radius: 5px;
+    /*border: solid 1px #eee;*/
+}
+.goto_today:hover {
+    background-color: #eee;
+}
+
+.cycle_month {
+    padding: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 1.25rem;
+    border-radius: 50%;
+    /*border: solid 1px #eee;*/
+}
+.cycle_month:hover {
+    background-color: #eee;
+}
+
+
 .head_cal a {
     text-decoration: none;
     color: #85baff;

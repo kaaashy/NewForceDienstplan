@@ -158,11 +158,6 @@ function showEventAdder(dateStr, id) {
         + '</div>'
         + '</form>';
 
-    window.onbeforeunload = function() {
-        console.log("onbeforeunload");
-        _("#calendar_data").innerHTML = "";
-    };
-
     setTimeout(function() {
         document.getElementById('event_title_input').focus();
     }, 100);
@@ -208,6 +203,16 @@ function addEvents(eventData, month, year) {
 }
 
 
+function todayMonth() {
+    var today = new Date();
+    month = today.getMonth();
+    year = today.getFullYear();
+    
+    sessionStorage.setItem('month', month);
+    sessionStorage.setItem('year', year);
+    
+    refresh();
+}
 
 function previousMonth() {
     month = month - 1; 
@@ -271,9 +276,16 @@ function buildCalendarHtml(month, year) {
     html = "<table>";
     // head
     html += "<thead>";
-    html +='<tr class="head_cal"><th><a href="#" onclick="return previousMonth();"> &lt;</a></th>';
-    html +='<th colspan="5">' + month_of_year[month] + "</th>";
-    html +='<th><a href="#" onclick="return nextMonth();">&gt;</a></th></tr>';
+    html += '<tr class="head_cal">';
+    html += '<th colspan="2"><table>'; 
+    html += '<th><a href="#" class="goto_today" onclick="return todayMonth();">Heute</a></th>';
+    html += '<th><a href="#" class="cycle_month" onclick="return previousMonth();">&lt;</a></th>';
+    html += '<th><a href="#" class="cycle_month" onclick="return nextMonth();">&gt;</a></th>'; 
+    html += '</table></th>';
+    
+    html += '<th colspan="3">' + month_of_year[month] + "</th>";
+    html += '<th colspan="2"></th>';
+    html += '</tr>';
     
     html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
     html += '<tr class="week_cal">';
