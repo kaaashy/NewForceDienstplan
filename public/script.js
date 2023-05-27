@@ -53,13 +53,12 @@ function showInfo(event) {
                 + "<dt><dfn>Description:</dfn></dt><dd>"
                 + (value.description !== "" ? value.description : "[Keine Beschreibung]")
                 + "</dd>"
-                + '<dt><dfn>More Info:</dfn></dt><dd><a href="'
-                + value.additional_details
-                + '" title="More info">Here</a></dd>'
         
+                + '<dd><a href="#" title="&#xFE0F; Bearbeiten"> &#x270F; Bearbeiten</a></dd>'
+
                 + '<form method="POST" action="">'
                 + '<input type="hidden" id="id" name="id" value="'+value.id+'">'
-                + '<input class="create_event" type="submit" name="deleteevent" value="Veranstaltung Löschen">'
+                + '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Veranstaltung Löschen">'
                 + '</form>';
                 + "</dl>";
         
@@ -237,7 +236,7 @@ function buildCalendarHtml() {
 
                 if (today === Calendar.getDate()) {
                     html +=
-                        '<td><div class="today calendar_day" href="#" data-id="' + dateStr + '">'
+                        '<td><div class="today calendar_day" data-id="' + dateStr + '">'
                         + "<span>"+day+"</span>";
                 } else {
                     html +=

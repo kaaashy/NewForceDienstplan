@@ -158,7 +158,7 @@ function deleteUser($username) {
     $stmt->bindValue(':username', $username);
     $stmt->execute();
 
-    if ($stmt->affected_rows === 1) {
+    if ($stmt->rowCount() === 1) {
         echo 'User deleted successfully.';
     } else {
         echo 'Error deleting user.';
@@ -228,7 +228,7 @@ function deleteEvent($id)
     $stmt->bindValue(':id', $id);
     $stmt->execute();
 
-    if ($stmt->affected_rows === 1) {
+    if ($stmt->rowCount() === 1) {
         echo 'Event deleted successfully.';
     } else {
         echo 'Error deleting event.';

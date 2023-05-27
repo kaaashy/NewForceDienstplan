@@ -119,10 +119,11 @@ tbody.days_cal tr td {
   transition: all 0.1s ease;
 }
 
-.today.event {
-  background: #b0c9ff !important;
-  color: #fff !important;
-  transition: all 0.1s ease;
+.today {
+    font-weight: bold;
+    transition: all 0.1s ease;
+    border: 3px solid #dfdfdf;
+    color: #85baff !important;
 }
 
 /*.today.calendar_event:hover,.calendar_event:hover {
@@ -188,6 +189,9 @@ tbody.days_cal tr td {
 }
 input.create_event {
     float: left;
+}
+input.delete_event {
+    float: right;
     
 }
 
@@ -312,7 +316,7 @@ input.create_event {
     display: inline-block;
     border-radius: 4px;
     margin-top: 2px;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     margin-left: 5px; 
     margin-right: 5px;
     padding: 5px;
