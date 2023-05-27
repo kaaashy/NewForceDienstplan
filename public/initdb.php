@@ -161,6 +161,8 @@ function initialize()
     // set Max for Fr, Sa
     updateOutlineDay(9, 4, true);
     updateOutlineDay(9, 5, true);
+    updateOutlineDay(9, 5, false);
+    updateOutlineDay(9, 5, true);
 
     
     $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
@@ -190,7 +192,11 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-   
+    updateEventSchedule(1, $id, true, true);
+    updateEventSchedule(5, $id, true, true);
+    updateEventSchedule(4, $id, true, true);
+    updateEventSchedule(4, $id, true, true);
+    updateEventSchedule(4, $id, true, false);
 }
 
 function generateSalt($length = 16) {
@@ -228,6 +234,7 @@ function addUser($username, $password)
     $stmt->bindValue(':display_name', $username);
     $stmt->execute();
 
+    return $pdo->lastInsertId();
 }
 
 function deleteUser($username) {
@@ -344,14 +351,17 @@ function updateEventSchedule($userId, $eventId, $deliberate, $active)
             ON DUPLICATE KEY UPDATE deliberate = :deliberate;";
     } else {
         $sql = "DELETE IGNORE FROM Schedule
-            WHERE user_id = :id AND event_id = :event_id;";
+            WHERE user_id = :user_id AND event_id = :event_id;";
     }
     
     // Prepare the statement and bind the parameters
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $userId);
-    $stmt->bindParam(':day', $eventId);
-    $stmt->bindParam(':deliberate', $deliberate);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':event_id', $eventId);
+    
+    if ($active) {
+        $stmt->bindParam(':deliberate', $deliberate);
+    }
     
     // Execute the statement
     if ($stmt->execute()) {
@@ -420,6 +430,20 @@ function getEvents($month, $year) {
     
     $rows = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Retrieve the outline schedule
+        $sql = "SELECT user_id, deliberate
+                FROM Schedule
+                WHERE event_id = :event_id;";
+
+        $stmt2 = $pdo->prepare($sql);
+        $stmt2->bindValue("event_id", $row["id"]);
+        $stmt2->execute();
+        
+        $row["users"] = array();
+        while ($usersRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            $row["users"][] = $usersRow;
+        }
+
         $rows[] = $row;
     }
     
