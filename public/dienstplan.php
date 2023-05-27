@@ -33,9 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         updateEvent($id, $type, $title, $description, $details, $date, $time, $venue, $address);
         
+        header('Location: dienstplan.php');
+        
     } else if (isset($_POST['deleteevent'])) {
         $id = filter_input(INPUT_POST, 'id');
         deleteEvent($id);
+        
+        header('Location: dienstplan.php');
     }
 }
 
