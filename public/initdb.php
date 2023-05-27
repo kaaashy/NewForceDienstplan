@@ -105,15 +105,33 @@ function initialize()
     addUser("Andi", "Andi");
     addUser("Domi", "Domi");
     addUser("Max", "Max");
-    
+        
+    $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
+    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-05-07", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-05");           
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-05", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
-    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-05-07", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-06");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-06", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-12");           
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-12", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-13");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-13", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-19");           
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-19", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-20");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-20", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-26");           
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-26", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
 }
 
@@ -144,10 +162,12 @@ function addUser($username, $password)
     $hashedPassword = hash('sha256', $password . $salt);
 
     // Prepare and execute the SQL statement
-    $stmt = $pdo->prepare('INSERT INTO Users (username, password, salt) VALUES (:username, :password, :salt)');
+    $stmt = $pdo->prepare('INSERT INTO Users (username, display_name, password, salt) '
+            . 'VALUES (:username, :display_name, :password, :salt)');
     $stmt->bindValue(':username', $username);
     $stmt->bindValue(':password', $hashedPassword);
     $stmt->bindValue(':salt', $salt);
+    $stmt->bindValue(':display_name', $username);
     $stmt->execute();
 
 }
@@ -295,7 +315,7 @@ function getUsers() {
     $pdo = connect();
 
     // Retrieve the salt from the database
-    $sql = "SELECT id, username, display_name, first_name, last_name
+    $sql = "SELECT id, display_name, first_name, last_name
             FROM Users;";
     
     $stmt = $pdo->prepare($sql);

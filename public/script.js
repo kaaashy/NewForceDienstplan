@@ -43,57 +43,7 @@ function _(s) {
   return document.querySelector(s);
 }
  
-// show info
-function showInfo(eventId) {
-    
-    for (var key in eventData) {
-        var event = eventData[key];
-
-        if (event.id === eventId) {
-            if (!_("#calendar_data").classList.contains("show_data")) {
-                _("#calendar_data").classList.add("show_data");
-            }
-            
-            console.log(event);
-            // template info
-            var data = '<a href="#" class="hideEvent" '
-                + 'onclick="return hideEvent();">&times;</a>'
-                + "<h3>"
-                + event.type
-                + "</h3>"
-                + "<dl>"
-                + "<dt><dfn>Titel:</dfn></dt><dd>"
-                + event.title
-                + "</dd>"
-                + "<dt><dfn>Uhrzeit:</dfn></dt><dd>"
-                + event.time
-                + "</dd>"
-                + "<dt><dfn>Venue:</dfn></dt><dd>"
-                + event.venue
-                + "</dd>"
-                + "<dt><dfn>Address:</dfn></dt><dd>"
-                + event.address
-                + "</dd>"
-                + "<dt><dfn>Description:</dfn></dt><dd>"
-                + (event.description !== "" ? event.description : "[Keine Beschreibung]")
-                + "</dd>"
-        
-                + '<dd><a href="#" title="&#xFE0F; Bearbeiten" onclick="return showEventAdder(\'\', ' + event.id + ');"> &#x270F; Bearbeiten</a></dd>'
-
-                + '<form method="POST" action="">'
-                + '<input type="hidden" id="id" name="id" value="'+event.id+'">'
-                + '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Veranstaltung Löschen">'
-                + '</form>';
-                + "</dl>";
-        
-            return (_("#calendar_data").innerHTML = data);
-        }
-    }
-
-    return false;
-}
-
-function showEventAdder(dateStr, id) {
+function showEvent(dateStr, id) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
     }
@@ -106,7 +56,8 @@ function showEventAdder(dateStr, id) {
     var address = "Buckenhofer Weg 69, 91058 Erlangen";
     var description = ""; 
     var buttonCaption = "Veranstaltung Anlegen";
-
+    var deleteButton = "";
+            
     if (id && eventData) {
         for (var key in eventData) {
             var event = eventData[key];
@@ -120,6 +71,7 @@ function showEventAdder(dateStr, id) {
                 description = event.description;
                 buttonCaption = "Änderungen Speichern";
                 headline = title;
+                deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen">';
             }
         }
     } else {
@@ -154,12 +106,13 @@ function showEventAdder(dateStr, id) {
         +   '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
         + '</div>'
         + '<div class="input_line">'
-        +   '<textarea id="description" name="description" placeholder="Beschreibung" rows="8" value="' + description + '" ></textarea>'
+        +   '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">'+ description +'</textarea>'
         + '</div>'
 
         + '<input type="hidden" id="id" name="id" value="' + id + '">'
         + '<div class="input_line">'
         + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '">'
+        + deleteButton
         + '</div>'
         + '</div>'
         + '</form>';
@@ -181,7 +134,7 @@ function addEvents(eventData, month, year) {
             
             var div = document.createElement("div");
             div.classList.add("calendar_event");
-            div.innerHTML = '<a href="#" onclick="return showInfo(' + event.id + ")\">"
+            div.innerHTML = '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
                         + event.title
                         + "</a>";
                 
@@ -198,7 +151,7 @@ function addEvents(eventData, month, year) {
             
             var div = document.createElement("div");
             div.classList.add("calendar_event_adder");
-            div.innerHTML = '<a href="#" onclick="return showEventAdder(\'' + dateStr + "');\">"
+            div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "');\">"
                 + "+ Neue Veranstaltung"
                 + "</a>";
                 

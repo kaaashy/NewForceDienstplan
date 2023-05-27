@@ -217,6 +217,8 @@ tbody.days_cal tr td {
 input.create_event {
     float: left;
     height: 2rem;
+    
+    width: 40%;
 }
 input.delete_event {
     float: right;
@@ -224,6 +226,7 @@ input.delete_event {
     background-color: #fcc;
     border: 1px solid #700;
     border-radius: 4px;
+    width: 20%;
 }
 input.delete_event:hover {
     background-color: #ffdddd;
