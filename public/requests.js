@@ -13,6 +13,23 @@ function createEvent() {
 
 function requestEvents(month, year, callback) {
                 
+    var data = 'username=' + userName;
+    data = data + "&month=" + month;
+    data = data + "&year=" + year;
+    
+    sendRequest(data, callback);
+}
+
+function requestUsers(callback) {
+
+    // Set the request payload
+    var data = 'username=' + userName;
+    data += "&users=y";
+
+    sendRequest(data, callback); 
+}
+
+function sendRequest(data, callback) {
     // Create a new XMLHttpRequest object
     var xhr = new XMLHttpRequest();
 
@@ -24,16 +41,6 @@ function requestEvents(month, year, callback) {
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    // Set the request header if needed
-    // xhr.setRequestHeader('Content-Type', 'application/json');
-
-    // Set the request payload
-    var data = 'username=' + userName;
-    data = data + "&month=" + month;
-    data = data + "&year=" + year;
-    
-    console.log(data);
-    
     // Define the success callback function
     xhr.onload = function() {
         if (xhr.status === 200) {

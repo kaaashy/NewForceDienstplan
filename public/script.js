@@ -15,15 +15,21 @@ sessionStorage.setItem('year', year);
 function refresh() {
     // declare and fill event data
     eventData = {};
+    userData = {};
 
     requestEvents(month + 1, year, function(data) {
-        console.log("received data");
+        console.log("received events");
 
         // after querying events, rebuild calendar
         eventData = data;
         _("#calendar").innerHTML = buildCalendarHtml(month, year);
 
         addEvents(data, month, year);
+    });
+
+    requestUsers(function(data) {
+        console.log("received users");
+        userData = data;
     });
 
     // build the calendar

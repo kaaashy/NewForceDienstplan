@@ -97,6 +97,14 @@ function initialize()
     initializeTables(); 
     
     addUser("admin", "AdminPW");
+    addUser("Tascha", "Tascha");
+    addUser("Oli", "Oli");
+    addUser("Sophia", "Sophia");
+    addUser("Lina", "Lina");
+    addUser("Tom", "Tom");
+    addUser("Andi", "Andi");
+    addUser("Domi", "Domi");
+    addUser("Max", "Max");
     
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-05");           
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-05", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
@@ -276,14 +284,29 @@ function getEvents($month, $year) {
     $stmt->execute();
     
     $rows = array();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $rows[] = $row;
     }
     
     echo json_encode($rows);
 }
 
+function getUsers() {    
+    $pdo = connect();
 
+    // Retrieve the salt from the database
+    $sql = "SELECT id, username, display_name, first_name, last_name
+            FROM Users;";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+       
+    $rows = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $rows[] = $row;
+    }
+    
+    echo json_encode($rows);
+}
 
 ?>

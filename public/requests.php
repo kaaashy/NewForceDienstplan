@@ -19,4 +19,8 @@ if (isset($_POST['month']) && isset($_POST['year'])) {
     getEvents($month, $year);
 }
 
+if (isset($_POST['users'])) {
+    getUsers();
+}
+
 ?>
