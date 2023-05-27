@@ -1,22 +1,37 @@
 
-// declare and fill event data
-eventData = {};
 
-requestEvents(5, 2023, function(data) {
-    console.log("received data");
-    
-    // after querying events, rebuild calendar
-    eventData = data;
-    _("#calendar").innerHTML = buildCalendarHtml();
-    
-    addEvents(data);
-});
+var month = (new Date()).getMonth();
+var year = (new Date()).getFullYear();
 
-// build the calendar
-_("#calendar").innerHTML = buildCalendarHtml();
+if (sessionStorage.getItem('month'))
+    month = parseInt(sessionStorage.getItem('month'));
+if (sessionStorage.getItem('year'))
+    year = parseInt(sessionStorage.getItem('year'));
+
+sessionStorage.setItem('month', month);
+sessionStorage.setItem('year', year);
 
 
- 
+function refresh() {
+    // declare and fill event data
+    eventData = {};
+
+    requestEvents(month + 1, year, function(data) {
+        console.log("received data");
+
+        // after querying events, rebuild calendar
+        eventData = data;
+        _("#calendar").innerHTML = buildCalendarHtml(month, year);
+
+        addEvents(data, month, year);
+    });
+
+    // build the calendar
+    _("#calendar").innerHTML = buildCalendarHtml(month, year);
+}
+
+refresh();
+
 // short querySelector
 function _(s) {
   return document.querySelector(s);
@@ -143,6 +158,11 @@ function showEventAdder(dateStr, id) {
         + '</div>'
         + '</form>';
 
+    window.onbeforeunload = function() {
+        console.log("onbeforeunload");
+        _("#calendar_data").innerHTML = "";
+    };
+
     setTimeout(function() {
         document.getElementById('event_title_input').focus();
     }, 100);
@@ -150,7 +170,7 @@ function showEventAdder(dateStr, id) {
     return (_("#calendar_data").innerHTML = data);
 }
 
-function addEvents(eventData) {
+function addEvents(eventData, month, year) {
     
     for (var key in eventData) {
         var event = eventData[key];
@@ -168,10 +188,9 @@ function addEvents(eventData) {
         }
     }
     
-    var date = new Date();
     for (var i = 1; i <= 31; ++i) {        
-        var dateStr = date.getFullYear() 
-                + "-" + String(date.getMonth() + 1).padStart(2, '0') 
+        var dateStr = year
+                + "-" + String(month + 1).padStart(2, '0') 
                 + "-" + String(i).padStart(2, '0');
 
         if (_('[data-id="' + dateStr + '"]')) {
@@ -190,6 +209,31 @@ function addEvents(eventData) {
 
 
 
+function previousMonth() {
+    month = month - 1; 
+    if (month === -1) {
+        year = year - 1; 
+        month = 11;
+    }
+    
+    sessionStorage.setItem('month', month);
+    sessionStorage.setItem('year', year);
+    
+    refresh();
+}
+
+function nextMonth() {
+    month = month + 1; 
+    if (month === 12) {
+        year = year + 1; 
+        month = 0;
+    }
+    
+    sessionStorage.setItem('month', month);
+    sessionStorage.setItem('year', year);
+    
+    refresh();
+}
 
 // toggle event show or hide
 function hideEvent() {
@@ -206,17 +250,18 @@ function germanDay(calendar) {
 }
 
 // simple calendar
-function buildCalendarHtml() {
+function buildCalendarHtml(month, year) {
     // vars
     var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
     var month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni", 
                                   "Juli", "August", "September", "Oktober", "November", "Dezember");
+    
     var Calendar = new Date();
-    var year = Calendar.getYear();
-    var month = Calendar.getMonth();
-    var today = Calendar.getDate();
+    var today = new Date(); 
     var weekday = germanDay(Calendar);
     var html = "";
+ 
+    console.log(today);
  
     // start in 1 and this month
     Calendar.setDate(1);
@@ -226,14 +271,11 @@ function buildCalendarHtml() {
     html = "<table>";
     // head
     html += "<thead>";
-    html +=
-        '<tr class="head_cal"><th colspan="7">' +
-        month_of_year[month] +
-        "</th></tr>";
-    html +=
-        '<tr class="subhead_cal"><th colspan="7">' +
-        Calendar.getFullYear() +
-        "</th></tr>";
+    html +='<tr class="head_cal"><th><a href="#" onclick="return previousMonth();"> &lt;</a></th>';
+    html +='<th colspan="5">' + month_of_year[month] + "</th>";
+    html +='<th><a href="#" onclick="return nextMonth();">&gt;</a></th></tr>';
+    
+    html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
     html += '<tr class="week_cal">';
     for (index = 0; index < 7; index++) {
         if (weekday === index) {
@@ -266,9 +308,9 @@ function buildCalendarHtml() {
             if (week_day !== 7) {
                 // this day
                 var day = Calendar.getDate();
-                var dateStr = Calendar.getFullYear() + "-" + String(Calendar.getMonth() + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0');
+                var dateStr = year + "-" + String(month + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0');
 
-                if (today === Calendar.getDate()) {
+                if (today.getTime() === Calendar.getTime()) {
                     html +=
                         '<td><div class="today calendar_day" data-id="' + dateStr + '">'
                         + "<span>"+day+"</span>";

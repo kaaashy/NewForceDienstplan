@@ -12,7 +12,6 @@ body {
     background: #efefef;
   
     font-family: sans-serif;
-
 }
 
 .wrapper {
@@ -55,6 +54,11 @@ table {
   font-size: 2rem;
   line-height: 5rem;
   text-transform: uppercase;
+}
+
+.head_cal a {
+    text-decoration: none;
+    color: #85baff;
 }
 
 .subhead_cal {
@@ -189,10 +193,11 @@ tbody.days_cal tr td {
 }
 input.create_event {
     float: left;
+    height: 2rem;
 }
 input.delete_event {
     float: right;
-    
+    height: 2rem;
 }
 
 .input_line textarea {
