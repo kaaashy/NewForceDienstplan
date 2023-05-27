@@ -1,8 +1,10 @@
 TODO: 
-* Ajax-Requests für Events
 * User-Rollen (admin/manager/bearbeiter/viewer)
 * Hübsches CSS
-* Einträge erstellen/löschen/bearbeiten
+* Rahmendienstplan
+* Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
+* Event Automatisch erstellt? 
+
 
 
 DONE: 

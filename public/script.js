@@ -114,7 +114,7 @@ function showEventAdder(dateStr, id) {
         + '<form method="POST" action="">'
         + '<div class="input_line">'
         +   '<label for="title">Titel:</label>'
-        +   '<input type="text" id="title" name="title" placeholder="Titel" value="'+ title +'" required>'
+        +   '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="'+ title +'" required>'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="date">Datum:</label>'
@@ -142,6 +142,10 @@ function showEventAdder(dateStr, id) {
         + '</div>'
         + '</div>'
         + '</form>';
+
+    setTimeout(function() {
+        document.getElementById('event_title_input').focus();
+    }, 100);
 
     return (_("#calendar_data").innerHTML = data);
 }
@@ -174,7 +178,7 @@ function addEvents(eventData) {
             
             var div = document.createElement("div");
             div.classList.add("calendar_event_adder");
-            div.innerHTML = '<a href="#" onclick="return showEventAdder(\'' + dateStr + "')\">"
+            div.innerHTML = '<a href="#" onclick="return showEventAdder(\'' + dateStr + "');\">"
                 + "+ Neue Veranstaltung"
                 + "</a>";
                 
