@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </head>
   <body>
     <a href="admin.php">Admin</a>
+    <a href="users.php">Mitarbeitenden-Index</a>
       
     <div class="wrapper">
         <div id="calendar"></div>

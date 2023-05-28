@@ -82,6 +82,7 @@ function initializeTables()
         display_name VARCHAR(50),
         first_name VARCHAR(50),
         last_name VARCHAR(50),
+        email VARCHAR(255),
 
         creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -121,15 +122,18 @@ function initialize()
     initializeDatabase();
     initializeTables(); 
     
-    addUser("admin", "AdminPW");
-    addUser("Tascha", "Tascha");
-    addUser("Oli", "Oli");
-    addUser("Sophia", "Sophia");
-    addUser("Lina", "Lina");
-    addUser("Tom", "Tom");
-    addUser("Andi", "Andi");
-    addUser("Domi", "Domi");
-    addUser("Max", "Max");
+    $users = ["admin", "Tascha", "Oli", "Sophia", "Lina", "Tom", "Andi", "Domi", "Max"]; 
+    
+    foreach ($users as $name) {
+        $displayName = $name; 
+        $password = $displayName . "PW";
+        
+        $first = $displayName;
+        $last = strtoupper($displayName)[0] . ".";
+        $email = strtolower($name) . "@email.de";
+        
+        addUser($name, $password, $email, $first, $last);
+    }
     
     // set Tascha for Do, Sa
     updateOutlineDay(2, 3, true);
@@ -157,15 +161,6 @@ function initialize()
     updateOutlineDay(9, 5, true);
 
     
-    $id = addEvent("Veranstaltung", "Großputz", "2023-05-07");
-    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-05-07", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-05");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-05", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-06");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-06", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-12");           
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-12", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
@@ -192,6 +187,17 @@ function initialize()
     updateOutlineDay(8, 3, true);
     updateOutlineDay(8, 4, true);
 
+    
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-06-02");           
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-06-02", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-06-03");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-06-03", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Großputz", "2023-06-25");
+    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-06-25", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    
     updateEventSchedule(2, $id, true, true);
     updateEventSchedule(5, $id, true, true);
     updateEventSchedule(4, $id, true, true);
@@ -215,7 +221,7 @@ function generateSalt($length = 16) {
     return $salt;
 }
 
-function addUser($username, $password)
+function addUser($username, $password, $email, $first, $last)
 {
     // Create a connection
     $pdo = connect();
@@ -226,12 +232,15 @@ function addUser($username, $password)
     $hashedPassword = hash('sha256', $password . $salt);
 
     // Prepare and execute the SQL statement
-    $stmt = $pdo->prepare('INSERT INTO Users (username, display_name, password, salt) '
-            . 'VALUES (:username, :display_name, :password, :salt)');
+    $stmt = $pdo->prepare('INSERT INTO Users (username, display_name, password, salt, first_name, last_name, email) '
+            . 'VALUES (:username, :display_name, :password, :salt, :first_name, :last_name, :email)');
     $stmt->bindValue(':username', $username);
     $stmt->bindValue(':password', $hashedPassword);
     $stmt->bindValue(':salt', $salt);
     $stmt->bindValue(':display_name', $username);
+    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':first_name', $first);
+    $stmt->bindValue(':last_name', $last);
     $stmt->execute();
 
     return $pdo->lastInsertId();
@@ -383,7 +392,7 @@ function updateOutlineDay($userId, $day, $active)
         
     } else {
         $sql = "DELETE IGNORE FROM Schedule
-            WHERE user_id = :user_id AND event_id = :event_id;";
+            WHERE user_id = :user_id AND event_id = :event_id AND deliberate = false;";
     }
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -509,7 +518,7 @@ function getUsers() {
     $pdo = connect();
 
     // Retrieve the data from the database
-    $sql = "SELECT id, display_name, first_name, last_name
+    $sql = "SELECT id, username, display_name, first_name, last_name, email
             FROM Users;";
     
     $stmt = $pdo->prepare($sql);

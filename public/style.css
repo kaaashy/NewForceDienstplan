@@ -402,3 +402,15 @@ input.delete_event:hover {
     text-decoration: underline;
     background: #666 !important;
 }
+
+#user_index {
+    padding: 1rem;
+}
+
+.outline_schedule td {
+    text-align: center;
+}
+
+.user_overview td {
+    text-align: center;
+}

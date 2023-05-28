@@ -268,20 +268,14 @@ function buildCalendarHtml(month, year) {
     let day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
     let month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni", 
                                   "Juli", "August", "September", "Oktober", "November", "Dezember");
-    
-    let Calendar = new Date();
-    let today = new Date(); 
-    let weekday = germanDay(Calendar);
+
+    let today = new Date();  
+    let weekday = germanDay(today);
     let html = "";
  
-    console.log(today);
- 
-    // start in 1 and this month
-    Calendar.setDate(1);
-    Calendar.setMonth(month);
-
     // template calendar
     html = "<table>";
+    
     // head
     html += "<thead>";
     html += '<tr class="head_cal">';
@@ -298,7 +292,7 @@ function buildCalendarHtml(month, year) {
     html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
     html += '<tr class="week_cal">';
     for (index = 0; index < 7; index++) {
-        if (weekday === index) {
+        if (weekday === index && month === today.getMonth()) {
             html += '<th class="week_event">' + day_of_week[index] + "</th>";
         } else {
             html += "<th>" + day_of_week[index] + "</th>";
@@ -311,6 +305,12 @@ function buildCalendarHtml(month, year) {
     // body
     html += '<tbody class="days_cal">';
     html += "</tr>";
+
+
+    // start in 1 and this month
+    let Calendar = new Date();
+    Calendar.setDate(1);
+    Calendar.setMonth(month);
 
     // white zone
     for (index = 0; index < germanDay(Calendar); index++) {
