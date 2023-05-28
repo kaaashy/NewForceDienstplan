@@ -1,23 +1,27 @@
 TODO: 
 * Profile
 * Eventupdate: Kein Datums-Update mehr möglich (wegen Rahmendienstplan)
-* Rahmendienstplan
-* MA eintragen und austragen
+* End-Uhrzeit
+* Wochenansicht
 * Warnungen bei nicht-genügend-MA im Event
+* Übersicht über alle MA bei Veranstaltungen in Wochenansicht
 * User-Rollen (admin/manager/bearbeiter/viewer)
+* User einladen
 * Email-Notifications
 * User deaktivieren
+* User ausblenden
 * User aus Veranstaltungen entfernen
-* Rahmendienstplanänderungen an Veranstaltungen aktualisieren
 * Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
 * Hübsches CSS für Profile
 * Hübsches CSS für Admin-Bereich
-* End-Uhrzeit
 * Mehrtägige Events?
 * Events automatisch einfügen? 
 * Event Automatisch erstellt? 
 
 DONE: 
+* Rahmendienstplan
+* MA eintragen und austragen
+* Rahmendienstplanänderungen an Veranstaltungen aktualisieren
 * Monate blättern
 * Events erstellen, bearbeiten, löschen
 * Hübsches CSS für Kalender
