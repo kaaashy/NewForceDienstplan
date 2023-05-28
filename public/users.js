@@ -28,9 +28,23 @@ function refresh() {
 
 refresh();
 
+function setOutlineForUser(id, day) {
+    
+    let checkBoxId = 'outline_check_'+id+'_'+day;
+    let checked = _("#"+checkBoxId).checked; 
+    
+        console.log(id);
+    console.log(day);
+    console.log(checked);
+
+    sendUserOutlineScheduleDay(id, day, checked, function(){console.log("sent"); refresh();});
+}
+
 function buildIndexHtml()
 {   
     let html = "";
+    
+    html += '<a href="dienstplan.php"> &lt;&lt; Zurück zur Übersicht</a>';
     
     html += '<h2>Rahmendienstplan</h2>';
     html += '<table class="outline_schedule">';
@@ -45,9 +59,10 @@ function buildIndexHtml()
     html += '<th>Sonntag</th>';
     html += '</tr>';
     
-    let outlineDay = function(value) {
-        if (value) return "Ja";
-        return "";
+    let outlineDay = function(value, id, day) {
+        let v = value ? "checked" : ""; 
+        
+        return '<input type="checkbox" id="outline_check_'+id+'_'+day+'" onclick=setOutlineForUser('+id+','+day+') '+v+'>';
     };
     
     for (let id in userData) {
@@ -55,13 +70,13 @@ function buildIndexHtml()
         
         html += '<tr>';
         html += '<td>'+user.display_name+'</td>';
-        html += '<td>'+outlineDay(user.day_0)+'</td>';
-        html += '<td>'+outlineDay(user.day_1)+'</td>';
-        html += '<td>'+outlineDay(user.day_2)+'</td>';
-        html += '<td>'+outlineDay(user.day_3)+'</td>';
-        html += '<td>'+outlineDay(user.day_4)+'</td>';
-        html += '<td>'+outlineDay(user.day_5)+'</td>';
-        html += '<td>'+outlineDay(user.day_6)+'</td>';
+        html += '<td>'+outlineDay(user.day_0, id, 0)+'</td>';
+        html += '<td>'+outlineDay(user.day_1, id, 1)+'</td>';
+        html += '<td>'+outlineDay(user.day_2, id, 2)+'</td>';
+        html += '<td>'+outlineDay(user.day_3, id, 3)+'</td>';
+        html += '<td>'+outlineDay(user.day_4, id, 4)+'</td>';
+        html += '<td>'+outlineDay(user.day_5, id, 5)+'</td>';
+        html += '<td>'+outlineDay(user.day_6, id, 6)+'</td>';
         html += '</tr>';
     }
     

@@ -407,8 +407,24 @@ input.delete_event:hover {
     padding: 1rem;
 }
 
+.outline_schedule {
+    border: 1px solid #d0d0d0;
+}
+
 .outline_schedule td {
+    width:12.5%;
     text-align: center;
+    border: 1px solid #d0d0d0;
+}
+
+.outline_schedule th {
+    text-align: center;
+    border: 1px solid #d0d0d0;
+    background: #f0f0f0;
+}
+
+.outline_schedule tr:hover {
+    background: #f8f8f8;
 }
 
 .user_overview td {

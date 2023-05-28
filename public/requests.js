@@ -3,12 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-function getEventsOfDay() {
+function sendUserOutlineScheduleDay(userId, day, active, callback) {
+                
+    var data = 'username=' + userName;
+    data = data + "&outline_schedule=y";
+    data = data + "&user_id=" + userId;
+    data = data + "&day=" + day;
+    data = data + "&active=" + (active ? 1 : 0);
     
-}
-
-function createEvent() {
-    
+    sendRequest(data, callback);
 }
 
 function requestEvents(month, year, callback) {
@@ -45,9 +48,19 @@ function sendRequest(data, callback) {
     xhr.onload = function() {
         if (xhr.status === 200) {
             // Request succeeded
-            console.log(xhr.responseText);
+            let response = xhr.responseText.trim(); 
+                    console.log("response text: '"+response+"'");
+
+            let result = response;            
+            if (response !== "") {
+                try {
+                    result = JSON.parse(xhr.responseText);
+                } catch(e) {
+                    console.log(e);
+                }
+            }
             
-            return callback(JSON.parse(xhr.responseText));            
+            return callback(result);
         } else {
             // Request failed
             console.log('Error:', xhr.status);
