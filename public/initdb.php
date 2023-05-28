@@ -150,14 +150,6 @@ function initialize()
     updateOutlineDay(6, 3, true);
     updateOutlineDay(6, 4, true);
     
-    // set Andi for Fr, Sa
-    updateOutlineDay(7, 4, true);
-    updateOutlineDay(7, 5, true);
-    
-    // set Domi for Do, Fr
-    updateOutlineDay(8, 3, true);
-    updateOutlineDay(8, 4, true);
-    
     // set Max for Fr, Sa
     updateOutlineDay(9, 4, true);
     updateOutlineDay(9, 5, true);
@@ -192,6 +184,14 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
+    // set Andi for Fr, Sa
+    updateOutlineDay(7, 4, true);
+    updateOutlineDay(7, 5, true);
+    
+    // set Domi for Do, Fr
+    updateOutlineDay(8, 3, true);
+    updateOutlineDay(8, 4, true);
+
     updateEventSchedule(2, $id, true, true);
     updateEventSchedule(5, $id, true, true);
     updateEventSchedule(4, $id, true, true);
@@ -269,10 +269,34 @@ function addEvent($type, $title, $date)
     $stmt->bindValue(':type', $type);
     $stmt->bindValue(':title', $title);
     $stmt->bindValue(':date', $date);
-
     $stmt->execute();
 
-    return $pdo->lastInsertId();
+    $eventId = $pdo->lastInsertId();
+    
+    // now, check the outline schedule and add all users that have the correct day set
+    
+    // database has days from 0-6 (monday-sunday)
+    // date() creates days from 0-6 (sunday-saturday), so we have to convert
+    $day = date('w', strtotime($date)) - 1; 
+    if ($day == -1) $day = 6;
+    
+    $stmt = $pdo->prepare('SELECT user_id from OutlineSchedule 
+            WHERE day = :day');
+    
+    $stmt->bindValue(':day', $day);
+    $stmt->execute();
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+            VALUES (:user_id, :event_id, false)";
+    
+        $stmt2 = $pdo->prepare($sql);
+        $stmt2->bindValue(":user_id", $row["user_id"]);
+        $stmt2->bindValue(":event_id", $eventId);
+        $stmt2->execute();
+    }
+
+    return $eventId;
 }
 
 function updateEvent($event_id, $type, $title, $description, $details, $date, $time, $venue, $address)
@@ -318,6 +342,7 @@ function updateOutlineDay($userId, $day, $active)
     $pdo = connect();
 
     // Prepare the SQL statement
+    $sql = "";
     if ($active) {
         $sql = "INSERT IGNORE INTO OutlineSchedule (user_id, day)
             VALUES (:id, :day);";
@@ -337,6 +362,36 @@ function updateOutlineDay($userId, $day, $active)
     } else {
         echo "Error updating outline schedule.";
     }
+    
+    
+    // Now, update all events of today or in the future with the new outline day
+    $sql = "SELECT id, date FROM Events
+        WHERE date >= CURDATE()-30 AND DAYOFWEEK(date) = :day;";
+        
+    // $day is 0 -> 6 for mon -> sun
+    // we must convert it to 1 -> 7 for sun -> sat
+    $sqlDay = $day + 2;
+    if ($sqlDay == 8) $sqlDay = 1;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":day", $sqlDay);
+    $stmt->execute();
+
+    if ($active) {
+        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+            VALUES (:user_id, :event_id, false)";
+        
+    } else {
+        $sql = "DELETE IGNORE FROM Schedule
+            WHERE user_id = :user_id AND event_id = :event_id;";
+    }
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $stmt2 = $pdo->prepare($sql);
+        $stmt2->bindValue(":user_id", $userId);
+        $stmt2->bindValue(":event_id", $row["id"]);
+        $stmt2->execute();
+    }
 }
 
 function updateEventSchedule($userId, $eventId, $deliberate, $active)
@@ -346,7 +401,7 @@ function updateEventSchedule($userId, $eventId, $deliberate, $active)
 
     // Prepare the SQL statement
     if ($active) {
-        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+        $sql = "INSERT INTO Schedule (user_id, event_id, deliberate)
             VALUES (:user_id, :event_id, :deliberate)
             ON DUPLICATE KEY UPDATE deliberate = :deliberate;";
     } else {

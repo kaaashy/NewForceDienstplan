@@ -1,5 +1,6 @@
 TODO: 
 * Profile
+* Eventupdate: Kein Datums-Update mehr möglich (wegen Rahmendienstplan)
 * Rahmendienstplan
 * MA eintragen und austragen
 * Warnungen bei nicht-genügend-MA im Event
