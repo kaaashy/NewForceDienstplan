@@ -48,7 +48,16 @@ refresh();
 function _(s) {
   return document.querySelector(s);
 }
- 
+
+var endTimes = {}; 
+endTimes[0] = "00:00";
+endTimes[1] = "00:00";
+endTimes[2] = "00:00";
+endTimes[3] = "00:00";
+endTimes[4] = "02:00";
+endTimes[5] = "02:00";
+endTimes[6] = "00:00";
+
 function showEvent(dateStr, id) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
@@ -58,6 +67,7 @@ function showEvent(dateStr, id) {
     let title = ""; 
     let date = dateStr; 
     let time = "20:00"; 
+    let endTime = endTimes[germanDay(new Date(dateStr))];
     let venue = "New Force"; 
     let address = "Buckenhofer Weg 69, 91058 Erlangen";
     let description = ""; 
@@ -65,6 +75,7 @@ function showEvent(dateStr, id) {
     let deleteButton = "";
     let eventUsers = "";
     let nonEventUsers = "";
+    let dateFlags = "required";
     
     if (id && eventData) {
         for (let key in eventData) {
@@ -74,11 +85,13 @@ function showEvent(dateStr, id) {
                 title = event.title;
                 date = event.date;
                 time = event.time;
+                endTime = event.end_time;
                 venue = event.venue;
                 address = event.address;
                 description = event.description;
                 buttonCaption = "Änderungen Speichern";
                 headline = title;
+                dateFlags = "disabled";
                 deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen">';
                 
                 let remainingUsers = new Set();
@@ -127,11 +140,15 @@ function showEvent(dateStr, id) {
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="date">Datum:</label>'
-        +   '<input type="date" id="date" name="date" value="' + date + '" required>'
+        +   '<input type="date" id="date" name="date" value="' + date + '" '+dateFlags+'>'
         + '</div>'
         + '<div class="input_line">'
-        +   '<label for="time">Uhrzeit:</label>'
+        +   '<label for="time">Start:</label>'
         +   '<input type="time" id="time" name="time" value="' + time + '" required>'
+        + '</div>'
+        + '<div class="input_line">'
+        +   '<label for="time">Ende:</label>'
+        +   '<input type="time" id="end_time" name="end_time" value="' + endTime + '" required>'
         + '</div>'
         + '<div class="input_line">'
         +   '<label for="venue">Ort:</label>'
@@ -250,7 +267,7 @@ function nextMonth() {
 
 // toggle event show or hide
 function hideEvent() {
-  _("#calendar_data").classList.remove("show_data");
+    _("#calendar_data").classList.remove("show_data");
 }
  
 function germanDay(calendar) {
@@ -357,4 +374,5 @@ function buildCalendarHtml(month, year) {
 
     return html;
 }
- 
+
+

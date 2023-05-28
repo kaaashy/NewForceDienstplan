@@ -60,6 +60,7 @@ function initializeTables()
         additional_details TEXT,
         date DATE,
         time TIME,
+        end_time TIME,
         venue VARCHAR(255),
         address VARCHAR(255),
         
@@ -162,22 +163,22 @@ function initialize()
 
     
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-12");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-12", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-13");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-13", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-19");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-19", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-20");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-20", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-26");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-05-26", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-05-27", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     // set Andi for Fr, Sa
     updateOutlineDay(7, 4, true);
@@ -189,13 +190,13 @@ function initialize()
 
     
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-06-02");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "Blasts für die Melodischen unter uns", "2023-06-02", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-06-03");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "Fette Blasts", "2023-06-03", "20:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Großputz", "2023-06-25");
-    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "Mehr Info gibt's net", "2023-06-25", "16:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     
     updateEventSchedule(2, $id, true, true);
@@ -308,7 +309,7 @@ function addEvent($type, $title, $date)
     return $eventId;
 }
 
-function updateEvent($event_id, $type, $title, $description, $details, $date, $time, $venue, $address)
+function updateEvent($event_id, $type, $title, $description, $time, $end_time, $venue, $address)
 {
     // Create a connection
     $pdo = connect();
@@ -318,9 +319,8 @@ function updateEvent($event_id, $type, $title, $description, $details, $date, $t
             SET description = :description,
                 type = :type,
                 title = :title,
-                additional_details = :additional_details,
-                date = :date,
                 time = :time,
+                end_time = :end_time,
                 venue = :venue,
                 address = :address
             WHERE id = :id";
@@ -331,9 +331,8 @@ function updateEvent($event_id, $type, $title, $description, $details, $date, $t
     $stmt->bindParam(':type', $type);
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':description', $description);
-    $stmt->bindParam(':additional_details', $details);
-    $stmt->bindParam(':date', $date);
     $stmt->bindParam(':time', $time);
+    $stmt->bindParam(':end_time', $end_time);
     $stmt->bindParam(':venue', $venue);
     $stmt->bindParam(':address', $address);
     

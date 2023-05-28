@@ -1,8 +1,6 @@
 TODO: 
-* Profile
-* Eventupdate: Kein Datums-Update mehr möglich (wegen Rahmendienstplan)
-* End-Uhrzeit
 * Wochenansicht
+* Profile
 * Warnungen bei nicht-genügend-MA im Event
 * Übersicht über alle MA bei Veranstaltungen in Wochenansicht
 * User-Rollen (admin/manager/bearbeiter/viewer)
@@ -19,6 +17,8 @@ TODO:
 * Event Automatisch erstellt? 
 
 DONE: 
+* Eventupdate: Kein Datums-Update mehr möglich (wegen Rahmendienstplan)
+* End-Uhrzeit
 * Rahmendienstplan
 * MA eintragen und austragen
 * Rahmendienstplanänderungen an Veranstaltungen aktualisieren
