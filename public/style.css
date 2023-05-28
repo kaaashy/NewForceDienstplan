@@ -134,7 +134,7 @@ div.past_day_overlay {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255, 0.5); /* Semi-transparent color */
+    background-color: rgba(245,245,245, 0.5); /* Semi-transparent color */
     z-index: 1; /* Higher z-index value to appear above the element */
     pointer-events: none;
 }
