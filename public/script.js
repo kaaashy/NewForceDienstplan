@@ -30,8 +30,8 @@ function refresh() {
     requestUsers(function(data) {
         console.log("received users");
         userData = {};
-        for (var i in data) {
-            var user = data[i];
+        for (let i in data) {
+            let user = data[i];
             userData[user.id] = user;
         }
         
@@ -54,21 +54,21 @@ function showEvent(dateStr, id) {
         _("#calendar_data").classList.add("show_data");
     }
 
-    var headline = "Neue Veranstaltung";
-    var title = ""; 
-    var date = dateStr; 
-    var time = "20:00"; 
-    var venue = "New Force"; 
-    var address = "Buckenhofer Weg 69, 91058 Erlangen";
-    var description = ""; 
-    var buttonCaption = "Veranstaltung Anlegen";
-    var deleteButton = "";
-    var eventUsers = "";
-    var nonEventUsers = "";
+    let headline = "Neue Veranstaltung";
+    let title = ""; 
+    let date = dateStr; 
+    let time = "20:00"; 
+    let venue = "New Force"; 
+    let address = "Buckenhofer Weg 69, 91058 Erlangen";
+    let description = ""; 
+    let buttonCaption = "Veranstaltung Anlegen";
+    let deleteButton = "";
+    let eventUsers = "";
+    let nonEventUsers = "";
     
     if (id && eventData) {
-        for (var key in eventData) {
-            var event = eventData[key];
+        for (let key in eventData) {
+            let event = eventData[key];
 
             if (event.id === id) {
                 title = event.title;
@@ -81,14 +81,14 @@ function showEvent(dateStr, id) {
                 headline = title;
                 deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen">';
                 
-                var remainingUsers = new Set();
-                for (var id in userData) {
-                    remainingUsers.add(userData[id].id);
+                let remainingUsers = new Set();
+                for (let uid in userData) {
+                    remainingUsers.add(userData[uid].id);
                 }
                 
-                for (var i in event.users) {
-                    var eventUser = event.users[i]; 
-                    var user = userData[eventUser.user_id];
+                for (let i in event.users) {
+                    let eventUser = event.users[i]; 
+                    let user = userData[eventUser.user_id];
                     remainingUsers.delete(eventUser.user_id);
                     
                     if (user) {
@@ -100,8 +100,8 @@ function showEvent(dateStr, id) {
                     }
                 }
                 
-                for (const id of remainingUsers) {
-                    var user = userData[id];
+                for (const uid of remainingUsers) {
+                    let user = userData[uid];
                     if (user) {
                         nonEventUsers += '<div class="deliberate_event_user">' + user.display_name + '</div>';
                     }
@@ -112,8 +112,10 @@ function showEvent(dateStr, id) {
         id = "";
     }
 
+    console.log(id); 
+
     // template info
-    var data = '<a href="#" class="hideEvent" ' 
+    let data = '<a href="#" class="hideEvent" ' 
         + 'onclick="return hideEvent();">&times;</a>' 
         + '<h3>' + headline + '</h3>'
         
@@ -172,13 +174,13 @@ function showEvent(dateStr, id) {
 
 function addEvents(eventData, month, year) {
     
-    for (var key in eventData) {
-        var event = eventData[key];
+    for (let key in eventData) {
+        let event = eventData[key];
         
         // if has event add class
         if (_('[data-id="' + event.date + '"]')) {
             
-            var div = document.createElement("div");
+            let div = document.createElement("div");
             div.classList.add("calendar_event");
             div.innerHTML = '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
                         + event.title
@@ -188,14 +190,14 @@ function addEvents(eventData, month, year) {
         }
     }
     
-    for (var i = 1; i <= 31; ++i) {        
-        var dateStr = year
+    for (let i = 1; i <= 31; ++i) {        
+        let dateStr = year
                 + "-" + String(month + 1).padStart(2, '0') 
                 + "-" + String(i).padStart(2, '0');
 
         if (_('[data-id="' + dateStr + '"]')) {
             
-            var div = document.createElement("div");
+            let div = document.createElement("div");
             div.classList.add("calendar_event_adder");
             div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "');\">"
                 + "+ Neue Veranstaltung"
@@ -209,7 +211,7 @@ function addEvents(eventData, month, year) {
 
 
 function todayMonth() {
-    var today = new Date();
+    let today = new Date();
     month = today.getMonth();
     year = today.getFullYear();
     
@@ -262,14 +264,14 @@ function germanDay(calendar) {
 // simple calendar
 function buildCalendarHtml(month, year) {
     // vars
-    var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
-    var month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni", 
+    let day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
+    let month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni", 
                                   "Juli", "August", "September", "Oktober", "November", "Dezember");
     
-    var Calendar = new Date();
-    var today = new Date(); 
-    var weekday = germanDay(Calendar);
-    var html = "";
+    let Calendar = new Date();
+    let today = new Date(); 
+    let weekday = germanDay(Calendar);
+    let html = "";
  
     console.log(today);
  
@@ -324,8 +326,8 @@ function buildCalendarHtml(month, year) {
 
             if (week_day !== 7) {
                 // this day
-                var day = Calendar.getDate();
-                var dateStr = year + "-" + String(month + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0');
+                let day = Calendar.getDate();
+                let dateStr = year + "-" + String(month + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0');
 
                 if (today.getTime() === Calendar.getTime()) {
                     html +=
