@@ -190,19 +190,20 @@ function addEvents(eventData, month, year) {
         }
     }
     
-    for (let i = 1; i <= 31; ++i) {        
+    // add little blobs for creating a new event
+    let today = new Date();
+    for (let i = 1; i <= 31; ++i) {
         let dateStr = year
                 + "-" + String(month + 1).padStart(2, '0') 
                 + "-" + String(i).padStart(2, '0');
 
         if (_('[data-id="' + dateStr + '"]')) {
-            
             let div = document.createElement("div");
             div.classList.add("calendar_event_adder");
             div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "');\">"
                 + "+ Neue Veranstaltung"
                 + "</a>";
-                
+
             _('[data-id="' + dateStr + '"]').appendChild(div);
         }
     }
@@ -337,6 +338,10 @@ function buildCalendarHtml(month, year) {
                     html +=
                         '<td><div class="calendar_day" data-id="' + dateStr + '">'
                         + "<span>"+day+"</span>";
+                
+                    if (today.getTime() > Calendar.getTime()) {
+                        html += '<div class="past_day_overlay"></div>';
+                    } 
                 }
                 
                 html += "</div></td>";
