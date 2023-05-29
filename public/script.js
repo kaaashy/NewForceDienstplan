@@ -1,17 +1,10 @@
 
-// start of the month
-var monthStart = new Date();
-monthStart.setDate(1);
-if (sessionStorage.getItem('monthStart'))
-    monthStart = new Date(Date.parse(sessionStorage.getItem('monthStart')));
-sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
-
-// start of the week
-var weekStart = new Date();
-weekStart = getStartOfWeek(weekStart);
-if (sessionStorage.getItem('weekStart'))
-    weekStart = new Date(Date.parse(sessionStorage.getItem('weekStart')));
-sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
+// start date
+var startDate = new Date();
+startDate = getStartOfWeek(startDate);
+if (sessionStorage.getItem('startDate'))
+    startDate = new Date(Date.parse(sessionStorage.getItem('startDate')));
+sessionStorage.setItem('startDate', getPaddedDateString(startDate));
 
 const monthMode = "month";
 const weekMode = "week";
@@ -26,14 +19,11 @@ function refresh() {
     eventData = {};
     userData = {};
 
-    let startDate = monthStart;
-    let endDate = monthStart;
+    let startDate = startDate;
     if (mode === weekMode) {
-        startDate = weekStart;
         endDate = new Date(startDate);
         endDate.setDate(endDate.getDate() + 7);
     } else {
-        startDate = monthStart;
         endDate = new Date(startDate);
         endDate.setMonth(endDate.getMonth() + 1);
     }
@@ -253,44 +243,56 @@ function addEvents(eventData, startDate) {
 
 function gotoToday() {
     if (mode === weekMode) {
-        weekStart = getStartOfWeek(new Date());
-        sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
+        startDate = getStartOfWeek(new Date());
     } else {
-        monthStart = new Date();
-        monthStart.setDate(1);
-        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
+        startDate = new Date();
+        startDate.setDate(1);
     }
+
+    sessionStorage.setItem('startDate', getPaddedDateString(startDate));
 
     refresh();
 }
 
 function gotoPrevious() {
     if (mode === weekMode) {
-        weekStart.setDate(weekStart.getDate() - 7);
-        sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
+        startDate.setDate(startDate.getDate() - 7);
     } else {
-        monthStart.setMonth(monthStart.getMonth() - 1);
-        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
+        startDate.setMonth(startDate.getMonth() - 1);
     }
+    sessionStorage.setItem('startDate', getPaddedDateString(startDate));
 
     refresh();
 }
 
 function gotoNext() {
     if (mode === weekMode) {
-        weekStart.setDate(weekStart.getDate() + 7);
-        sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
+        startDate.setDate(startDate.getDate() + 7);
     } else {
-        monthStart.setMonth(monthStart.getMonth() + 1);
-        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
+        startDate.setMonth(startDate.getMonth() + 1);
     }
+    sessionStorage.setItem('startDate', getPaddedDateString(startDate));
 
     refresh();
 }
 
 function setMode(newMode) {
     mode = newMode;
+
+    if (mode === weekMode) {
+        let today = new Date();
+        if (today.getMonth() === startDate.getMonth()) {
+            startDate = getStartOfWeek(today);
+        } else {
+            startDate = getStartOfWeek(startDate);
+        }
+    } else {
+        startDate.setDate(1);
+    }
+
     sessionStorage.setItem('mode', mode);
+    sessionStorage.setItem('startDate', getPaddedDateString(startDate));
+
     refresh();
 }
 
@@ -327,21 +329,21 @@ function buildCalendarHtml() {
     startOfMonth.setDate(1);
 
     if (mode === weekMode) {
-        return buildWeeklyCalendarHtml(weekStart);
+        return buildWeeklyCalendarHtml(startDate);
     } else {
-        return buildMonthlyCalendarHtml(monthStart);
+        return buildMonthlyCalendarHtml(startDate);
     }
 }
 
-function buildWeeklyCalendarHtml(weekStart) {
+function buildWeeklyCalendarHtml(startDate) {
     let html = "";
 
     // template calendar
     html = "<table>";
 
-    let weekEnding = new Date(weekStart);
+    let weekEnding = new Date(startDate);
     weekEnding.setDate(weekEnding.getDate() + 6);
-    html += buildCalendarHead(weekStart.getMonth(), weekEnding.getMonth(), weekStart.getFullYear());
+    html += buildCalendarHead(startDate.getMonth(), weekEnding.getMonth(), startDate.getFullYear());
 
     // body
     html += '<tbody class="days_cal">';
@@ -350,7 +352,7 @@ function buildWeeklyCalendarHtml(weekStart) {
     const today = new Date();
 
     // start in 1 and this month
-    let date = new Date(weekStart);
+    let date = new Date(startDate);
 
     // white zone
     for (let i = 0; i < getGermanWeekDay(date); i++) {
@@ -395,7 +397,7 @@ function buildMonthlyCalendarHtml() {
     html = "<table>";
 
     // head
-    html += buildCalendarHead(monthStart.getMonth(), monthStart.getMonth(), monthStart.getFullYear());
+    html += buildCalendarHead(startDate.getMonth(), startDate.getMonth(), startDate.getFullYear());
 
     // body
     html += '<tbody class="days_cal">';
@@ -404,7 +406,7 @@ function buildMonthlyCalendarHtml() {
     const today = new Date();
 
     // start in 1 and this month
-    let date = new Date(monthStart);
+    let date = new Date(startDate);
 
     // white zone
     for (index = 0; index < getGermanWeekDay(date); index++) {
