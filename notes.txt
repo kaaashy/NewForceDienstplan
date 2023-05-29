@@ -1,8 +1,7 @@
 TODO: 
-* Wochenansicht
+* Minimum-Anzahl Mitarbeiter
 * Profile
 * Warnungen bei nicht-genügend-MA im Event
-* Übersicht über alle MA bei Veranstaltungen in Wochenansicht
 * User-Rollen (admin/manager/bearbeiter/viewer)
 * User einladen
 * Email-Notifications
@@ -17,6 +16,8 @@ TODO:
 * Event Automatisch erstellt? 
 
 DONE: 
+* Übersicht über alle MA bei Veranstaltungen in Wochenansicht
+* Wochenansicht
 * Eventupdate: Kein Datums-Update mehr möglich (wegen Rahmendienstplan)
 * End-Uhrzeit
 * Rahmendienstplan

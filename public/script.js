@@ -14,12 +14,30 @@ if (sessionStorage.getItem('mode') && mode !== sessionStorage.getItem('mode')) {
     mode = sessionStorage.getItem('mode');
 }
 
+var refreshCounter = 0;
+var dataReceived = 0;
+
+function onEventsReceived(refresh) {
+    console.log(refresh);
+    console.log(refreshCounter);
+
+    if (refresh !== refreshCounter)
+        return;
+
+    // it's important we only start adding events once all data was received
+    // to avoid flickering and wrong events
+    dataReceived++;
+    if (dataReceived === 2) {
+        _("#calendar").innerHTML = buildCalendarHtml();
+        addEvents(eventData, startDate);
+    }
+}
+
 function refresh() {
     // declare and fill event data
     eventData = {};
     userData = {};
 
-    let startDate = startDate;
     if (mode === weekMode) {
         endDate = new Date(startDate);
         endDate.setDate(endDate.getDate() + 7);
@@ -31,15 +49,9 @@ function refresh() {
     let start = getPaddedDateString(startDate);
     let end = getPaddedDateString(endDate);
 
-    requestEvents(start, end, function (data) {
-        console.log("received events");
-
-        // after querying events, rebuild calendar
-        eventData = data;
-        _("#calendar").innerHTML = buildCalendarHtml();
-
-        addEvents(data, startDate);
-    });
+    refreshCounter++;
+    let counter = refreshCounter;
+    dataReceived = 0;
 
     requestUsers(function (data) {
         console.log("received users");
@@ -49,7 +61,16 @@ function refresh() {
             userData[user.id] = user;
         }
 
-        console.log(userData);
+        onEventsReceived(counter);
+    });
+
+    requestEvents(start, end, function (data) {
+        console.log("received events");
+
+        // after querying events, rebuild calendar
+        eventData = data;
+
+        onEventsReceived(counter);
     });
 
     // build the calendar
@@ -203,6 +224,30 @@ function showEvent(dateStr, id) {
     return (_("#calendar_data").innerHTML = data);
 }
 
+function buildEventAssigneeOverview(event) {
+    let html = "";
+
+    console.log(event);
+
+    html += '<table class="user_listing">';
+
+    for (let i in event.users) {
+        let eventUser = event.users[i];
+        let user = userData[eventUser.user_id];
+
+        if (user) {
+            if (eventUser.deliberate) {
+                html += '<tr><td><div class="deliberate_event_user">' + user.display_name + '</div></td></tr>';
+            } else {
+                html += '<tr><td><div class="event_user">' + user.display_name + '*</div></td></tr>';
+            }
+        }
+    }
+    html += "</table>";
+
+    return html;
+}
+
 function addEvents(eventData, startDate) {
 
     for (let key in eventData) {
@@ -211,10 +256,16 @@ function addEvents(eventData, startDate) {
         // if has event add class
         if (_('[data-id="' + event.date + '"]')) {
 
+            let assignedUsers = "";
+            if (mode === weekMode)
+                assignedUsers = buildEventAssigneeOverview(event);
+
             let div = document.createElement("div");
             div.classList.add("calendar_event");
             div.innerHTML = '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
-                    + event.title
+                    + '<span class="event_title">' + event.title + '</span>'
+                    + '<span>' + event.users.length + '</span>'
+                    + assignedUsers
                     + "</a>";
 
             _('[data-id="' + event.date + '"]').appendChild(div);
@@ -325,9 +376,6 @@ function getStartOfWeek(date) {
 }
 
 function buildCalendarHtml() {
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-
     if (mode === weekMode) {
         return buildWeeklyCalendarHtml(startDate);
     } else {

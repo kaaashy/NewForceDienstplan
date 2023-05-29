@@ -123,6 +123,12 @@ tbody.table {
     table-layout: fixed;
 }
 
+.days_cal .user_listing tr td {
+    background: none;
+    border: none;
+    text-align: left;
+}
+
 tbody.days_cal tr td a span {
     padding: 0;
     text-decoration: none;
@@ -181,11 +187,6 @@ tbody.days_cal tr td {
     border: 3px solid #dfdfdf;
     color: #85baff !important;
 }
-
-/*.today.calendar_event:hover,.calendar_event:hover {
-  opacity: 0.5;
-  transition: all 0.1s ease;
-}*/
 
 .week_event {
     color: #85baff;
@@ -362,13 +363,29 @@ input.delete_event:hover {
     line-height: 1rem;
 }
 
+tbody.days_cal .calendar_event span {
+    background: none; 
+    color: white; 
+    line-height: 1.0rem;
+}
+
+.calendar_event .event_title {
+    text-transform: uppercase;
+    font-weight: bold; 
+    background: none; 
+    color: white; 
+}
+
 .calendar_day:hover .calendar_event_adder a {
     visibility: visible;
 }
 
 .calendar_event:hover a {
-    font-weight: bold;
     background: #666; 
+}
+
+.calendar_event table {
+    padding-top: 10px;
 }
 
 .calendar_event a {
