@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = filter_input(INPUT_POST, 'description');
         $time = filter_input(INPUT_POST, 'time');
         $end_time = filter_input(INPUT_POST, 'end_time');
+        $minUsers = filter_input(INPUT_POST, 'minimum_users');
+        $organizer = filter_input(INPUT_POST, 'organizer');
         $venue = filter_input(INPUT_POST, 'venue');
         $address = filter_input(INPUT_POST, 'address');
         $id = filter_input(INPUT_POST, 'id');
@@ -30,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$id && $date)
             $id = addEvent($type, $title, $date);
         
-        updateEvent($id, $type, $title, $description, $time, $end_time, $venue, $address);
+        updateEvent($id, $type, $title, $description, $time, $end_time, $minUsers, $organizer, $venue, $address);
         
         header('Location: dienstplan.php');
         

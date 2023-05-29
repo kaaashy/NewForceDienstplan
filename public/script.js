@@ -89,7 +89,7 @@ function showEvent(dateStr, id) {
         _("#calendar_data").classList.add("show_data");
     }
 
-    var endTimes = {};
+    let endTimes = {};
     endTimes[0] = "00:00";
     endTimes[1] = "00:00";
     endTimes[2] = "00:00";
@@ -98,20 +98,22 @@ function showEvent(dateStr, id) {
     endTimes[5] = "02:00";
     endTimes[6] = "00:00";
 
-    var minUsers = {};
-    minUsers[0] = "3";
-    minUsers[1] = "3";
-    minUsers[2] = "3";
-    minUsers[3] = "3";
-    minUsers[4] = "4";
-    minUsers[5] = "4";
-    minUsers[6] = "3";
+    let minUsersOfDay = {};
+    minUsersOfDay[0] = "3";
+    minUsersOfDay[1] = "3";
+    minUsersOfDay[2] = "3";
+    minUsersOfDay[3] = "3";
+    minUsersOfDay[4] = "4";
+    minUsersOfDay[5] = "4";
+    minUsersOfDay[6] = "3";
 
     let headline = "Neue Veranstaltung";
     let title = "";
     let date = dateStr;
     let time = "20:00";
     let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
+    let minUsers = minUsersOfDay[getGermanWeekDay(new Date(dateStr))];
+    let organizer = "";
     let venue = "New Force";
     let address = "Buckenhofer Weg 69, 91058 Erlangen";
     let description = "";
@@ -130,6 +132,8 @@ function showEvent(dateStr, id) {
                 date = event.date;
                 time = event.time;
                 endTime = event.end_time;
+                minUsers = event.minimum_users;
+                organizer = event.organizer;
                 venue = event.venue;
                 address = event.address;
                 description = event.description;
@@ -193,6 +197,14 @@ function showEvent(dateStr, id) {
             + '<div class="input_line">'
             + '<label for="time">Ende:</label>'
             + '<input type="time" id="end_time" name="end_time" value="' + endTime + '" required>'
+            + '</div>'
+            + '<div class="input_line">'
+            + '<label for="organizer">Verantwortlich:</label>'
+            + '<input type="text" id="organizer" name="organizer" value="' + organizer + '">'
+            + '</div>'
+            + '<div class="input_line">'
+            + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
+            + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
             + '</div>'
 
             + '<table class="userlist">'

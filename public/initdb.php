@@ -56,13 +56,17 @@ function initializeTables()
         
         type VARCHAR(255),
         title VARCHAR(255),
-        description TEXT,
-        additional_details TEXT,
         date DATE,
         time TIME,
         end_time TIME,
+        minimum_users INT UNSIGNED, 
+        
+        organizer VARCHAR(255),
+        description TEXT,
+        
         venue VARCHAR(255),
         address VARCHAR(255),
+        additional_details TEXT,
         
         auto_created BOOL,
         created_by INT UNSIGNED,
@@ -89,7 +93,7 @@ function initializeTables()
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     if ($pdo->query($createUsersTable) === TRUE) {
-        echo "Table Events created successfully";
+        echo "Table Users created successfully";
     }
     
     $createSchedulesTable = "CREATE TABLE Schedule (
@@ -161,24 +165,23 @@ function initialize()
     updateOutlineDay(9, 5, false);
     updateOutlineDay(9, 5, true);
 
-    
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-12");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-13");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-19");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-20");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-26");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     // set Andi for Fr, Sa
     updateOutlineDay(7, 4, true);
@@ -190,13 +193,16 @@ function initialize()
 
     
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-06-02");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-06-03");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2023-06-08");           
+    updateEvent($id, "Veranstaltung", "Spielmannstreiben", "Rudelgedudel", "20:00", "02:00", 4, "DomiTheWall", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Großputz", "2023-06-25");
-    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     
     updateEventSchedule(2, $id, true, true);
@@ -309,7 +315,7 @@ function addEvent($type, $title, $date)
     return $eventId;
 }
 
-function updateEvent($event_id, $type, $title, $description, $time, $end_time, $venue, $address)
+function updateEvent($event_id, $type, $title, $description, $time, $end_time, $minUsers, $organizer, $venue, $address)
 {
     // Create a connection
     $pdo = connect();
@@ -321,6 +327,8 @@ function updateEvent($event_id, $type, $title, $description, $time, $end_time, $
                 title = :title,
                 time = :time,
                 end_time = :end_time,
+                minimum_users = :minimum_users,
+                organizer = :organizer,
                 venue = :venue,
                 address = :address
             WHERE id = :id";
@@ -333,6 +341,8 @@ function updateEvent($event_id, $type, $title, $description, $time, $end_time, $
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':time', $time);
     $stmt->bindParam(':end_time', $end_time);
+    $stmt->bindParam(':minimum_users', $minUsers);
+    $stmt->bindParam(':organizer', $organizer);
     $stmt->bindParam(':venue', $venue);
     $stmt->bindParam(':address', $address);
     
