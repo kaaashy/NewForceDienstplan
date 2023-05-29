@@ -1,19 +1,7 @@
 
 
-var month = (new Date()).getMonth();
-var year = (new Date()).getFullYear();
 
-if (sessionStorage.getItem('month'))
-    month = parseInt(sessionStorage.getItem('month'));
-if (sessionStorage.getItem('year'))
-    year = parseInt(sessionStorage.getItem('year'));
-
-sessionStorage.setItem('month', month);
-sessionStorage.setItem('year', year);
-
-
-let mode = "week";
-
+let mode = "month";
 // start of the month
 var monthStart = new Date();
 monthStart.setDate(1);
@@ -53,7 +41,7 @@ function refresh() {
 
         // after querying events, rebuild calendar
         eventData = data;
-        _("#calendar").innerHTML = buildCalendarHtml(month, year);
+        _("#calendar").innerHTML = buildCalendarHtml();
 
         addEvents(data, startDate);
     });
@@ -70,7 +58,7 @@ function refresh() {
     });
 
     // build the calendar
-    _("#calendar").innerHTML = buildCalendarHtml(month, year);
+    _("#calendar").innerHTML = buildCalendarHtml();
 }
 
 refresh();
@@ -263,12 +251,9 @@ function gotoToday() {
         weekStart = getStartOfWeek(new Date());
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
-        let today = new Date();
-        month = today.getMonth();
-        year = today.getFullYear();
-
-        sessionStorage.setItem('month', month);
-        sessionStorage.setItem('year', year);
+        monthStart = new Date();
+        monthStart.setDate(1);
+        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
     }
 
     refresh();
@@ -279,14 +264,8 @@ function gotoPrevious() {
         weekStart.setDate(weekStart.getDate() - 7);
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
-        month = month - 1;
-        if (month === -1) {
-            year = year - 1;
-            month = 11;
-        }
-
-        sessionStorage.setItem('month', month);
-        sessionStorage.setItem('year', year);
+        monthStart.setMonth(monthStart.getMonth() - 1);
+        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
     }
 
     refresh();
@@ -297,14 +276,8 @@ function gotoNext() {
         weekStart.setDate(weekStart.getDate() + 7);
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
-        month = month + 1;
-        if (month === 12) {
-            year = year + 1;
-            month = 0;
-        }
-
-        sessionStorage.setItem('month', month);
-        sessionStorage.setItem('year', year);
+        monthStart.setMonth(monthStart.getMonth() + 1);
+        sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
     }
 
     refresh();
@@ -338,14 +311,14 @@ function getStartOfWeek(date) {
     return start;
 }
 
-function buildCalendarHtml(month, year) {
+function buildCalendarHtml() {
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
 
     if (mode === "week") {
-        return buildWeeklyCalendarHtml(weekStart, year);
+        return buildWeeklyCalendarHtml(weekStart);
     } else {
-        return buildMonthlyCalendarHtml(month, year);
+        return buildMonthlyCalendarHtml(monthStart);
     }
 }
 
@@ -448,14 +421,14 @@ function buildCalendarHead(month1, month2, year) {
     return html;
 }
 
-function buildMonthlyCalendarHtml(month, year) {
+function buildMonthlyCalendarHtml() {
     let html = "";
 
     // template calendar
     html = "<table>";
 
     // head
-    html += buildCalendarHead(month, month, year);
+    html += buildCalendarHead(monthStart.getMonth(), monthStart.getMonth(), monthStart.getFullYear());
 
     // body
     html += '<tbody class="days_cal">';
@@ -464,9 +437,7 @@ function buildMonthlyCalendarHtml(month, year) {
     const today = new Date();
 
     // start in 1 and this month
-    let date = new Date();
-    date.setDate(1);
-    date.setMonth(month);
+    let date = new Date(monthStart);
 
     // white zone
     for (index = 0; index < getGermanWeekDay(date); index++) {
@@ -475,35 +446,27 @@ function buildMonthlyCalendarHtml(month, year) {
 
     for (index = 0; index < 31; index++) {
         if (index < date.getDate()) {
-            week_day = getGermanWeekDay(date);
+            let weekDay = getGermanWeekDay(date);
 
-            if (week_day === 0) {
-                html += "</tr>";
-            }
+            // this day
+            let day = date.getDate();
+            let dateStr = getPaddedDateString(date);
 
-            if (week_day !== 7) {
-                // this day
-                let day = date.getDate();
-                let dateStr = year + "-" + String(month + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0');
+            if (getPaddedDateString(today) === getPaddedDateString(date)) {
+                html += '<td><div class="today calendar_day" data-id="' + dateStr + '">'
+                        + "<span>" + day + "</span>";
+            } else {
+                html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
+                        + "<span>" + day + "</span>";
 
-                if (today.getTime() === date.getTime()) {
-                    html +=
-                            '<td><div class="today calendar_day" data-id="' + dateStr + '">'
-                            + "<span>" + day + "</span>";
-                } else {
-                    html +=
-                            '<td><div class="calendar_day" data-id="' + dateStr + '">'
-                            + "<span>" + day + "</span>";
-
-                    if (today.getTime() > date.getTime()) {
-                        html += '<div class="past_day_overlay"></div>';
-                    }
+                if (today.getTime() > date.getTime()) {
+                    html += '<div class="past_day_overlay"></div>';
                 }
-
-                html += "</div></td>";
             }
 
-            if (week_day == 7) {
+            html += "</div></td>";
+
+            if (weekDay === 6) {
                 html += "</tr>";
             }
         }
