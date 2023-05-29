@@ -365,10 +365,20 @@ input.delete_event:hover {
 }
 
 tbody.days_cal .calendar_event .event_time {
-    background: none; 
-    color: white; 
-    font-size: 0.75rem;
-    line-height: 1.0rem;
+    color: #eee; 
+}
+
+tbody.days_cal .calendar_event .warning {
+    color: #ff5; 
+}
+
+tbody.days_cal .calendar_event .bad {
+    color: #f66;
+    font-weight: bold;
+}
+
+tbody.days_cal .calendar_event .good {
+    color: #5f5; 
 }
 
 tbody.days_cal .calendar_event span {

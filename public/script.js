@@ -200,7 +200,7 @@ function showEvent(dateStr, id) {
             + '</div>'
             + '<div class="input_line">'
             + '<label for="organizer">Verantwortlich:</label>'
-            + '<input type="text" id="organizer" name="organizer" value="' + organizer + '">'
+            + '<input type="text" id="organizer" name="organizer" placeholder="Verantwortlich" value="' + organizer + '">'
             + '</div>'
             + '<div class="input_line">'
             + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
@@ -229,8 +229,6 @@ function showEvent(dateStr, id) {
             + '<div class="input_line">'
             + '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">' + description + '</textarea>'
             + '</div>'
-
-
 
             + '<input type="hidden" id="id" name="id" value="' + id + '">'
             + '<div class="input_line">'
@@ -277,6 +275,26 @@ function addEvents(eventData, startDate) {
         return str.slice(0, -3);
     };
 
+    let usersOverview = function (event) {
+        let users = event.users.length;
+        let min = event.minimum_users;
+
+        let allGood = "good";
+        if (users === min - 1)
+            allGood = "warning";
+        if (users < min - 1)
+            allGood = "bad";
+
+        let html = '<span class="' + allGood + '">';
+        if (users > min)
+            html += users;
+        else
+            html += users + '/' + min;
+
+        html += ' MA</span>';
+        return html;
+    };
+
     for (let key in eventData) {
         let event = eventData[key];
 
@@ -293,7 +311,7 @@ function addEvents(eventData, startDate) {
                     + '<span class="event_title">' + event.title + '</span>'
                     + '<span class="event_time">' + readableTime(event.time)
                     + " bis " + readableTime(event.end_time) + '</span>'
-                    + '<span>' + event.users.length + ' MA</span>'
+                    + usersOverview(event)
                     + assignedUsers
                     + "</a>";
 
