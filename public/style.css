@@ -84,6 +84,23 @@ table {
     color: #85baff;
 }
 
+.week_or_month {
+    display: inline-block;
+    text-decoration: none;
+    color: #85baff;
+    font-size: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+    height: 1.5rem;
+    line-height: 1.5rem;
+}
+
+.enabled {
+    background: #e0e0e0;
+    border-radius: 5px;
+}
+
 .subhead_cal {
     background: #85baff;
     color: #fff;

@@ -1,7 +1,4 @@
 
-
-
-let mode = "month";
 // start of the month
 var monthStart = new Date();
 monthStart.setDate(1);
@@ -16,6 +13,14 @@ if (sessionStorage.getItem('weekStart'))
     weekStart = new Date(Date.parse(sessionStorage.getItem('weekStart')));
 sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
 
+const monthMode = "month";
+const weekMode = "week";
+let mode = monthMode;
+
+if (sessionStorage.getItem('mode') && mode !== sessionStorage.getItem('mode')) {
+    mode = sessionStorage.getItem('mode');
+}
+
 function refresh() {
     // declare and fill event data
     eventData = {};
@@ -23,7 +28,7 @@ function refresh() {
 
     let startDate = monthStart;
     let endDate = monthStart;
-    if (mode === "week") {
+    if (mode === weekMode) {
         startDate = weekStart;
         endDate = new Date(startDate);
         endDate.setDate(endDate.getDate() + 7);
@@ -247,7 +252,7 @@ function addEvents(eventData, startDate) {
 }
 
 function gotoToday() {
-    if (mode === "week") {
+    if (mode === weekMode) {
         weekStart = getStartOfWeek(new Date());
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
@@ -260,7 +265,7 @@ function gotoToday() {
 }
 
 function gotoPrevious() {
-    if (mode === "week") {
+    if (mode === weekMode) {
         weekStart.setDate(weekStart.getDate() - 7);
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
@@ -272,7 +277,7 @@ function gotoPrevious() {
 }
 
 function gotoNext() {
-    if (mode === "week") {
+    if (mode === weekMode) {
         weekStart.setDate(weekStart.getDate() + 7);
         sessionStorage.setItem('weekStart', getPaddedDateString(weekStart));
     } else {
@@ -280,6 +285,12 @@ function gotoNext() {
         sessionStorage.setItem('monthStart', getPaddedDateString(monthStart));
     }
 
+    refresh();
+}
+
+function setMode(newMode) {
+    mode = newMode;
+    sessionStorage.setItem('mode', mode);
     refresh();
 }
 
@@ -315,7 +326,7 @@ function buildCalendarHtml() {
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
 
-    if (mode === "week") {
+    if (mode === weekMode) {
         return buildWeeklyCalendarHtml(weekStart);
     } else {
         return buildMonthlyCalendarHtml(monthStart);
@@ -370,53 +381,9 @@ function buildWeeklyCalendarHtml(weekStart) {
         html += "</div></td>";
 
         date.setDate(date.getDate() + 1);
-    } // end for loop
+    }
 
     html += '</table>';
-
-    return html;
-}
-
-function buildCalendarHead(month1, month2, year) {
-    let html = "";
-
-    const today = new Date();
-    const weekday = getGermanWeekDay(today);
-
-    var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
-    var month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni",
-            "Juli", "August", "September", "Oktober", "November", "Dezember");
-
-    // head
-    html += "<thead>";
-    html += '<tr class="head_cal">';
-    html += '<th colspan="2"><table>';
-    html += '<th><a href="#" class="goto_today" onclick="return gotoToday();">Heute</a></th>';
-    html += '<th><a href="#" class="cycle_month" onclick="return gotoPrevious();">&lt;</a></th>';
-    html += '<th><a href="#" class="cycle_month" onclick="return gotoNext();">&gt;</a></th>';
-    html += '</table></th>';
-
-    if (month1 === month2) {
-        html += '<th colspan="3">' + month_of_year[month1] + "</th>";
-    } else {
-        html += '<th colspan="3">' + month_of_year[month1] + " - " + month_of_year[month2] + "</th>";
-    }
-
-    html += '<th colspan="2"></th>';
-    html += '</tr>';
-
-    html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
-    html += '<tr class="week_cal">';
-    for (let index = 0; index < 7; index++) {
-        if (weekday === index && (month1 === today.getMonth() || month2 === today.getMonth())) {
-            html += '<th class="week_event">' + day_of_week[index] + "</th>";
-        } else {
-            html += "<th>" + day_of_week[index] + "</th>";
-        }
-    }
-
-    html += "</tr>";
-    html += "</thead>";
 
     return html;
 }
@@ -479,4 +446,52 @@ function buildMonthlyCalendarHtml() {
     return html;
 }
 
+function buildCalendarHead(month1, month2, year) {
+    let html = "";
 
+    const today = new Date();
+    const weekday = getGermanWeekDay(today);
+
+    var day_of_week = new Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
+    var month_of_year = new Array("Januar", "Februar", "März", "April", "Mai", "Juni",
+            "Juli", "August", "September", "Oktober", "November", "Dezember");
+
+    // head
+    html += "<thead>";
+    html += '<tr class="head_cal">';
+    html += '<th colspan="2"><table>';
+    html += '<th><a href="#" class="goto_today" onclick="return gotoToday();">Heute</a></th>';
+    html += '<th><a href="#" class="cycle_month" onclick="return gotoPrevious();">&lt;</a></th>';
+    html += '<th><a href="#" class="cycle_month" onclick="return gotoNext();">&gt;</a></th>';
+    html += '</table></th>';
+
+    if (month1 === month2) {
+        html += '<th colspan="3">' + month_of_year[month1] + "</th>";
+    } else {
+        html += '<th colspan="3">' + month_of_year[month1] + " - " + month_of_year[month2] + "</th>";
+    }
+
+    let week = (mode === weekMode) ? " enabled" : " ";
+    let month = (mode === monthMode) ? " enabled" : " ";
+
+    let weekOrMonth = '<a href="#" class="week_or_month' + week + '" onclick="setMode(weekMode);">Woche <br/> </a>'
+            + '<a href="#" class="week_or_month' + month + '" onclick="setMode(monthMode);">Monat</a>';
+
+    html += '<th colspan="2">' + weekOrMonth + '</th>';
+    html += '</tr>';
+
+    html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
+    html += '<tr class="week_cal">';
+    for (let index = 0; index < 7; index++) {
+        if (weekday === index && (month1 === today.getMonth() || month2 === today.getMonth())) {
+            html += '<th class="week_event">' + day_of_week[index] + "</th>";
+        } else {
+            html += "<th>" + day_of_week[index] + "</th>";
+        }
+    }
+
+    html += "</tr>";
+    html += "</thead>";
+
+    return html;
+}
