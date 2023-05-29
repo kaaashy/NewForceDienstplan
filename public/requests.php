@@ -12,11 +12,11 @@ if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
     exit;
 }
 
-if (isset($_POST['month']) && isset($_POST['year'])) {
-    $month = $_POST['month'];
-    $year = $_POST['year'];
+if (isset($_POST['startDate']) && isset($_POST['endDate'])) {
+    $startDate = filter_input(INPUT_POST, 'startDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $endDate = filter_input(INPUT_POST, 'endDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
-    getEvents($month, $year);
+    getEvents($startDate, $endDate);
 }
 
 if (isset($_POST['users'])) {

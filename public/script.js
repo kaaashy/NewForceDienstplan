@@ -33,14 +33,29 @@ function refresh() {
     eventData = {};
     userData = {};
 
-    requestEvents(month + 1, year, function (data) {
+    let startDate = monthStart;
+    let endDate = monthStart;
+    if (mode === "week") {
+        startDate = weekStart;
+        endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + 7);
+    } else {
+        startDate = monthStart;
+        endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1);
+    }
+
+    let start = getPaddedDateString(startDate);
+    let end = getPaddedDateString(endDate);
+
+    requestEvents(start, end, function (data) {
         console.log("received events");
 
         // after querying events, rebuild calendar
         eventData = data;
         _("#calendar").innerHTML = buildCalendarHtml(month, year);
 
-        addEvents(data, month, year);
+        addEvents(data, startDate);
     });
 
     requestUsers(function (data) {
@@ -205,7 +220,7 @@ function showEvent(dateStr, id) {
     return (_("#calendar_data").innerHTML = data);
 }
 
-function addEvents(eventData, month, year) {
+function addEvents(eventData, startDate) {
 
     for (let key in eventData) {
         let event = eventData[key];
@@ -224,11 +239,9 @@ function addEvents(eventData, month, year) {
     }
 
     // add little blobs for creating a new event
-    let today = new Date();
-    for (let i = 1; i <= 31; ++i) {
-        let dateStr = year
-                + "-" + String(month + 1).padStart(2, '0')
-                + "-" + String(i).padStart(2, '0');
+    let date = new Date(startDate);
+    for (let i = 0; i <= 45; ++i) {
+        let dateStr = getPaddedDateString(date);
 
         if (_('[data-id="' + dateStr + '"]')) {
             let div = document.createElement("div");
@@ -239,6 +252,8 @@ function addEvents(eventData, month, year) {
 
             _('[data-id="' + dateStr + '"]').appendChild(div);
         }
+
+        date.setDate(date.getDate() + 1);
     }
 
 }

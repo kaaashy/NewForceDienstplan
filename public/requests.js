@@ -1,25 +1,25 @@
-/* 
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
 function sendUserOutlineScheduleDay(userId, day, active, callback) {
-                
+
     var data = 'username=' + userName;
     data = data + "&outline_schedule=y";
     data = data + "&user_id=" + userId;
     data = data + "&day=" + day;
     data = data + "&active=" + (active ? 1 : 0);
-    
+
     sendRequest(data, callback);
 }
 
-function requestEvents(month, year, callback) {
-                
+function requestEvents(start, end, callback) {
+
     var data = 'username=' + userName;
-    data = data + "&month=" + month;
-    data = data + "&year=" + year;
-    
+    data = data + "&startDate=" + start;
+    data = data + "&endDate=" + end;
+
     sendRequest(data, callback);
 }
 
@@ -29,7 +29,7 @@ function requestUsers(callback) {
     var data = 'username=' + userName;
     data += "&users=y";
 
-    sendRequest(data, callback); 
+    sendRequest(data, callback);
 }
 
 function sendRequest(data, callback) {
@@ -45,21 +45,21 @@ function sendRequest(data, callback) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     // Define the success callback function
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             // Request succeeded
-            let response = xhr.responseText.trim(); 
-                    console.log("response text: '"+response+"'");
+            let response = xhr.responseText.trim();
+            console.log("response text: '" + response + "'");
 
-            let result = response;            
+            let result = response;
             if (response !== "") {
                 try {
                     result = JSON.parse(xhr.responseText);
-                } catch(e) {
+                } catch (e) {
                     console.log(e);
                 }
             }
-            
+
             return callback(result);
         } else {
             // Request failed
@@ -68,7 +68,7 @@ function sendRequest(data, callback) {
     };
 
     // Define the error callback function
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         console.log('Request failed.');
     };
 

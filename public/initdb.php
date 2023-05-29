@@ -477,18 +477,17 @@ function checkLogin($username, $password)
     return $result;
 }
 
-function getEvents($month, $year) {    
+function getEvents($startDate, $endDate) {    
     $pdo = connect();
 
     // Retrieve the salt from the database
     $sql = "SELECT *
             FROM Events
-            WHERE MONTH(date) = :month
-            AND YEAR(date) = :year;";
+            WHERE date >= :start AND date <= :end;";
     
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':month', $month);
-    $stmt->bindValue(':year', $year);
+    $stmt->bindValue(':start', $startDate);
+    $stmt->bindValue(':end', $endDate);
     $stmt->execute();
     
     $rows = array();
