@@ -2,6 +2,9 @@ TODO:
 * Minimum-Anzahl Mitarbeiter
 * Profile
 * Warnungen bei nicht-genügend-MA im Event
+* Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein
+* User-Farben
+* Event-Farben
 * User-Rollen (admin/manager/bearbeiter/viewer)
 * User einladen
 * Email-Notifications

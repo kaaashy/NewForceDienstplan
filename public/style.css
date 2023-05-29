@@ -151,7 +151,7 @@ div.calendar_day {
     display: block;
 }
 
-div.past_day_overlay {
+.days_cal .past_day_overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -170,10 +170,11 @@ tbody.days_cal tr td {
     width: 14.28571428571429%;
     height: auto;
     background: #fff;
+    vertical-align: top;
 }
 
-tbody.days_cal tr td {
-    vertical-align: top;
+.days_cal td {
+    position: relative;
 }
 
 .event {
@@ -181,7 +182,7 @@ tbody.days_cal tr td {
     transition: all 0.1s ease;
 }
 
-.today {
+tbody.days_cal .today {
     font-weight: bold;
     transition: all 0.1s ease;
     border: 3px solid #dfdfdf;
@@ -363,6 +364,13 @@ input.delete_event:hover {
     line-height: 1rem;
 }
 
+tbody.days_cal .calendar_event .event_time {
+    background: none; 
+    color: white; 
+    font-size: 0.75rem;
+    line-height: 1.0rem;
+}
+
 tbody.days_cal .calendar_event span {
     background: none; 
     color: white; 
@@ -376,7 +384,7 @@ tbody.days_cal .calendar_event span {
     color: white; 
 }
 
-.calendar_day:hover .calendar_event_adder a {
+.days_cal td:hover .calendar_event_adder a {
     visibility: visible;
 }
 

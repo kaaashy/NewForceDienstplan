@@ -84,19 +84,28 @@ function _(s) {
     return document.querySelector(s);
 }
 
-var endTimes = {};
-endTimes[0] = "00:00";
-endTimes[1] = "00:00";
-endTimes[2] = "00:00";
-endTimes[3] = "00:00";
-endTimes[4] = "02:00";
-endTimes[5] = "02:00";
-endTimes[6] = "00:00";
-
 function showEvent(dateStr, id) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
     }
+
+    var endTimes = {};
+    endTimes[0] = "00:00";
+    endTimes[1] = "00:00";
+    endTimes[2] = "00:00";
+    endTimes[3] = "00:00";
+    endTimes[4] = "02:00";
+    endTimes[5] = "02:00";
+    endTimes[6] = "00:00";
+
+    var minUsers = {};
+    minUsers[0] = "3";
+    minUsers[1] = "3";
+    minUsers[2] = "3";
+    minUsers[3] = "3";
+    minUsers[4] = "4";
+    minUsers[5] = "4";
+    minUsers[6] = "3";
 
     let headline = "Neue Veranstaltung";
     let title = "";
@@ -185,6 +194,18 @@ function showEvent(dateStr, id) {
             + '<label for="time">Ende:</label>'
             + '<input type="time" id="end_time" name="end_time" value="' + endTime + '" required>'
             + '</div>'
+
+            + '<table class="userlist">'
+            + '<tr>'
+            + '<th>Eingetragen</th>'
+            + '<th>Existent</th>'
+            + '</tr>'
+            + '<tr>'
+            + '<td>' + eventUsers + '</td>'
+            + '<td>' + nonEventUsers + '</td>'
+            + '</tr>'
+            + '</table>'
+
             + '<div class="input_line">'
             + '<label for="venue">Ort:</label>'
             + '<input type="text" id="venue" name="venue" value="' + venue + '" placeholder="Ort">'
@@ -197,16 +218,6 @@ function showEvent(dateStr, id) {
             + '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">' + description + '</textarea>'
             + '</div>'
 
-            + '<table class="userlist">'
-            + '<tr>'
-            + '<th>Eingetragen</th>'
-            + '<th>Existent</th>'
-            + '</tr>'
-            + '<tr>'
-            + '<td>' + eventUsers + '</td>'
-            + '<td>' + nonEventUsers + '</td>'
-            + '</tr>'
-            + '</table>'
 
 
             + '<input type="hidden" id="id" name="id" value="' + id + '">'
@@ -250,6 +261,10 @@ function buildEventAssigneeOverview(event) {
 
 function addEvents(eventData, startDate) {
 
+    let readableTime = function (str) {
+        return str.slice(0, -3);
+    };
+
     for (let key in eventData) {
         let event = eventData[key];
 
@@ -264,7 +279,9 @@ function addEvents(eventData, startDate) {
             div.classList.add("calendar_event");
             div.innerHTML = '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
                     + '<span class="event_title">' + event.title + '</span>'
-                    + '<span>' + event.users.length + '</span>'
+                    + '<span class="event_time">' + readableTime(event.time)
+                    + " bis " + readableTime(event.end_time) + '</span>'
+                    + '<span>' + event.users.length + ' MA</span>'
                     + assignedUsers
                     + "</a>";
 
@@ -417,7 +434,7 @@ function buildWeeklyCalendarHtml(startDate) {
         let dateStr = getPaddedDateString(date);
 
         if (getPaddedDateString(today) === getPaddedDateString(date)) {
-            html += '<td><div class="today calendar_day" data-id="' + dateStr + '">'
+            html += '<td class="today"><div class="calendar_day" data-id="' + dateStr + '">'
                     + "<span>" + paddedDay + "." + paddedMonth + "." + "</span>";
         } else {
             html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
@@ -470,18 +487,20 @@ function buildMonthlyCalendarHtml() {
             let dateStr = getPaddedDateString(date);
 
             if (getPaddedDateString(today) === getPaddedDateString(date)) {
-                html += '<td><div class="today calendar_day" data-id="' + dateStr + '">'
+                html += '<td class="today"><div class="calendar_day" data-id="' + dateStr + '">'
                         + "<span>" + day + "</span>";
+                html += "</div>";
             } else {
                 html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
                         + "<span>" + day + "</span>";
+                html += "</div>";
 
                 if (today.getTime() > date.getTime()) {
                     html += '<div class="past_day_overlay"></div>';
                 }
             }
 
-            html += "</div></td>";
+            html += "</td>";
 
             if (weekDay === 6) {
                 html += "</tr>";
