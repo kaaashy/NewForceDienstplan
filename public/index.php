@@ -16,9 +16,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    if (checkLogin($username, $password)) {
+    list($loginCorrect, $userId) = checkLogin($username, $password);
+
+    if ($loginCorrect) {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
+        $_SESSION['user_id'] = $userId;
         
         header('Location: dienstplan.php');
         exit;

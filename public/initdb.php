@@ -466,25 +466,27 @@ function checkLogin($username, $password)
     $pdo = connect();
 
     // Retrieve the salt from the database
-    $sql = "SELECT password, salt FROM Users WHERE username = :username";
+    $sql = "SELECT password, id, salt FROM Users WHERE username = :username";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':username', $username);
     $stmt->execute();
     
-    $result = false;
+    $loginCorrect = false;
+    $id = 0;
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row)
     {
         $hashedPassword = $row["password"];
+        $id = $row["id"];
         $salt = $row["salt"];
         
         // Verify the password
         $hashedInput = hash('sha256', $password . $salt);
         
-        $result = ($hashedInput === $hashedPassword);
+        $loginCorrect = ($hashedInput === $hashedPassword);
     }
     
-    return $result;
+    return array($loginCorrect, $id);
 }
 
 function getEvents($startDate, $endDate) {    
@@ -500,6 +502,26 @@ function getEvents($startDate, $endDate) {
     $stmt->bindValue(':end', $endDate);
     $stmt->execute();
     
+    echoEvents($pdo, $stmt);
+}
+
+function getEvent($id) {    
+    $pdo = connect();
+
+    // Retrieve the salt from the database
+    $sql = "SELECT *
+            FROM Events
+            WHERE id = :id;";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $id);
+    $stmt->execute();
+    
+    echoEvents($pdo, $stmt);
+}
+
+function echoEvents($pdo, $stmt) 
+{
     $rows = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         // Retrieve the outline schedule

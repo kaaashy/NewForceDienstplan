@@ -13,10 +13,10 @@ ensureLoggedIn();
 <html>
 <head>
     <title>Mitarbeitenden-Index</title>
+    <?php jsUserId(); ?>
     <script src="requests.js" defer></script>
     <script src="users.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    <?php jsUserId(); ?>
 
 </head>
 <body>

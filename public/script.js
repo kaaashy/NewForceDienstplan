@@ -17,6 +17,9 @@ if (sessionStorage.getItem('mode') && mode !== sessionStorage.getItem('mode')) {
 var refreshCounter = 0;
 var dataReceived = 0;
 
+var currentEventId = null;
+
+
 function onEventsReceived(refresh) {
     console.log(refresh);
     console.log(refreshCounter);
@@ -79,9 +82,52 @@ function refresh() {
 
 refresh();
 
+function refreshEvent(eventId) {
+    requestEvent(eventId, function (receivedEvents) {
+        console.log("received event");
+
+        let receivedEvent = receivedEvents[0];
+
+        for (let key in eventData) {
+            let event = eventData[key];
+
+            if (event.id === receivedEvent.id) {
+                eventData[key] = receivedEvent;
+            }
+        }
+
+        showEvent(receivedEvent.date, receivedEvent.id);
+    });
+}
+
+
 // short querySelector
 function _(s) {
     return document.querySelector(s);
+}
+
+function insertIntoSchedule(userId) {
+    if (!userId) {
+        userId = loggedInUserId;
+    }
+
+    sendUserEventActivity(userId, currentEventId, true, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("insert into event " + currentEventId);
+}
+
+function removeFromSchedule(userId) {
+    if (!userId) {
+        userId = loggedInUserId;
+    }
+
+    sendUserEventActivity(userId, currentEventId, false, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("remove from event " + currentEventId);
 }
 
 function showEvent(dateStr, id) {
@@ -123,11 +169,15 @@ function showEvent(dateStr, id) {
     let nonEventUsers = "";
     let dateFlags = "required";
 
+    currentEventId = null;
+
     if (id && eventData) {
         for (let key in eventData) {
             let event = eventData[key];
 
             if (event.id === id) {
+                currentEventId = id;
+
                 title = event.title;
                 date = event.date;
                 time = event.time;
@@ -175,6 +225,14 @@ function showEvent(dateStr, id) {
 
     console.log(id);
 
+    let addRemoveButtons = "";
+    if (id !== "") {
+        addRemoveButtons += '<tr>'
+                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();">Für Dienst Eintragen</button></td>'
+                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();">Aus Dienst Austragen</button></td>'
+                + '</tr>';
+    }
+
     // template info
     let data = '<a href="#" class="hideEvent" '
             + 'onclick="return hideEvent();">&times;</a>'
@@ -216,6 +274,7 @@ function showEvent(dateStr, id) {
             + '<td>' + eventUsers + '</td>'
             + '<td>' + nonEventUsers + '</td>'
             + '</tr>'
+            + addRemoveButtons
             + '</table>'
 
             + '<div class="input_line">'

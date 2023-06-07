@@ -5,7 +5,7 @@
 
 function sendUserOutlineScheduleDay(userId, day, active, callback) {
 
-    var data = 'username=' + userName;
+    var data = 'username=' + loggedInUserName;
     data = data + "&outline_schedule=y";
     data = data + "&user_id=" + userId;
     data = data + "&day=" + day;
@@ -14,11 +14,31 @@ function sendUserOutlineScheduleDay(userId, day, active, callback) {
     sendRequest(data, callback);
 }
 
+function sendUserEventActivity(userId, eventId, active, callback) {
+
+    var data = 'username=' + loggedInUserName;
+    data = data + "&event_schedule=y";
+    data = data + "&user_id=" + userId;
+    data = data + "&event_id=" + eventId;
+    data = data + "&active=" + (active ? 1 : 0);
+
+    sendRequest(data, callback);
+}
+
 function requestEvents(start, end, callback) {
 
-    var data = 'username=' + userName;
+    var data = 'username=' + loggedInUserName;
     data = data + "&startDate=" + start;
     data = data + "&endDate=" + end;
+
+    sendRequest(data, callback);
+}
+
+function requestEvent(eventId, callback) {
+
+    var data = 'username=' + loggedInUserName;
+    data = data + "&request_event=y";
+    data = data + "&event_id=" + eventId;
 
     sendRequest(data, callback);
 }
@@ -26,7 +46,7 @@ function requestEvents(start, end, callback) {
 function requestUsers(callback) {
 
     // Set the request payload
-    var data = 'username=' + userName;
+    var data = 'username=' + loggedInUserName;
     data += "&users=y";
 
     sendRequest(data, callback);

@@ -482,3 +482,12 @@ tbody.days_cal .calendar_event span {
 .user_overview td {
     text-align: center;
 }
+
+.schedule_insert {
+    height: 2rem;
+    width: 100%;
+}
+.schedule_remove {
+    height: 2rem;
+    width: 100%;
+}
