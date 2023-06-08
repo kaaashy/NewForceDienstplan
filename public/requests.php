@@ -8,7 +8,7 @@ ini_set('display_errors', 'on');
 include 'initdb.php';
 
 if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
-    echo 'not logged in';
+    echo 'ERROR_NOT_LOGGED_IN';
     exit;
 }
 
@@ -16,7 +16,7 @@ if (isset($_POST['startDate']) && isset($_POST['endDate'])) {
     $startDate = filter_input(INPUT_POST, 'startDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $endDate = filter_input(INPUT_POST, 'endDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
-    getEvents($startDate, $endDate);
+    respondEvents($startDate, $endDate);
     return;
 }
 
@@ -24,13 +24,13 @@ if (isset($_POST['request_event'])) {
     $id = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
     
     if ($id) {
-        getEvent($id);
+        respondEvent($id);
         return;
     }
 }
 
 if (isset($_POST['users'])) {
-    getUsers();
+    respondUsers();
     return;
 }
 
@@ -47,7 +47,16 @@ if (isset($_POST['event_schedule'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
     $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
-    $deliberate = true; 
+    $deliberate = true;
+    
+    if (!$active) {
+        $users = getNumUsersAtEvent($eventId);
+        $minUsers = getMinUsersAtEvent($eventId);
+        if ($users <= $minUsers) {
+            echo 'ERROR_NOT_ENOUGH_USERS';
+            return;
+        }
+    }
     
     updateEventSchedule($userId, $eventId, $deliberate, $active);
     return;

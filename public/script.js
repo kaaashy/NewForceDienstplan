@@ -162,6 +162,7 @@ function showEvent(dateStr, id) {
     let date = dateStr;
     let time = "20:00";
     let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
+    let users = 0;
     let minUsers = minUsersOfDay[getGermanWeekDay(new Date(dateStr))];
     let organizer = "";
     let venue = "New Force";
@@ -172,6 +173,7 @@ function showEvent(dateStr, id) {
     let eventUsers = "";
     let nonEventUsers = "";
     let dateFlags = "required";
+    let selfInUserList = false;
 
     currentEventId = null;
 
@@ -186,6 +188,7 @@ function showEvent(dateStr, id) {
                 date = event.date;
                 time = event.time;
                 endTime = event.end_time;
+                users = event.users.length;
                 minUsers = event.minimum_users;
                 organizer = event.organizer;
                 venue = event.venue;
@@ -205,6 +208,9 @@ function showEvent(dateStr, id) {
                     let eventUser = event.users[i];
                     let user = userData[eventUser.user_id];
                     remainingUsers.delete(eventUser.user_id);
+
+                    if (eventUser.user_id === loggedInUserId)
+                        selfInUserList = true;
 
                     if (user) {
                         if (eventUser.deliberate) {
@@ -231,9 +237,18 @@ function showEvent(dateStr, id) {
 
     let addRemoveButtons = "";
     if (id !== "") {
+
+        let addDisabled = "";
+        if (selfInUserList)
+            addDisabled = "disabled";
+
+        let removeDisabled = "";
+        if (!selfInUserList || users <= minUsers)
+            removeDisabled = "disabled";
+
         addRemoveButtons += '<tr>'
-                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();">Für Dienst Eintragen</button></td>'
-                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();">Aus Dienst Austragen</button></td>'
+                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();"' + addDisabled + '>Für Dienst Eintragen</button></td>'
+                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();"' + removeDisabled + '>Aus Dienst Austragen</button></td>'
                 + '</tr>';
     }
 

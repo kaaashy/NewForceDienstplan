@@ -1,20 +1,19 @@
 TODO: 
-* MA können sich selbst bei Events ein- und austragen
-* Manager können MA ein- und austragen
-** Email-Notification bei Eintragung?
 * Profile
 * Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
 * Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein
-* User-Farben
-* Event-Farben
-* Bei löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
+* Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
 * User-Rollen (admin/manager/bearbeiter/viewer)
+* Manager können MA ein- und austragen
+** Email-Notification bei Eintragung?
 * User einladen
 * Email-Notifications
 * User deaktivieren
 * User ausblenden
 * User aus Veranstaltungen entfernen
 * Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
+* User-Farben
+* Event-Farben
 * Hübsches CSS für Profile
 * Hübsches CSS für Admin-Bereich
 * Mehrtägige Events?
@@ -22,6 +21,8 @@ TODO:
 * Event Automatisch erstellt? 
 
 DONE: 
+* Kein Austragen wenn Min-MA unterschritten würde
+* MA können sich selbst bei Events ein- und austragen
 * Warnungen bei nicht-genügend-MA im Event
 * Minimum-Anzahl Mitarbeiter
 * Übersicht über alle MA bei Veranstaltungen in Wochenansicht
@@ -39,6 +40,6 @@ DONE:
 * Kalenderansicht
 
 Offene Fragen: 
-* Bei Rahmendienstplan: Ist der Vorgang "Aktiv Eintragen" oder "Aktiv Austragen"?
+* Bei Rahmendienstplan: Ist der Vorgang "Aktiv Eintragen" oder "Aktiv Austragen"? -> Aktiv austragen
 * Ansichten: Was wird wie benötigt?
 

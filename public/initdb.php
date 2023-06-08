@@ -489,7 +489,41 @@ function checkLogin($username, $password)
     return array($loginCorrect, $id);
 }
 
-function getEvents($startDate, $endDate) {    
+function getNumUsersAtEvent($eventId) 
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT COUNT(*) as row_count
+            FROM Schedule
+            WHERE event_id = :event_id;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("event_id", $eventId);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row['row_count'];
+}
+
+function getMinUsersAtEvent($eventId) 
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT minimum_users
+            FROM Events
+            WHERE id = :event_id;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("event_id", $eventId);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row['minimum_users'];
+}
+
+function respondEvents($startDate, $endDate) {    
     $pdo = connect();
 
     // Retrieve the salt from the database
@@ -505,7 +539,7 @@ function getEvents($startDate, $endDate) {
     echoEvents($pdo, $stmt);
 }
 
-function getEvent($id) {    
+function respondEvent($id) {    
     $pdo = connect();
 
     // Retrieve the salt from the database
@@ -544,7 +578,7 @@ function echoEvents($pdo, $stmt)
     echo json_encode($rows);
 }
 
-function getUsers() {    
+function respondUsers() {    
     $pdo = connect();
 
     // Retrieve the data from the database
