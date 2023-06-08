@@ -96,6 +96,10 @@ function refreshEvent(eventId) {
             }
         }
 
+        let element = _('[data-id="' + receivedEvent.id + '"]');
+        if (element)
+            element.innerHTML = buildCalendarEventHtml(receivedEvent);
+
         showEvent(receivedEvent.date, receivedEvent.id);
     });
 }
@@ -328,7 +332,7 @@ function buildEventAssigneeOverview(event) {
     return html;
 }
 
-function addEvents(eventData, startDate) {
+function buildCalendarEventHtml(event) {
 
     let readableTime = function (str) {
         return str.slice(0, -3);
@@ -354,25 +358,33 @@ function addEvents(eventData, startDate) {
         return html;
     };
 
+    let assignedUsers = "";
+    if (mode === weekMode)
+        assignedUsers = buildEventAssigneeOverview(event);
+
+    return '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
+            + '<span class="event_title">' + event.title + '</span>'
+            + '<span class="event_time">' + readableTime(event.time)
+            + " bis " + readableTime(event.end_time) + '</span>'
+            + usersOverview(event)
+            + assignedUsers
+            + "</a>";
+
+}
+
+function addEvents(eventData, startDate) {
+
     for (let key in eventData) {
         let event = eventData[key];
 
         // if has event add class
         if (_('[data-id="' + event.date + '"]')) {
 
-            let assignedUsers = "";
-            if (mode === weekMode)
-                assignedUsers = buildEventAssigneeOverview(event);
-
             let div = document.createElement("div");
             div.classList.add("calendar_event");
-            div.innerHTML = '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
-                    + '<span class="event_title">' + event.title + '</span>'
-                    + '<span class="event_time">' + readableTime(event.time)
-                    + " bis " + readableTime(event.end_time) + '</span>'
-                    + usersOverview(event)
-                    + assignedUsers
-                    + "</a>";
+            div.setAttribute("data-id", event.id);
+
+            div.innerHTML = buildCalendarEventHtml(event);
 
             _('[data-id="' + event.date + '"]').appendChild(div);
         }
