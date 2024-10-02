@@ -247,8 +247,8 @@ function showEvent(dateStr, id) {
             removeDisabled = "disabled";
 
         addRemoveButtons += '<tr>'
-                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();"' + addDisabled + '>Für Dienst Eintragen</button></td>'
-                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();"' + removeDisabled + '>Aus Dienst Austragen</button></td>'
+                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();"' + addDisabled + '>Mich Eintragen</button></td>'
+                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();"' + removeDisabled + '>Mich Austragen</button></td>'
                 + '</tr>';
     }
 
@@ -263,7 +263,7 @@ function showEvent(dateStr, id) {
             + '<table class="userlist">'
             + '<tr>'
             + '<th>Eingetragen</th>'
-            + '<th>Rest</th>'
+            + '<th>Verfügbar</th>'
             + '</tr>'
             + '<tr>'
             + '<td>' + eventUsers + '</td>'
