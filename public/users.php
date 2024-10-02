@@ -22,7 +22,7 @@ ensureLoggedIn();
 </head>
 <body>
     <div class="narrowwrapper">
-        <div id="user_index"> </div>
+        <div id="user_index" class="info_page"> </div>
     </div>
 </body>
 </html>

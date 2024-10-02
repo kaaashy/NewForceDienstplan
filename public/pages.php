@@ -22,4 +22,11 @@ function jsUserId()
     echo "</script>";
 }
 
+function jsErrorMessage($errorMessage)
+{
+    echo "<script>";
+    echo "var phpError = " . json_encode($errorMessage) . ";";
+    echo "</script>";
+}
+
 ?>

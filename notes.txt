@@ -1,5 +1,6 @@
 TODO: 
 * Profile
+* Passwort-Reset
 * Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
 * Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
 * Bug: Veranstaltungen mit "" MA gehen kaputt & machen den Kalender kaputt
@@ -45,7 +46,10 @@ TODO:
 * Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
 
 
-
+Fragen: 
+* Security: Passwort-Sicherheit checken? 
+* Wie soll die Registrierung ablaufen? 
+* Emails verschicken? 
 
 
 Mitarbeiterrechte lt Oli

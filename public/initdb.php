@@ -89,11 +89,42 @@ function initializeTables()
         last_name VARCHAR(50),
         email VARCHAR(255),
 
+        role INT,
+
         creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     if ($pdo->query($createUsersTable) === TRUE) {
         echo "Table Users created successfully";
+    }
+    
+    $createRolesTable = "CREATE TABLE Roles (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        
+        name VARCHAR(50) NOT NULL,
+
+        change_own_outline_schedule BOOL,
+        change_own_schedule BOOL,
+        change_own_profile BOOL,
+        
+        manage_events BOOL,
+        change_event_description BOOL,
+
+        manage_users BOOL,
+        manage_roles BOOL,
+        
+        change_other_outline_schedule BOOL,
+        change_other_schedule BOOL,
+        change_other_profile BOOL,
+
+        manage_database BOOL,
+        view_as_others BOOL,
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createRolesTable) === TRUE) {
+        echo "Table Roles created successfully";
     }
     
     $createSchedulesTable = "CREATE TABLE Schedule (
@@ -404,6 +435,7 @@ function updateOutlineDay($userId, $day, $active)
             WHERE user_id = :user_id AND event_id = :event_id AND deliberate = false;";
     }
     
+    
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $stmt2 = $pdo->prepare($sql);
         $stmt2->bindValue(":user_id", $userId);
@@ -444,6 +476,66 @@ function updateEventSchedule($userId, $eventId, $deliberate, $active)
     }
 }
 
+function updateUserPassword($username, $new_password)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Users
+            SET password = :password,
+                salt = :salt
+            WHERE username = :username";
+
+    // Generate a salt
+    $salt = generateSalt();
+    // Hash the password with the salt
+    $hashedPassword = hash('sha256', $new_password . $salt);
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':password', $hashedPassword);
+    $stmt->bindValue(':salt', $salt);
+    $stmt->execute();
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User password updated successfully.";
+    } else {
+        echo "Error updating user password.";
+    }
+}
+
+function updateUserProfileData($username, $display_name, $first_name, $last_name, $email)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Users
+            SET display_name = :display_name,
+                first_name = :first_name,
+                last_name = :last_name,
+                email = :email
+            WHERE username = :username";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':display_name', $display_name);
+    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':first_name', $first_name);
+    $stmt->bindValue(':last_name', $last_name);
+    $stmt->execute();
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User updated successfully.";
+    } else {
+        echo "Error updating user.";
+    }
+}
 
 function deleteEvent($id)
 {

@@ -121,14 +121,26 @@ function buildIndexHtml()
     html += makeElement("email", "text", "Email", user.email, "required");
     html += '<tr class="spacer-row"></tr>';
 
-    html += makeElement("new_password", "password", "Neues Passwort", "");
+    html += '<tr>';
+    html += '<td><label for="new_password">Neues Passwort:</label></td>';
+    html += '<td><input type="password" id="new_password" name="new_password" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}" title="Must contain at least one lowercase letter, one uppercase letter, and one number. Minimum length: 8 characters."></td>';
+
+    //html += makeElement("new_password", "password", "Neues Passwort", "");
     html += makeElement("new_password_repeat", "password", "Passwort Wiederholen", "");
     html += '<tr class="spacer-row"></tr>';
 
     html += makeElement("password", "password", "Aktuelles Passwort zur Bestätigung", "");
 
+
     html += '</table>';
-    html += '<input type="submit" name="updateuserprofile" value="Speichern">';
+
+    if (typeof phpError !== 'undefined' && phpError !== "") {
+        html += '<div class="error-box">';
+        html += '<p>' + phpError + '</p>';
+        html += '</div>';
+    }
+
+    html += '<input type="submit" name="update_userprofile" value="Speichern">';
     html += '</form>';
 
 

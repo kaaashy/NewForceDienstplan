@@ -473,7 +473,7 @@ tbody.days_cal .calendar_event span {
     background: #666 !important; /* hehe */
 }
 
-#user_index {
+.info_page {
     padding: 1rem;
 }
 
@@ -528,4 +528,15 @@ tr.spacer-row {
 
 .link-container a:last-child {
   margin-right: 0; /* Remove right margin from the last link */
+}
+
+.error-box {
+  color: #d71008;
+  background-color: #f0d0c8; /* Red background color */
+  border: 2px solid #e74c3c; /* Darker red border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 15px; /* Font size */
+  margin: 10px 0; /* Add some margin for spacing */
+  padding-left: 15px;
+  padding-right: 15px;
 }
