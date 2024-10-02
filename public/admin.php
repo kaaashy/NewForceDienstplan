@@ -38,11 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Dienstplan NewForce</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php jsUserId(); ?>
+    <script src="utility.js" ></script>
 </head>
 <body>
     <div class="narrowwrapper">
         <div class="info_page">
-        
+            <script > document.write(buildNavHtml()); </script>
             <h1>Dev Maintenance</h1>
 
             <h2>Mitarbeitende Anlegen</h2>
