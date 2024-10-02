@@ -1,49 +1,54 @@
-TODO: 
-* Profile
-* Passwort-Reset
-* Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
+TODO:  
+Core Functionality ########################
 * Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
 * Bug: Veranstaltungen mit "" MA gehen kaputt & machen den Kalender kaputt
 * Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
-* Flag für Admin, dass er nicht angezeigt wird im Dienstplan und Rahmendienstplan
-* User-Rollen (admin/manager/bearbeiter/viewer)
-* USER können: 
-** Kalender einsehen
-** Eigenes Profil einsehen & bearbeiten
-** Rahmendienstplan & Übersicht einsehen
-** Rahmendienstplan für sich selbst ändern
-** Sich selbst in Veranstaltungen ein- und austragen
-* BEARBEITER können: 
-** Veranstaltungen erstellen & verwalten
-* MANAGER können:
-** Alle MA ein- und austragen
-*** Email-Notification bei Eintragung?
-** Neue MA einladen
-** Profile anderer Nutzer bearbeiten
-** Rahmendienstplan anderer Nutzer bearbeiten
-** Nutzer deaktivieren
-** Nutzer verstecken/anzeigen
-** Rechte verwalten
-* ADMINs können: 
-** Datenbank verwalten
-** Als andere Nutzer betrachten
+
+User Management ########################
 * User einladen
-* Email-Notifications
+* Email-Notifications 
 * User deaktivieren
 * User ausblenden
 * User aus Veranstaltungen entfernen
-* User-Farben
-* Event-Farben
+* Passwort-Reset
+
+User-Rechte (admin/manager/bearbeiter/viewer) ########################
+* Ein-/Austragen bei Veranstaltungen (Alle)
+* Eigenes Profil & Rahmendienstplan bearbeiten (Alle)
+* Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
+* Andere MA ein-/austragen bei Veranstaltungen (Dienstplan-Manager)
+* Als andere MA einloggen (Dienstplan-Manager, Vorstand?)
+* MA verwalten (anlegen/einladen, deaktivieren, Rechte verwalten) (Dienstplan-Manager, Vorstand?)
+* Datenbank-Infos & Technisches verwalten (Admin)
+
+Sperrungen ########################
 * Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
 * Dienstplan/Woche/Veranstaltung sperren
+
+Übersichten ########################
 * Export für Posting in MatterMost
 * Übersicht über wer hat diese Woche/Monat wie viele Dienste gemacht
+* Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
+
+Doku ########################
+* Wie installieren? 
+* Wo/Was Code?
+* Wie konfigurieren? 
+* Welche Versionen von welcher Software sind nötig?
+* Wie pflegen?
+
+Aufhübschen ########################
 * Hübsches CSS für Profile
 * Hübsches CSS für Admin-Bereich
+* User-Farben
+* Event-Farben
+
+Unklar ########################
 * Mehrtägige Events?
 * Events automatisch einfügen? 
 * Event Automatisch erstellt? 
-* Stats (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
+* Hintergrund-Infos (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
+* Dienst-Statistiken (wer hat wie oft Dienst gemacht?)
 
 
 Fragen: 
@@ -64,6 +69,7 @@ Montag Morgen, Wer ist wo, wie könnte es passen, sodass keine Doppeldienste pas
 
 
 DONE: 
+* Profile 
 * Kein Austragen wenn Min-MA unterschritten würde
 * MA können sich selbst bei Events ein- und austragen
 * Warnungen bei nicht-genügend-MA im Event
