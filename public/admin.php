@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Dev Maintenance</h1>
     
-    <h2>Neue Mitarbeiter*in Anlegen</h2>
+    <h2>Mitarbeitende Anlegen</h2>
     <form method="POST" action="">
         <div>
             <label for="username">Name:</label>
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="submit" name="createuser" value="Anlegen">
     </form>
 
-    <h2>Mitarbeiter*in Löschen</h2>
+    <h2>Mitarbeitende Löschen</h2>
     <form method="POST" action="">
         <div>
             <label for="username">Name:</label>

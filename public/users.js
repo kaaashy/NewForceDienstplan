@@ -47,7 +47,7 @@ function buildIndexHtml()
 {
     let html = "";
 
-    html += '<a href="dienstplan.php"> &lt;&lt; Zurück zur Übersicht</a>';
+    html += buildNavHtml();
 
     html += '<h2>Rahmendienstplan</h2>';
     html += '<table class="outline_schedule">';
@@ -107,7 +107,7 @@ function buildIndexHtml()
 
         html += '<tr>';
         html += '<td>' + id + '</td>';
-        html += '<td>' + toDisplay(user.display_name) + '</td>';
+        html += '<td>' + toDisplay(user.username) + '</td>';
         html += '<td>' + toDisplay(user.display_name) + '</td>';
         html += '<td>' + toDisplay(user.first_name) + '</td>';
         html += '<td>' + toDisplay(user.last_name) + '</td>';

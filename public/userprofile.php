@@ -1,3 +1,4 @@
+
 <?php
 
 session_start(); 
@@ -12,11 +13,11 @@ ensureLoggedIn();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mitarbeitenden-Index</title>
+    <title>Mein Profil</title>
     <?php jsUserId(); ?>
     <script src="utility.js" defer></script>
     <script src="requests.js" defer></script>
-    <script src="users.js" defer></script>
+    <script src="userprofile.js" defer></script>
     <link rel="stylesheet" href="style.css">
 
 </head>

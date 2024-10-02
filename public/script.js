@@ -259,6 +259,19 @@ function showEvent(dateStr, id) {
 
             + '<div class="create_event_wrapper">'
             + '<form method="POST" action="">'
+
+            + '<table class="userlist">'
+            + '<tr>'
+            + '<th>Eingetragen</th>'
+            + '<th>Rest</th>'
+            + '</tr>'
+            + '<tr>'
+            + '<td>' + eventUsers + '</td>'
+            + '<td>' + nonEventUsers + '</td>'
+            + '</tr>'
+            + addRemoveButtons
+            + '</table>'
+
             + '<div class="input_line">'
             + '<label for="title">Titel:</label>'
             + '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="' + title + '" required>'
@@ -284,17 +297,6 @@ function showEvent(dateStr, id) {
             + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
             + '</div>'
 
-            + '<table class="userlist">'
-            + '<tr>'
-            + '<th>Eingetragen</th>'
-            + '<th>Existent</th>'
-            + '</tr>'
-            + '<tr>'
-            + '<td>' + eventUsers + '</td>'
-            + '<td>' + nonEventUsers + '</td>'
-            + '</tr>'
-            + addRemoveButtons
-            + '</table>'
 
             + '<div class="input_line">'
             + '<label for="venue">Ort:</label>'
@@ -350,6 +352,9 @@ function buildEventAssigneeOverview(event) {
 function buildCalendarEventHtml(event) {
 
     let readableTime = function (str) {
+        if (!str)
+            return "";
+
         return str.slice(0, -3);
     };
 
@@ -519,8 +524,10 @@ function buildCalendarHtml() {
 function buildWeeklyCalendarHtml(startDate) {
     let html = "";
 
+    html += buildNavHtml();
+
     // template calendar
-    html = "<table>";
+    html += "<table>";
 
     let weekEnding = new Date(startDate);
     weekEnding.setDate(weekEnding.getDate() + 6);
@@ -528,7 +535,6 @@ function buildWeeklyCalendarHtml(startDate) {
 
     // body
     html += '<tbody class="days_cal">';
-    html += "</tr>";
 
     const today = new Date();
 
@@ -575,14 +581,15 @@ function buildMonthlyCalendarHtml() {
     let html = "";
 
     // template calendar
-    html = "<table>";
+    html += "<table>";
+
+    html += buildNavHtml();
 
     // head
     html += buildCalendarHead(startDate.getMonth(), startDate.getMonth(), startDate.getFullYear());
 
     // body
     html += '<tbody class="days_cal">';
-    html += "</tr>";
 
     const today = new Date();
 

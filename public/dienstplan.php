@@ -54,14 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php jsUserId(); ?>
+    <script src="utility.js" defer></script>
     <script src="requests.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
-    <a href="admin.php">Admin</a>
-    <a href="users.php">Mitarbeitenden-Index</a>
       
-    <div class="wrapper">
+    <div class="widewrapper">
         <div id="calendar"></div>
         <div id="calendar_data"></div>
     </div>
