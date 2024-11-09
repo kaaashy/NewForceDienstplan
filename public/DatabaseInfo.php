@@ -38,7 +38,7 @@ function makePHPMail()
     $mail->Port = 465;
 
     // from
-    $mail->setFrom('dienstplan@newforce.de', 'Dienstplaner vom Force');
+    $mail->setFrom('dienstplan@newforce.de', 'New Force Dienstplaner');
 
     return $mail;
 }

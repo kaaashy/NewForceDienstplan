@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Dev Maintenance</h1>
 
             <h2>Mitarbeitende Anlegen</h2>
+            <p> Für existierende Mitarbeitende: Setzt Passwort zurück und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
             <form method="POST" action="">
                 <div>
                     <label for="username">Name:</label>
@@ -134,16 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" name="logout" value="Ausloggen"></input>
             </form>
 
-            <h2>Auf Werkseinstellungen Zurücksetzen</h2>
-            <form method="POST" action="">
-                <!-- Form 1 fields -->
-                <input type="submit" name="reinit_everything" value="Auf Werkseinstellungen zurücksetzen"></input>
-            </form>
-
             <h2>Testmail</h2>
             <form method="POST" action="">
                 <!-- Form 1 fields -->
                 <input type="submit" name="send_testmail" value="Test-Email verschicken"></input>
+            </form>
+
+            <h2>Auf Werkseinstellungen Zurücksetzen</h2>
+            <form method="POST" action="">
+                <!-- Form 1 fields -->
+                <input type="submit" name="reinit_everything" value="Auf Werkseinstellungen zurücksetzen"></input>
             </form>
 
         </div>
