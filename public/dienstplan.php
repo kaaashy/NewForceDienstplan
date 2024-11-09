@@ -28,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $venue = filter_input(INPUT_POST, 'venue');
         $address = filter_input(INPUT_POST, 'address');
         $id = filter_input(INPUT_POST, 'id');
-               
+        
+        $minUsers = filter_var($minUsers, FILTER_SANITIZE_NUMBER_INT);
+        if (!filter_var($minUsers, FILTER_VALIDATE_INT))
+            $minUsers = 0;
+        
         if (!$id && $date)
             $id = addEvent($type, $title, $date);
         
