@@ -4,7 +4,6 @@ TODO:
 * Bug: Ansicht ist manchmal kaputt und zeigt wenige oder keine Tage
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
-* Monatsübersicht: Tage von Wochen auch anzeigen, wenn sie streng genommen nicht zum Monat gehören
 * Unterschiedliche Formulare für Eintragen / Veranstaltung erstellen
 
 
@@ -89,6 +88,7 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Monatsübersicht: Tage von Wochen auch anzeigen, wenn sie streng genommen nicht zum Monat gehören
 * Leute alphabetisch listen
 * Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
 * Profile 

@@ -637,6 +637,8 @@ function buildMonthlyCalendarHtml() {
     // head
     html += buildCalendarHead(startDate.getMonth(), startDate.getMonth(), startDate.getFullYear());
 
+    let displayedMonth = startDate.getMonth();
+
     // body
     html += '<tbody class="days_cal">';
 
@@ -645,42 +647,58 @@ function buildMonthlyCalendarHtml() {
     // start in 1 and this month
     let date = new Date(startDate);
 
-    // white zone
-    for (index = 0; index < getGermanWeekDay(date); index++) {
-        html += '<td class="white_cal"> </td>';
+    for (i = 0; i < 7; ++i)
+    {
+        if (getGermanWeekDay(date) === 0)
+            break;
+
+        date.setDate(date.getDate()-1);
     }
 
-    for (index = 0; index < 31; index++) {
-        if (index < date.getDate()) {
-            let weekDay = getGermanWeekDay(date);
+    let endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth()+1);
 
-            // this day
-            let day = date.getDate();
-            let dateStr = getPaddedDateString(date);
+    for (i = 0; i < 7; ++i)
+    {
+        if (getGermanWeekDay(endDate) === 0)
+            break;
 
-            if (getPaddedDateString(today) === getPaddedDateString(date)) {
-                html += '<td class="today"><div class="calendar_day" data-id="' + dateStr + '">'
-                        + "<span>" + day + "</span>";
-                html += "</div>";
-            } else {
-                html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
-                        + "<span>" + day + "</span>";
-                html += "</div>";
+        endDate.setDate(endDate.getDate()+1);
+    }
 
-                if (today.getTime() > date.getTime()) {
-                    html += '<div class="past_day_overlay"></div>';
-                }
-            }
+    for (i = 0; i < 42; i++) {
+        if (date.getTime() >= endDate.getTime())
+            break;
 
-            html += "</td>";
+        let weekDay = getGermanWeekDay(date);
 
-            if (weekDay === 6) {
-                html += "</tr>";
+        // this day
+        let day = date.getDate();
+        let dateStr = getPaddedDateString(date);
+
+        if (getPaddedDateString(today) === getPaddedDateString(date)) {
+            html += '<td class="today"><div class="calendar_day" data-id="' + dateStr + '">'
+                    + "<span>" + day + "</span>";
+            html += "</div>";
+        } else {
+            html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
+                    + "<span>" + day + "</span>";
+            html += "</div>";
+
+            if (today.getTime() > date.getTime()
+                    || date.getMonth() != displayedMonth) {
+                html += '<div class="past_day_overlay"></div>';
             }
         }
 
+        html += "</td>";
+
+        if (weekDay === 6) {
+            html += "</tr>";
+        }
+
         date.setDate(date.getDate() + 1);
-    } // end for loop
+    }
 
     html += "</table>";
 
