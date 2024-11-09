@@ -68,8 +68,21 @@ function buildIndexHtml()
         return '<input type="checkbox" id="outline_check_' + id + '_' + day + '" onclick=setOutlineForUser(' + id + ',' + day + ') ' + v + '>';
     };
 
+    let sorted = [];
     for (let id in userData) {
-        let user = userData[id];
+        sorted.push(userData[id]);
+    }
+
+    sorted.sort(function (a, b) {
+        let nameA = a.display_name;
+        let nameB = b.display_name;
+
+        return nameA.localeCompare(nameB);
+    });
+
+    for (const i in sorted) {
+        let user = sorted[i];
+        let id = user.id;
 
         html += '<tr>';
         html += '<td>' + user.display_name + '</td>';
@@ -89,10 +102,10 @@ function buildIndexHtml()
     html += '<table class="user_overview">';
     html += '<tr>';
     html += '<th>Id</th>';
-    html += '<th>Username</th>';
     html += '<th>Anzeigename</th>';
     html += '<th>Vorname</th>';
     html += '<th>Nachname</th>';
+    html += '<th>Username</th>';
     html += '<th>Email</th>';
     html += '</tr>';
 
@@ -102,15 +115,16 @@ function buildIndexHtml()
         return "-";
     };
 
-    for (let id in userData) {
-        let user = userData[id];
+    for (const i in sorted) {
+        let user = sorted[i];
+        let id = user.id;
 
         html += '<tr>';
         html += '<td>' + id + '</td>';
-        html += '<td>' + toDisplay(user.username) + '</td>';
         html += '<td>' + toDisplay(user.display_name) + '</td>';
         html += '<td>' + toDisplay(user.first_name) + '</td>';
         html += '<td>' + toDisplay(user.last_name) + '</td>';
+        html += '<td>' + toDisplay(user.username) + '</td>';
         html += '<td>' + toDisplay(user.email) + '</td>';
         html += '</tr>';
     }

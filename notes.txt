@@ -1,10 +1,14 @@
 TODO:  
-Core Functionality ########################
+### Core Functionality ########################
 * Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
-* Bug: Veranstaltungen mit "" MA gehen kaputt & machen den Kalender kaputt
+* Bug: Ansicht ist manchmal kaputt und zeigt wenige oder keine Tage
+* Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
+* Monatsübersicht: Tage von Wochen auch anzeigen, wenn sie streng genommen nicht zum Monat gehören
+* Unterschiedliche Formulare für Eintragen / Veranstaltung erstellen
 
-User Management ########################
+
+### User Management ########################
 * User einladen
 * Email-Notifications 
 * User deaktivieren
@@ -12,38 +16,47 @@ User Management ########################
 * User aus Veranstaltungen entfernen
 * Passwort-Reset
 
-User-Rechte (admin/manager/bearbeiter/viewer) ########################
+### User-Rechte (admin/manager/bearbeiter/viewer) ########################
 * Ein-/Austragen bei Veranstaltungen (Alle)
 * Eigenes Profil & Rahmendienstplan bearbeiten (Alle)
+* Statistiken einsehen (Dienstplan-Manager)
 * Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
 * Andere MA ein-/austragen bei Veranstaltungen (Dienstplan-Manager)
 * Als andere MA einloggen (Dienstplan-Manager, Vorstand?)
 * MA verwalten (anlegen/einladen, deaktivieren, Rechte verwalten) (Dienstplan-Manager, Vorstand?)
 * Datenbank-Infos & Technisches verwalten (Admin)
 
-Sperrungen ########################
+### Mobile-Version ########################
+* Exakte Details bisher unklar, muss aber vollständig über Mobile benutzbar sein
+
+### Sperrungen ########################
 * Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
 * Dienstplan/Woche/Veranstaltung sperren
 
-Übersichten ########################
-* Export für Posting in MatterMost
-* Übersicht über wer hat diese Woche/Monat wie viele Dienste gemacht
-* Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
+### Putzdienst ########################
+* Lösung für Putzdienst finden - eigene Veranstaltung?
 
-Doku ########################
+### Übersichten ########################
+* Export für Posting in MatterMost, Senden via Email (html)
+* Übersicht über wer hat wie viele Dienste gemacht (letzte 1-12 Monate, inklusive Wochentage Auflistung)
+* Doppeldienste hervorheben
+
+### Doku ########################
 * Wie installieren? 
 * Wo/Was Code?
 * Wie konfigurieren? 
 * Welche Versionen von welcher Software sind nötig?
 * Wie pflegen?
 
-Aufhübschen ########################
+### Aufhübschen ########################
 * Hübsches CSS für Profile
 * Hübsches CSS für Admin-Bereich
 * User-Farben
 * Event-Farben
+* Events copy-pasten (evtl. button für Daten kopieren/einfügen)
 
-Unklar ########################
+
+### Unklar ########################
 * Mehrtägige Events?
 * Events automatisch einfügen? 
 * Event Automatisch erstellt? 
@@ -51,24 +64,33 @@ Unklar ########################
 * Dienst-Statistiken (wer hat wie oft Dienst gemacht?)
 
 
-Fragen: 
-* Security: Passwort-Sicherheit checken? 
+### Fragen: ########################
+* Security: Passwort-Sicherheit checken?
 * Wie soll die Registrierung ablaufen? 
-* Emails verschicken? 
+** Ich nehme an eine Art Admin/Manager legt neue User an und die bekommen einen Login-Link per Mail oder ähnliches?
+* Emails verschicken?
 
 
 Mitarbeiterrechte lt Oli
 - Ein- und Austragen
 - Veranstaltungsrechte
 
+Vorschläge: 
+- Trennung von Ansichten "ich will mich nur ein/austragen" vs. "ich kann bearbeiten"
+- Beschreibung in Wochenansicht mit anzeigen
+- MA-Übersicht alphabetisch
+- MA deaktivieren, nicht löschen
+
+
+
 Vorgehen: 
-
 Montag Morgen, Wer ist wo, wie könnte es passen, sodass keine Doppeldienste passieren.
-
-
-
+Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
+Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Leute alphabetisch listen
+* Veranstaltungen, an denen man selbst eingetragen ist, hervorheben
 * Profile 
 * Kein Austragen wenn Min-MA unterschritten würde
 * MA können sich selbst bei Events ein- und austragen
@@ -87,6 +109,7 @@ DONE:
 * Logins
 * Admin-Bereich
 * Kalenderansicht
+* Bug: Veranstaltungen mit "" MA gehen kaputt & machen den Kalender kaputt
 
 Offene Fragen: 
 * Bei Rahmendienstplan: Ist der Vorgang "Aktiv Eintragen" oder "Aktiv Austragen"? -> Aktiv austragen

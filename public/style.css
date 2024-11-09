@@ -336,6 +336,7 @@ input.delete_event:hover {
     font-size: 0.75rem;
     color: white;
     border: none;
+    font-weight: bold;
 }
 
 .event_user {
@@ -350,9 +351,9 @@ input.delete_event:hover {
     text-decoration: none;
     font-family: sans-serif;
     
-    background: #aaa; 
+    background: #666; 
     font-size: 0.75rem;
-    color: white;
+    color: #ccc;
     border: none;
 }
 
@@ -539,4 +540,13 @@ tr.spacer-row {
   margin: 10px 0; /* Add some margin for spacing */
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.assigned-highlight {
+    border: 2px solid #fff; /* Darker red border */   
+}
+
+.calendar_event a.assigned-highlight {
+    border: 2px solid #6c6cf7; /* Darker red border */   
+    background-color: #448
 }

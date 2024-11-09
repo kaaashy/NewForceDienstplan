@@ -177,6 +177,17 @@ function showEvent(dateStr, id) {
 
     currentEventId = null;
 
+    let allUsersSorted = [];
+    for (let i in userData) {
+        allUsersSorted.push(userData[i]);
+    }
+
+    allUsersSorted.sort(function (a, b) {
+        let nameA = a.display_name;
+        let nameB = b.display_name;
+        return nameA.localeCompare(nameB);
+    });
+
     if (id && eventData) {
         for (let key in eventData) {
             let event = eventData[key];
@@ -204,8 +215,19 @@ function showEvent(dateStr, id) {
                     remainingUsers.add(userData[uid].id);
                 }
 
+                let eventUsersSorted = [];
                 for (let i in event.users) {
-                    let eventUser = event.users[i];
+                    eventUsersSorted.push(event.users[i]);
+                }
+
+                eventUsersSorted.sort(function (a, b) {
+                    let nameA = userData[a.user_id].display_name;
+                    let nameB = userData[b.user_id].display_name;
+                    return nameA.localeCompare(nameB);
+                });
+
+                for (let i in eventUsersSorted) {
+                    let eventUser = eventUsersSorted[i];
                     let user = userData[eventUser.user_id];
                     remainingUsers.delete(eventUser.user_id);
 
@@ -214,17 +236,18 @@ function showEvent(dateStr, id) {
 
                     if (user) {
                         if (eventUser.deliberate) {
-                            eventUsers += '<div class="deliberate_event_user">' + user.display_name + '</div>';
+                            eventUsers += '<div class="deliberate_event_user">' + user.display_name + ' ✅</div>';
                         } else {
-                            eventUsers += '<div class="event_user">' + user.display_name + '</div>';
+                            eventUsers += '<div class="event_user">' + user.display_name + ' 📅</div>';
                         }
                     }
                 }
 
-                for (const uid of remainingUsers) {
-                    let user = userData[uid];
-                    if (user) {
-                        nonEventUsers += '<div class="deliberate_event_user">' + user.display_name + '</div>';
+                for (let i in allUsersSorted) {
+                    let user = allUsersSorted[i];
+                    console.log(user);
+                    if (remainingUsers.has(user.id)) {
+                        nonEventUsers += '<div class="event_user">' + user.display_name + '</div>';
                     }
                 }
             }
@@ -263,7 +286,7 @@ function showEvent(dateStr, id) {
             + '<table class="userlist">'
             + '<tr>'
             + '<th>Eingetragen</th>'
-            + '<th>Verfügbar</th>'
+            + '<th>Ausgetragen</th>'
             + '</tr>'
             + '<tr>'
             + '<td>' + eventUsers + '</td>'
@@ -332,15 +355,27 @@ function buildEventAssigneeOverview(event) {
 
     html += '<table class="user_listing">';
 
-    for (let i in event.users) {
-        let eventUser = event.users[i];
+    let sorted = [...event.users];
+    sorted.sort(function (a, b) {
+        let userA = userData[a.user_id];
+        let userB = userData[b.user_id];
+
+        return userA.display_name.localeCompare(userB.display_name);
+    });
+
+    for (let i in sorted) {
+        let eventUser = sorted[i];
         let user = userData[eventUser.user_id];
+
+        let selfClass = "";
+        if (eventUser.user_id === loggedInUserId)
+            selfClass = "assigned-highlight";
 
         if (user) {
             if (eventUser.deliberate) {
-                html += '<tr><td><div class="deliberate_event_user">' + user.display_name + '</div></td></tr>';
+                html += '<tr><td><div class="deliberate_event_user ' + selfClass + '">' + user.display_name + ' ✅</div></td></tr>';
             } else {
-                html += '<tr><td><div class="event_user">' + user.display_name + '*</div></td></tr>';
+                html += '<tr><td><div class="event_user ' + selfClass + '">' + user.display_name + ' 📅</div></td></tr>';
             }
         }
     }
@@ -350,6 +385,18 @@ function buildEventAssigneeOverview(event) {
 }
 
 function buildCalendarEventHtml(event) {
+
+    let selfHighlightClass = "";
+    let selfAssigned = false;
+    for (let i in event.users) {
+        let eventUser = event.users[i];
+
+        if (eventUser.user_id === loggedInUserId) {
+            selfHighlightClass = "assigned-highlight";
+            selfAssigned = true;
+            break;
+        }
+    }
 
     let readableTime = function (str) {
         if (!str)
@@ -375,6 +422,7 @@ function buildCalendarEventHtml(event) {
             html += users + '/' + min;
 
         html += ' MA</span>';
+
         return html;
     };
 
@@ -382,11 +430,12 @@ function buildCalendarEventHtml(event) {
     if (mode === weekMode)
         assignedUsers = buildEventAssigneeOverview(event);
 
-    return '<a href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
+    return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
             + '<span class="event_title">' + event.title + '</span>'
             + '<span class="event_time">' + readableTime(event.time)
             + " bis " + readableTime(event.end_time) + '</span>'
             + usersOverview(event)
+            + (selfAssigned ? '<span class="event_title">Dienst!</span>' : '')
             + assignedUsers
             + "</a>";
 
