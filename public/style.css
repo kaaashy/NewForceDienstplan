@@ -542,6 +542,17 @@ tr.spacer-row {
   padding-right: 15px;
 }
 
+.info-box {
+  color: #0870c7;
+  background-color: #e0e8f0; /* Red background color */
+  border: 2px solid #4c8ce7; /* Darker red border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 15px; /* Font size */
+  margin: 10px 0; /* Add some margin for spacing */
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .assigned-highlight {
     border: 2px solid #fff; /* Darker red border */   
 }

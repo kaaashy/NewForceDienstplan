@@ -1,6 +1,11 @@
 
 <?php
 
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class DatabaseInfo
 {
     public $serverName; 
@@ -17,6 +22,25 @@ function getDatabaseInfo()
     $result->password = "DesN3wForce,Ne,Des1sSch0EchtFet7.";
     $result->dbName = "NewForceRoster"; 
     return $result; 
+}
+
+function makePHPMail()
+{
+    $mail = new PHPMailer(true);
+
+    // SMTP configuration
+    $mail->isSMTP();
+    $mail->Host = 'newforce.de';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'dienstplan-neu@newforce.de';
+    $mail->Password = 'my-password'; // Replace with your app-specific password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = 465;
+
+    // from
+    $mail->setFrom('dienstplan@newforce.de', 'Dienstplaner vom Force');
+
+    return $mail;
 }
 
 ?>

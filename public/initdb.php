@@ -142,13 +142,24 @@ function initializeTables()
     $createOutlineScheduleTable = "CREATE TABLE OutlineSchedule (
         user_id INT UNSIGNED,
         day INT UNSIGNED,
-        
+
         creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (user_id, day)
     )";
     if ($pdo->query($createOutlineScheduleTable) === TRUE) {
         echo "Table Duties created successfully";
+    }
+
+    $createPasswordTokensTable = "CREATE TABLE PasswordTokens (
+        user_id INT UNSIGNED,
+        token VARCHAR(255),
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createPasswordTokensTable) === TRUE) {
+        echo "Table Roles created successfully";
     }
 
 }
@@ -293,17 +304,37 @@ function deleteUser($username) {
     
     $pdo = connect();
 
+    // Retrieve the user id
+    $sql = "SELECT id FROM Users WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':username', $username);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row)
+    {
+        $user_id = $row["id"];
+
+        // Prepare and execute the SQL statement
+        $stmt = $pdo->prepare('DELETE FROM Schedule WHERE user_id = :user_id');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+
+        // Prepare and execute the SQL statement
+        $stmt = $pdo->prepare('DELETE FROM OutlineSchedule WHERE user_id = :user_id');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+
+        // Prepare and execute the SQL statement
+        $stmt = $pdo->prepare('DELETE FROM PasswordTokens WHERE user_id = :user_id');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+    }
+
     // Prepare and execute the SQL statement
     $stmt = $pdo->prepare('DELETE FROM Users WHERE username = :username');
     $stmt->bindValue(':username', $username);
     $stmt->execute();
-
-    if ($stmt->rowCount() === 1) {
-        echo 'User deleted successfully.';
-    } else {
-        echo 'Error deleting user.';
-    }
-
 }
 
 function addEvent($type, $title, $date)
@@ -581,6 +612,94 @@ function checkLogin($username, $password)
     return array($loginCorrect, $id);
 }
 
+function initializeUser($username, $email, $password)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // check if there is already a user with that name
+    $stmt = $pdo->prepare('SELECT id, email, display_name, first_name, last_name FROM Users WHERE username = :username');
+    $stmt->bindValue(':username', $username);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $user_id = $row["id"];
+        $display_name = $row["display_name"];
+        $first_name = $row["first_name"];
+        $last_name = $row["last_name"];
+
+        updateUserProfileData($username, $display_name, $first_name, $last_name, $email);
+    } else {
+        $user_id = addUser($username, $password, $email, "", "");
+    }
+
+    // remove any previous tokens
+    $stmt = $pdo->prepare('DELETE FROM PasswordTokens WHERE user_id = :user_id');
+    $stmt->bindValue(':user_id', $user_id);
+    $stmt->execute();
+
+    // Encode some random bytes using base64
+    $token = base64_encode(random_bytes(32));
+
+    // Remove characters that are not URL-safe
+    $token = str_replace(['+', '/', '='], ['-', '_', ''], $token);
+
+    // create a registration token to change the users password
+    $stmt = $pdo->prepare('INSERT INTO PasswordTokens (user_id, token) '
+            . 'VALUES (:user_id, :token)');
+    $stmt->bindValue(':user_id', $user_id);
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    return array($token, $pdo->lastInsertId());
+}
+
+function fetchInitializationToken($token)
+{
+    $pdo = connect();
+
+    $sql = "SELECT user_id FROM PasswordTokens WHERE token = :token";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row)
+    {
+        $user_id = $row["user_id"];
+
+        $sql = "SELECT username, email FROM Users WHERE id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row)
+        {
+            $username = $row["username"];
+            $email = $row["email"];
+
+            return array($username, $email);
+        }
+    }
+}
+
+function removeInitializationToken($userId, $token)
+{
+    $pdo = connect();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM PasswordTokens WHERE token = :token');
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM PasswordTokens WHERE user_id = :user_id');
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->execute();
+}
+
 function getNumUsersAtEvent($eventId) 
 {
     $pdo = connect();
@@ -704,5 +823,73 @@ function respondUsers() {
     
     echo json_encode($rows);
 }
+
+function dumpUsers() {
+    $pdo = connect();
+
+    // Retrieve the data from the database
+    $sql = "SELECT * FROM Users;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $rows = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Retrieve the outline schedule
+        $sql = "SELECT day
+                FROM OutlineSchedule
+                WHERE user_id = :user_id;";
+
+        $stmt2 = $pdo->prepare($sql);
+        $stmt2->bindValue("user_id", $row["id"]);
+        $stmt2->execute();
+
+        for ($i = 0; $i < 7; $i++) {
+            $row["day_".$i] = false;
+        }
+
+        while ($dayRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            $row["day_".$dayRow["day"]] = true;
+        }
+
+        $rows[] = $row;
+    }
+
+    echo '<table>';
+    foreach ($rows as $row) {
+        echo '<tr>';
+        foreach ($row as $key => $value) {
+            echo "<td> $key $value </td>";
+        }
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+
+function dumpPendingUsers() {
+    $pdo = connect();
+
+    // Retrieve the data from the database
+    $sql = "SELECT * FROM PasswordTokens;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $rows = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $rows[] = $row;
+    }
+
+    echo '<table>';
+    foreach ($rows as $row) {
+        echo '<tr>';
+        foreach ($row as $key => $value) {
+            echo "<td> $key $value </td>";
+        }
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+
 
 ?>
