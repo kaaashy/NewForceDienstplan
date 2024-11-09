@@ -208,7 +208,7 @@ function showEvent(dateStr, id) {
                 buttonCaption = "Änderungen Speichern";
                 headline = title;
                 dateFlags = "disabled";
-                deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen">';
+                deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen" formnovalidate/>';
 
                 let remainingUsers = new Set();
                 for (let uid in userData) {
@@ -319,8 +319,6 @@ function showEvent(dateStr, id) {
             + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
             + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
             + '</div>'
-
-
             + '<div class="input_line">'
             + '<label for="venue">Ort:</label>'
             + '<input type="text" id="venue" name="venue" value="' + venue + '" placeholder="Ort">'
@@ -335,11 +333,13 @@ function showEvent(dateStr, id) {
 
             + '<input type="hidden" id="id" name="id" value="' + id + '">'
             + '<div class="input_line">'
-            + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '">'
+            + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '"/>'
+            + '</div>'
+            + '<div class="input_line">'
             + deleteButton
             + '</div>'
-            + '</div>'
-            + '</form>';
+            + '</form>'
+            + '</div>';
 
     setTimeout(function () {
         document.getElementById('event_title_input').focus();

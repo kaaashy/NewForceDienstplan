@@ -1,7 +1,5 @@
 TODO:  
 ### Core Functionality ########################
-* Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
-* Bug: Ansicht ist manchmal kaputt und zeigt wenige oder keine Tage
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Refactoring: Username -> Login umbenennen
 
@@ -86,6 +84,8 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Bug: Ansicht ist manchmal kaputt und zeigt wenige oder keine Tage
+* Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
 * User einladen
 * Monatsübersicht: Tage von Wochen auch anzeigen, wenn sie streng genommen nicht zum Monat gehören
 * Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden
