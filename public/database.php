@@ -45,8 +45,8 @@ function addUser($login, $password, $email, $first, $last)
     $hashedPassword = hash('sha256', $password . $salt);
 
     // Prepare and execute the SQL statement
-    $stmt = $pdo->prepare('INSERT INTO Users (login, display_name, password, salt, first_name, last_name, email) '
-            . 'VALUES (:login, :display_name, :password, :salt, :first_name, :last_name, :email)');
+    $stmt = $pdo->prepare('INSERT INTO Users (login, display_name, password, salt, first_name, last_name, email, active, visible) '
+            . 'VALUES (:login, :display_name, :password, :salt, :first_name, :last_name, :email, true, true)');
     $stmt->bindValue(':login', $login);
     $stmt->bindValue(':password', $hashedPassword);
     $stmt->bindValue(':salt', $salt);
@@ -332,6 +332,36 @@ function updateUserProfileData($login, $display_name, $first_name, $last_name, $
     }
 }
 
+function updateUserStatus($id, $visible, $active)
+{
+    if (!$active && $id == 1) {
+        echo 'Cannot deactivate admin for safety reasons.';
+        return;
+    }
+
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Users
+            SET active = :active,
+                visible = :visible
+            WHERE id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $id);
+    $stmt->bindValue(':visible', $visible ? 1 : 0);
+    $stmt->bindValue(':active', $active ? 1 : 0);
+    $stmt->execute();
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User updated successfully.";
+    } else {
+        echo "Error updating user.";
+    }
+}
+
 function deleteEvent($id)
 {
     // Create a connection
@@ -557,7 +587,7 @@ function respondUsers() {
     $pdo = connect();
 
     // Retrieve the data from the database
-    $sql = "SELECT id, login, display_name, first_name, last_name, email
+    $sql = "SELECT id, login, display_name, first_name, last_name, email, visible, active
             FROM Users;";
 
     $stmt = $pdo->prepare($sql);

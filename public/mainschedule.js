@@ -246,7 +246,7 @@ function showEvent(dateStr, id) {
                     if (user) {
                         if (eventUser.deliberate) {
                             eventUsers += '<div class="deliberate_event_user" title="Hat sich selbst eingetragen">' + user.display_name + ' ✅</div>';
-                        } else {
+                        } else if (user.active && user.visible){
                             eventUsers += '<div class="event_user" title="Ist durch Rahmendienstplan eingetragen">' + user.display_name + ' 📅</div>';
                         }
                     }
@@ -254,8 +254,8 @@ function showEvent(dateStr, id) {
 
                 for (let i in allUsersSorted) {
                     let user = allUsersSorted[i];
-                    console.log(user);
-                    if (remainingUsers.has(user.id)) {
+
+                    if (remainingUsers.has(user.id) && user.active && user.visible) {
                         nonEventUsers += '<div class="event_user">' + user.display_name + '</div>';
                     }
                 }
@@ -383,7 +383,7 @@ function buildEventAssigneeOverview(event) {
         if (user) {
             if (eventUser.deliberate) {
                 html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '">' + user.display_name + ' ✅</div></td></tr>';
-            } else {
+            } else if (user.active && user.visible){
                 html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '">' + user.display_name + ' 📅</div></td></tr>';
             }
         }

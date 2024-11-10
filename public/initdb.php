@@ -77,7 +77,8 @@ function initializeTables()
         last_name VARCHAR(50),
         email VARCHAR(255),
 
-        role INT,
+        visible BOOL,
+        active BOOL,
 
         creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -169,7 +170,10 @@ function initialize()
         
         addUser($name, $password, $email, $first, $last);
     }
-    
+
+    // set admin user to invisible
+    updateUserStatus(0, false, true);
+
     // set Tascha for Do, Sa
     updateOutlineDay(2, 3, true);
     updateOutlineDay(2, 5, true);

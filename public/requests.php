@@ -43,6 +43,25 @@ if (isset($_POST['outline_schedule'])) {
     return;
 }
 
+if (isset($_POST['user_status'])) {
+    $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+    $visible = filter_input(INPUT_POST, 'visible', FILTER_SANITIZE_NUMBER_INT) > 0;
+    $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
+
+    if (!$active) $visible = false;
+
+    updateUserStatus($userId, $visible, $active);
+
+    // when a user is set to "inactive", they're removed from the outline schedule
+    if (!$active) {
+        for ($day = 0; $day < 7; ++$day) {
+            updateOutlineDay($userId, $day, false);
+        }
+    }
+
+    return;
+}
+
 if (isset($_POST['event_schedule'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);

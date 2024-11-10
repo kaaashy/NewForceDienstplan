@@ -1,12 +1,8 @@
 TODO:  
 ### Core Functionality ########################
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
-* Refactoring: Username -> Login umbenennen
 
 ### User Management ########################
-* Email-Notifications 
-* User deaktivieren
-* User ausblenden
 * User aus Veranstaltungen entfernen
 * Passwort-Reset
 
@@ -42,8 +38,6 @@ TODO:
 * Wie konfigurieren? 
 * Welche Versionen von welcher Software sind nötig?
 * Wie pflegen?
-
-Cy77up61_
 
 ### Aufhübschen ########################
 * Hübsches CSS für Profile
@@ -84,8 +78,13 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* User deaktivieren
+* User ausblenden
+* Logout
+* Refactoring: Username -> Login umbenennen
 * Bug: Ansicht ist manchmal kaputt und zeigt wenige oder keine Tage
 * Bug: Bei löschen müssen alle Formulare korrekt ausgefüllt sein, sollte nicht nötig sein
+* Email-Notifications
 * User einladen
 * Monatsübersicht: Tage von Wochen auch anzeigen, wenn sie streng genommen nicht zum Monat gehören
 * Bei Löschen von Events/MA muss auch Schedule/OutlineSchedule aktualisiert werden

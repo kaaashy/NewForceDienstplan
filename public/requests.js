@@ -14,6 +14,17 @@ function sendUserOutlineScheduleDay(userId, day, active, callback) {
     sendRequest(data, callback);
 }
 
+function sendUserStatus(userId, visible, active, callback) {
+
+    var data = 'login=' + loggedInUserLogin;
+    data = data + "&user_status=y";
+    data = data + "&user_id=" + userId;
+    data = data + "&visible=" + (visible ? 1 : 0);
+    data = data + "&active=" + (active ? 1 : 0);
+
+    sendRequest(data, callback);
+}
+
 function sendUserEventActivity(userId, eventId, active, callback) {
 
     var data = 'login=' + loggedInUserLogin;

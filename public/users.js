@@ -33,12 +33,19 @@ function setOutlineForUser(id, day) {
     let checkBoxId = 'outline_check_' + id + '_' + day;
     let checked = _("#" + checkBoxId).checked;
 
-    console.log(id);
-    console.log(day);
-    console.log(checked);
-
     sendUserOutlineScheduleDay(id, day, checked, function () {
-        console.log("sent");
+        refresh();
+    });
+}
+
+function setUserStatus(id) {
+
+    let visibleCheckBoxId = 'visible_check_' + id;
+    let visibleChecked = _("#" + visibleCheckBoxId).checked;
+    let activeCheckBoxId = 'active_check_' + id;
+    let activeChecked = _("#" + activeCheckBoxId).checked;
+
+    sendUserStatus(id, visibleChecked, activeChecked, function () {
         refresh();
     });
 }
@@ -107,11 +114,12 @@ function buildIndexHtml()
     html += '<th>Nachname</th>';
     html += '<th>Login</th>';
     html += '<th>Email</th>';
+    html += '<th>Sichtbar</th>';
+    html += '<th>Aktiv</th>';
     html += '</tr>';
 
     let toDisplay = function (value) {
-        if (value)
-            return value;
+        if (value) return value;
         return "-";
     };
 
@@ -126,6 +134,14 @@ function buildIndexHtml()
         html += '<td>' + toDisplay(user.last_name) + '</td>';
         html += '<td>' + toDisplay(user.login) + '</td>';
         html += '<td>' + toDisplay(user.email) + '</td>';
+        {
+            let v = user.visible ? "checked" : "";
+            html += '<td><input type="checkbox" id="visible_check_' + id + '" onclick=setUserStatus(' + id + ') ' + v + '></td>';
+        }
+        {
+            let v = user.active ? "checked" : "";
+            html += '<td><input type="checkbox" id="active_check_' + id + '" onclick=setUserStatus(' + id + ') ' + v + '></td>';
+        }
         html += '</tr>';
     }
 
