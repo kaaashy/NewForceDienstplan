@@ -516,7 +516,7 @@ tr.spacer-row {
 }
 
 .link-container {
-  display: inline-block; /* or use display: inline */
+  display: flex; /* or use display: inline */
   text-decoration: none; /* Remove underline */
   padding: 10px; /* Add some padding for a better look */
 }
@@ -528,7 +528,7 @@ tr.spacer-row {
 }
 
 .link-container a:last-child {
-  margin-right: 0; /* Remove right margin from the last link */
+  margin-left: auto; /* Remove right margin from the last link */
 }
 
 .error-box {

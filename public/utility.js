@@ -8,7 +8,7 @@ function buildNavHtml()
     html += '<a href="admin.php">Admin</a>';
     html += '<a href="users.php">Mitarbeitende</a>';
     html += '<a href="userprofile.php">Mein Profil (' + loggedInUserLogin + ') </a>';
-    html += '<a href="logout.php">Logout </a>';
+    html += '<a href="logout.php">⤷🚪Logout </a>';
 
     html += '</div>';
 
