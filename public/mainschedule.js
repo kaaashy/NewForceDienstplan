@@ -235,6 +235,8 @@ function showEvent(dateStr, id) {
                     return nameA.localeCompare(nameB);
                 });
 
+                let handStyle = ' style="cursor: pointer;" ';
+
                 for (let i in eventUsersSorted) {
                     let eventUser = eventUsersSorted[i];
                     let user = userData[eventUser.user_id];
@@ -244,10 +246,11 @@ function showEvent(dateStr, id) {
                         selfInUserList = true;
 
                     if (user) {
+                        let removeOnClick = ' onclick="removeFromSchedule(' + user.id + '); "';
                         if (eventUser.deliberate) {
-                            eventUsers += '<div class="deliberate_event_user" title="Hat sich selbst eingetragen">' + user.display_name + ' ✅</div>';
+                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen">' + user.display_name + ' ✅</div>';
                         } else if (user.active && user.visible){
-                            eventUsers += '<div class="event_user" title="Ist durch Rahmendienstplan eingetragen">' + user.display_name + ' 📅</div>';
+                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen">' + user.display_name + ' 📅</div>';
                         }
                     }
                 }
@@ -256,7 +259,9 @@ function showEvent(dateStr, id) {
                     let user = allUsersSorted[i];
 
                     if (remainingUsers.has(user.id) && user.active && user.visible) {
-                        nonEventUsers += '<div class="event_user">' + user.display_name + '</div>';
+                        let addOnClick = ' onclick="insertIntoSchedule(' + user.id + '); "';
+
+                        nonEventUsers += '<div ' + addOnClick + handStyle + ' class="event_user">' + user.display_name + '</div>';
                     }
                 }
             }
