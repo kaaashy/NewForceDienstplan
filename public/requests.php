@@ -5,7 +5,7 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
-include 'initdb.php';
+include_once 'initdb.php';
 
 if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
     echo 'ERROR_NOT_LOGGED_IN';

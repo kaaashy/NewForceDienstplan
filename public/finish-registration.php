@@ -2,8 +2,8 @@
 
 session_start();
 
-include 'initdb.php';
-include 'pages.php';
+include_once 'initdb.php';
+include_once 'pages.php';
 
 $token = htmlspecialchars($_GET["token"]);
 
