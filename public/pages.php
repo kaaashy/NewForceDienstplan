@@ -1,7 +1,15 @@
 <?php 
 
+include_once 'database.php';
+
 function ensureLoggedIn()
 {
+    if (isset($_SESSION['user_id'])) {
+        if (!getUserActive($_SESSION['user_id'])){
+            session_destroy();
+        }
+    }
+
     if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
         backToLogin();
         exit;

@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 session_start();
 
 include_once 'initdb.php';
@@ -18,7 +21,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     list($loginCorrect, $userId) = checkLogin($login, $password);
 
-    if ($loginCorrect) {
+    if (!getUserActive($userId)) {
+        $loginError = "Account '$login' wurde deaktiviert.";
+    }
+    else if ($loginCorrect) {
         $_SESSION['loggedin'] = true;
         $_SESSION['login'] = $login;
         $_SESSION['user_id'] = $userId;
@@ -26,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         header('Location: dienstplan.php');
         exit;
     } else {
-        $loginError = 'Invalid login or password';
+        $loginError = 'Falscher Login oder Passwort.';
     }
 }
 

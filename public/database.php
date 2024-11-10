@@ -406,6 +406,23 @@ function checkLogin($login, $password)
     return array($loginCorrect, $id);
 }
 
+function getUserActive($user_id)
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT active
+            FROM Users
+            WHERE id = :user_id;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("user_id", $user_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row['active'];
+}
+
 function initializeUser($login, $email, $password)
 {
     // Create a connection
