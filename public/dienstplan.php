@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php jsUserId(); ?>
     <script src="utility.js" defer></script>
     <script src="requests.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="mainschedule.js" defer></script>
   </head>
   <body>
       
