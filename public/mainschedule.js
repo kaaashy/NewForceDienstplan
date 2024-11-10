@@ -139,6 +139,15 @@ function showEvent(dateStr, id) {
         _("#calendar_data").classList.add("show_data");
     }
 
+    let startTimes = {};
+    startTimes[0] = "20:00";
+    startTimes[1] = "20:00";
+    startTimes[2] = "20:00";
+    startTimes[3] = "20:00";
+    startTimes[4] = "20:00";
+    startTimes[5] = "20:00";
+    startTimes[6] = "15:00";
+
     let endTimes = {};
     endTimes[0] = "00:00";
     endTimes[1] = "00:00";
@@ -146,7 +155,7 @@ function showEvent(dateStr, id) {
     endTimes[3] = "00:00";
     endTimes[4] = "02:00";
     endTimes[5] = "02:00";
-    endTimes[6] = "00:00";
+    endTimes[6] = "19:00";
 
     let minUsersOfDay = {};
     minUsersOfDay[0] = "3";
@@ -160,7 +169,7 @@ function showEvent(dateStr, id) {
     let headline = "Neue Veranstaltung";
     let title = "";
     let date = dateStr;
-    let time = "20:00";
+    let time = startTimes[getGermanWeekDay(new Date(dateStr))];
     let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
     let users = 0;
     let minUsers = minUsersOfDay[getGermanWeekDay(new Date(dateStr))];
