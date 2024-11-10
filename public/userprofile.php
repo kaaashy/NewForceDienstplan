@@ -43,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             updateUserProfileData($login, $display_name, $first_name, $last_name, $email);
         }
+    } elseif (isset($_POST['logout'])) {
+        session_destroy();
+        header('Location: index.php');
+        die();
     }
 }
 

@@ -141,6 +141,10 @@ function buildIndexHtml()
     html += '<input type="submit" name="update_userprofile" value="Speichern">';
     html += '</form>';
 
+    html += '<h2>Logout</h2>';
+    html += '<form method="POST" action="">'
+    html += '<input type="submit" name="logout" value="Ausloggen"></input>'
+    html += '</form>'
 
     return html;
 }

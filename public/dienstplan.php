@@ -39,12 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateEvent($id, $type, $title, $description, $time, $end_time, $minUsers, $organizer, $venue, $address);
         
         header('Location: dienstplan.php');
-        
+        die();
     } else if (isset($_POST['deleteevent'])) {
         $id = filter_input(INPUT_POST, 'id');
         deleteEvent($id);
         
         header('Location: dienstplan.php');
+        die();
+    } elseif (isset($_POST['logout'])) {
+        session_destroy();
+        header('Location: index.php');
+        die();
     }
 }
 
