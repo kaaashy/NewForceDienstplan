@@ -13,20 +13,20 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
 // Check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     // Validate the login credentials
-    $username = $_POST['username'];
+    $login = $_POST['login'];
     $password = $_POST['password'];
 
-    list($loginCorrect, $userId) = checkLogin($username, $password);
+    list($loginCorrect, $userId) = checkLogin($login, $password);
 
     if ($loginCorrect) {
         $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
+        $_SESSION['login'] = $login;
         $_SESSION['user_id'] = $userId;
         
         header('Location: dienstplan.php');
         exit;
     } else {
-        $loginError = 'Invalid username or password';
+        $loginError = 'Invalid login or password';
     }
 }
 
@@ -44,8 +44,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     <?php } ?>
     <form method="POST" action="">
         <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
         </div>
         <div>
             <label for="password">Password:</label>

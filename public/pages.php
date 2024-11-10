@@ -17,7 +17,7 @@ function backToLogin($msg = "not logged in")
 function jsUserId()
 {
     echo "<script>";
-    echo "var loggedInUserName = " . json_encode($_SESSION['username']) . ";";
+    echo "var loggedInUserLogin = " . json_encode($_SESSION['login']) . ";";
     echo "var loggedInUserId = " . json_encode($_SESSION['user_id']) . ";";
     echo "</script>";
 }

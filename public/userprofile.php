@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $password = $_POST['password'];
         
-        $username = $_SESSION['username']; 
+        $login = $_SESSION['login'];
         $updateData = true;
         
-        list($loginCorrect, $userId) = checkLogin($username, $password);
+        list($loginCorrect, $userId) = checkLogin($login, $password);
 
         if (!$loginCorrect) {
             jsErrorMessage("Falsches Passwort!");
@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($updateData) {
             if ($new_password != "") {
-                updateUserPassword($username, $new_password);
+                updateUserPassword($login, $new_password);
             }
             
-            updateUserProfileData($username, $display_name, $first_name, $last_name, $email);
+            updateUserProfileData($login, $display_name, $first_name, $last_name, $email);
         }
     }
 }

@@ -8,8 +8,8 @@ include_once 'pages.php';
 $token = htmlspecialchars($_GET["token"]);
 
 // get the initialization details of the user from the password token
-list($username, $email) = fetchInitializationToken($token);
-if (!isset($email) || !isset($username)) {
+list($login, $email) = fetchInitializationToken($token);
+if (!isset($email) || !isset($login)) {
     $errorMessage = "Registrierung nicht mehr verfügbar. Bitte wenden Sie sich die Person, die Sie für den Dienstplan registrierte.";
 }
 
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // $password = $_POST['password'];
         // $email = $_POST['email'];
-        // $username = $_SESSION['username'];
+        // $login = $_SESSION['login'];
         $updateData = true;
 
         if ($new_password != "" && $new_password != $new_password_repeat) {
@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($updateData) {
-            updateUserPassword($username, $new_password);
-            updateUserProfileData($username, $display_name, $first_name, $last_name, $email);
-            removeInitializationToken($username, $token);
+            updateUserPassword($login, $new_password);
+            updateUserProfileData($login, $display_name, $first_name, $last_name, $email);
+            removeInitializationToken($login, $token);
 
             header("Location: userprofile.php");
             die();
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Registrierung Abschließen</h1>
 
             <?php
-            echo "Login: $username <br/>";
+            echo "Login: $login <br/>";
             echo "Email: $email <br/><br/>";
             ?>
 

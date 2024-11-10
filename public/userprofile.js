@@ -22,8 +22,6 @@ function refresh() {
         _("#user_index").innerHTML = buildIndexHtml();
     });
 
-    // build the calendar
-    _("#user_index").innerHTML = buildIndexHtml();
 }
 
 refresh();
@@ -112,7 +110,7 @@ function buildIndexHtml()
     html += '<form method="POST" action="">';
     html += '<table class="profiletable">';
     html += makeElement("userid", "text", "Interne ID", user.id, "disabled");
-    html += makeElement("login", "text", "Log-In", user.username, "disabled");
+    html += makeElement("login", "text", "Log-In", user.login, "disabled");
     html += '<tr class="spacer-row"></tr>';
 
     html += makeElement("display_name", "text", "Anzeigename", user.display_name, "required");

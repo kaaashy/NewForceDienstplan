@@ -52,7 +52,7 @@ function buildIndexHtml()
     html += '<h2>Rahmendienstplan</h2>';
     html += '<table class="outline_schedule">';
     html += '<tr>';
-    html += '<th>Name</th>';
+    html += '<th></th>';
     html += '<th>Montag</th>';
     html += '<th>Dienstag</th>';
     html += '<th>Mittwoch</th>';
@@ -105,7 +105,7 @@ function buildIndexHtml()
     html += '<th>Anzeigename</th>';
     html += '<th>Vorname</th>';
     html += '<th>Nachname</th>';
-    html += '<th>Username</th>';
+    html += '<th>Login</th>';
     html += '<th>Email</th>';
     html += '</tr>';
 
@@ -124,7 +124,7 @@ function buildIndexHtml()
         html += '<td>' + toDisplay(user.display_name) + '</td>';
         html += '<td>' + toDisplay(user.first_name) + '</td>';
         html += '<td>' + toDisplay(user.last_name) + '</td>';
-        html += '<td>' + toDisplay(user.username) + '</td>';
+        html += '<td>' + toDisplay(user.login) + '</td>';
         html += '<td>' + toDisplay(user.email) + '</td>';
         html += '</tr>';
     }

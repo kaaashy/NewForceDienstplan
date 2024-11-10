@@ -34,7 +34,7 @@ function generateSalt($length = 16) {
     return $salt;
 }
 
-function addUser($username, $password, $email, $first, $last)
+function addUser($login, $password, $email, $first, $last)
 {
     // Create a connection
     $pdo = connect();
@@ -45,12 +45,12 @@ function addUser($username, $password, $email, $first, $last)
     $hashedPassword = hash('sha256', $password . $salt);
 
     // Prepare and execute the SQL statement
-    $stmt = $pdo->prepare('INSERT INTO Users (username, display_name, password, salt, first_name, last_name, email) '
-            . 'VALUES (:username, :display_name, :password, :salt, :first_name, :last_name, :email)');
-    $stmt->bindValue(':username', $username);
+    $stmt = $pdo->prepare('INSERT INTO Users (login, display_name, password, salt, first_name, last_name, email) '
+            . 'VALUES (:login, :display_name, :password, :salt, :first_name, :last_name, :email)');
+    $stmt->bindValue(':login', $login);
     $stmt->bindValue(':password', $hashedPassword);
     $stmt->bindValue(':salt', $salt);
-    $stmt->bindValue(':display_name', $username);
+    $stmt->bindValue(':display_name', $login);
     $stmt->bindValue(':email', $email);
     $stmt->bindValue(':first_name', $first);
     $stmt->bindValue(':last_name', $last);
@@ -59,9 +59,9 @@ function addUser($username, $password, $email, $first, $last)
     return $pdo->lastInsertId();
 }
 
-function deleteUser($username) {
+function deleteUser($login) {
 
-    if ($username == "admin") {
+    if ($login == "admin") {
         echo 'Cannot delete admin for safety reasons.';
         return;
     }
@@ -69,9 +69,9 @@ function deleteUser($username) {
     $pdo = connect();
 
     // Retrieve the user id
-    $sql = "SELECT id FROM Users WHERE username = :username";
+    $sql = "SELECT id FROM Users WHERE login = :login";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':login', $login);
     $stmt->execute();
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -96,8 +96,8 @@ function deleteUser($username) {
     }
 
     // Prepare and execute the SQL statement
-    $stmt = $pdo->prepare('DELETE FROM Users WHERE username = :username');
-    $stmt->bindValue(':username', $username);
+    $stmt = $pdo->prepare('DELETE FROM Users WHERE login = :login');
+    $stmt->bindValue(':login', $login);
     $stmt->execute();
 }
 
@@ -271,7 +271,7 @@ function updateEventSchedule($userId, $eventId, $deliberate, $active)
     }
 }
 
-function updateUserPassword($username, $new_password)
+function updateUserPassword($login, $new_password)
 {
     // Create a connection
     $pdo = connect();
@@ -280,7 +280,7 @@ function updateUserPassword($username, $new_password)
     $sql = "UPDATE Users
             SET password = :password,
                 salt = :salt
-            WHERE username = :username";
+            WHERE login = :login";
 
     // Generate a salt
     $salt = generateSalt();
@@ -289,7 +289,7 @@ function updateUserPassword($username, $new_password)
 
     // Prepare the statement and bind the parameters
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':login', $login);
     $stmt->bindValue(':password', $hashedPassword);
     $stmt->bindValue(':salt', $salt);
     $stmt->execute();
@@ -302,7 +302,7 @@ function updateUserPassword($username, $new_password)
     }
 }
 
-function updateUserProfileData($username, $display_name, $first_name, $last_name, $email)
+function updateUserProfileData($login, $display_name, $first_name, $last_name, $email)
 {
     // Create a connection
     $pdo = connect();
@@ -313,11 +313,11 @@ function updateUserProfileData($username, $display_name, $first_name, $last_name
                 first_name = :first_name,
                 last_name = :last_name,
                 email = :email
-            WHERE username = :username";
+            WHERE login = :login";
 
     // Prepare the statement and bind the parameters
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':login', $login);
     $stmt->bindValue(':display_name', $display_name);
     $stmt->bindValue(':email', $email);
     $stmt->bindValue(':first_name', $first_name);
@@ -348,14 +348,14 @@ function deleteEvent($id)
     }
 }
 
-function checkLogin($username, $password)
+function checkLogin($login, $password)
 {
     $pdo = connect();
 
     // Retrieve the salt from the database
-    $sql = "SELECT password, id, salt FROM Users WHERE username = :username";
+    $sql = "SELECT password, id, salt FROM Users WHERE login = :login";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':login', $login);
     $stmt->execute();
 
     $loginCorrect = false;
@@ -376,14 +376,14 @@ function checkLogin($username, $password)
     return array($loginCorrect, $id);
 }
 
-function initializeUser($username, $email, $password)
+function initializeUser($login, $email, $password)
 {
     // Create a connection
     $pdo = connect();
 
     // check if there is already a user with that name
-    $stmt = $pdo->prepare('SELECT id, email, display_name, first_name, last_name FROM Users WHERE username = :username');
-    $stmt->bindValue(':username', $username);
+    $stmt = $pdo->prepare('SELECT id, email, display_name, first_name, last_name FROM Users WHERE login = :login');
+    $stmt->bindValue(':login', $login);
     $stmt->execute();
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -393,9 +393,9 @@ function initializeUser($username, $email, $password)
         $first_name = $row["first_name"];
         $last_name = $row["last_name"];
 
-        updateUserProfileData($username, $display_name, $first_name, $last_name, $email);
+        updateUserProfileData($login, $display_name, $first_name, $last_name, $email);
     } else {
-        $user_id = addUser($username, $password, $email, "", "");
+        $user_id = addUser($login, $password, $email, "", "");
     }
 
     // remove any previous tokens
@@ -433,7 +433,7 @@ function fetchInitializationToken($token)
     {
         $user_id = $row["user_id"];
 
-        $sql = "SELECT username, email FROM Users WHERE id = :user_id";
+        $sql = "SELECT login, email FROM Users WHERE id = :user_id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
@@ -441,10 +441,10 @@ function fetchInitializationToken($token)
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row)
         {
-            $username = $row["username"];
+            $login = $row["login"];
             $email = $row["email"];
 
-            return array($username, $email);
+            return array($login, $email);
         }
     }
 }
@@ -557,7 +557,7 @@ function respondUsers() {
     $pdo = connect();
 
     // Retrieve the data from the database
-    $sql = "SELECT id, username, display_name, first_name, last_name, email
+    $sql = "SELECT id, login, display_name, first_name, last_name, email
             FROM Users;";
 
     $stmt = $pdo->prepare($sql);

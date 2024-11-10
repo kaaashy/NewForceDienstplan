@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php');
         die();
     } elseif (isset($_POST['createuser'])) {
-        $username = $_POST['username'];
+        $login = $_POST['login'];
         $email = $_POST['email'];
 
         $password = base64_encode(random_bytes(12));
         $password = str_replace(['+', '/', '='], ['-', '_', ''], $password);
 
-        list($token, $userId) = initializeUser($username, $email, $password);
+        list($token, $userId) = initializeUser($login, $email, $password);
 
         $mail = makePHPMail();
 
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Email headers and content
             $mail->addAddress($email, '');
             $mail->Subject = 'New Force Dienstplan Account-Registrierung';
-            $mail->Body = "Hi $username,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
+            $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
 
             // Send email
             $mail->send();
@@ -47,9 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } elseif (isset($_POST['deleteuser'])) {
-        $username = $_POST['username'];
+        $login = $_POST['login'];
 
-        deleteUser($username);
+        deleteUser($login);
     } elseif (isset($_POST['send_testmail'])) {
 
         $mail = makePHPMail();
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Admin-Bereich</title>
     <meta charset="utf-8">
     <title>Dienstplan NewForce</title>
     <link rel="stylesheet" href="style.css">
@@ -92,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p> Für existierende Mitarbeitende: Setzt Passwort zurück und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
             <form method="POST" action="">
                 <div>
-                    <label for="username">Name:</label>
-                    <input type="text" id="username" name="username" required> </input>
+                    <label for="login">Login:</label>
+                    <input type="text" id="login" name="login" required> </input>
                 </div>
                 <div>
                     <label for="email">Email:</label>
@@ -121,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Mitarbeitende Löschen</h2>
             <form method="POST" action="">
                 <div>
-                    <label for="username">Name:</label>
-                    <input type="text" id="username" name="username" required></input>
+                    <label for="login">Login:</label>
+                    <input type="text" id="login" name="login" required></input>
                 </div>
 
                 <!-- Form 2 fields -->
