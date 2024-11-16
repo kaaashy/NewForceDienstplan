@@ -406,23 +406,6 @@ function checkLogin($login, $password)
     return array($loginCorrect, $id);
 }
 
-function getUserActive($user_id)
-{
-    $pdo = connect();
-
-    // Retrieve the outline schedule
-    $sql = "SELECT active
-            FROM Users
-            WHERE id = :user_id;";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue("user_id", $user_id);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $row['active'];
-}
-
 function initializeUser($login, $email, $password)
 {
     // Create a connection
@@ -450,6 +433,60 @@ function initializeUser($login, $email, $password)
     $stmt->bindValue(':user_id', $user_id);
     $stmt->execute();
 
+    // create an initialization token so the user can define their password
+    $token = addInitializationToken($user_id);
+
+    return array($token, $user_id);
+}
+
+function getUserActive($user_id)
+{
+    $row = getUserDetails($user_id);
+    if (!$row) return false;
+
+    return $row['active'];
+}
+
+function getUserDetails($user_id)
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT *
+            FROM Users
+            WHERE id = :user_id;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("user_id", $user_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row;
+}
+
+function fetchUserCredentialsByEmail($email)
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT id, login
+            FROM Users
+            WHERE email = :email;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("email", $email);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) return;
+
+    return array($row['id'], $row['login']);
+}
+
+function addInitializationToken($userId)
+{
+    $pdo = connect();
+
     // Encode some random bytes using base64
     $token = base64_encode(random_bytes(32));
 
@@ -459,11 +496,11 @@ function initializeUser($login, $email, $password)
     // create a registration token to change the users password
     $stmt = $pdo->prepare('INSERT INTO PasswordTokens (user_id, token) '
             . 'VALUES (:user_id, :token)');
-    $stmt->bindValue(':user_id', $user_id);
+    $stmt->bindValue(':user_id', $userId);
     $stmt->bindValue(':token', $token);
     $stmt->execute();
 
-    return array($token, $pdo->lastInsertId());
+    return $token;
 }
 
 function fetchInitializationToken($token)

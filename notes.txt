@@ -3,8 +3,7 @@ TODO:
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 
 ### User Management ########################
-* User aus Veranstaltungen entfernen
-* Passwort-Reset
+* Keine doppelten Emails erlauben
 
 ### User-Rechte (admin/manager/bearbeiter/viewer) ########################
 * Ein-/Austragen bei Veranstaltungen (Alle)
@@ -78,6 +77,8 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Passwort-Reset
+* User aus Veranstaltungen entfernen
 * User deaktivieren
 * User ausblenden
 * Logout

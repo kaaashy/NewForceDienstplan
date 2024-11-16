@@ -13,6 +13,9 @@ if (!isset($email) || !isset($login)) {
     $errorMessage = "Registrierung nicht mehr verfügbar. Bitte wenden Sie sich die Person, die Sie für den Dienstplan registrierte.";
 }
 
+list ($userId, $login) = fetchUserCredentialsByEmail($email);
+$userDetails = getUserDetails($userId);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['init_user'])) {
         $display_name = $_POST['display_name'];
@@ -40,22 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: userprofile.php");
             die();
         }
-
-    } elseif (isset($_POST['mail_user'])) {
-        $mail = makePHPMail();
-
-        try {
-            // Email headers and content
-            $mail->addAddress('konstantin.kronfeldner@gmail.com', 'Recipient Name');
-            $mail->Subject = 'Test Email via Google SMTP';
-            $mail->Body = 'This is a test email sent through Google SMTP using PHPMailer.';
-
-            // Send email
-            $mail->send();
-            echo 'Message has been sent';
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
     }
 }
 
@@ -64,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
     <meta charset="utf-8">
     <title>Dienstplan NewForce</title>
     <link rel="stylesheet" href="style.css">
@@ -75,7 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="narrowwrapper">
         <div class="info_page">
-            <h1>Registrierung Abschließen</h1>
+            <?php
+            if ($userDetails['display_name'] == "") {
+                echo '<h1>Registrierung Abschließen</h1>';
+            } else {
+                echo '<h1>Passwort zurücksetzen</h1>';
+            }
+            ?>
 
             <?php
             echo "Login: $login <br/>";
@@ -86,15 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="">
                 <div>
                     <label for="display_name">Anzeigename:</label>
-                    <input type="text" id="display_name" name="display_name" required>
+                    <input type="text" id="display_name" name="display_name" value="<?php echo $userDetails['display_name']; ?>" required>
                 </div>
                 <div>
                     <label for="first_name">Vorname (optional):</label>
-                    <input type="text" id="first_name" name="first_name">
+                    <input type="text" id="first_name" name="first_name" value="<?php echo $userDetails['first_name']; ?>">
                 </div>
                 <div>
                     <label for="last_name">Nachname (optional):</label>
-                    <input type="text" id="last_name" name="last_name">
+                    <input type="text" id="last_name" name="last_name" value="<?php echo $userDetails['last_name']; ?>">
                 </div>
                 <div>
                     <label for="password">Passwort:</label>
@@ -104,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password_repeat">Wiederholen:</label>
                     <input type="password" id="password_repeat" name="password_repeat" required>
                 </div>
+
                 <?php
                 if (isset($errorMessage)) {
                     echo '<div class="error-box">';

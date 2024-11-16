@@ -13,28 +13,37 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
     exit;
 }
 
-// Check if the form is submitted
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    // Validate the login credentials
-    $login = $_POST['login'];
-    $password = $_POST['password'];
+function validateLogin()
+{
+    // Check if the form is submitted
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        // Validate the login credentials
+        $login = $_POST['login'];
+        $password = $_POST['password'];
 
-    list($loginCorrect, $userId) = checkLogin($login, $password);
+        list($loginCorrect, $userId) = checkLogin($login, $password);
 
-    if (!getUserActive($userId)) {
-        $loginError = "Account '$login' wurde deaktiviert.";
-    }
-    else if ($loginCorrect) {
+        echo ($loginCorrect);
+        echo ($userId);
+
+        if (!$loginCorrect) {
+            return 'Falscher Login oder Passwort.';
+        }
+
+        if (!getUserActive($userId)) {
+            return "Account '$login' wurde deaktiviert.";
+        }
+
         $_SESSION['loggedin'] = true;
         $_SESSION['login'] = $login;
         $_SESSION['user_id'] = $userId;
-        
+
         header('Location: dienstplan.php');
         exit;
-    } else {
-        $loginError = 'Falscher Login oder Passwort.';
     }
 }
+
+$loginError = validateLogin();
 
 ?>
 
@@ -45,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 </head>
 <body>
     <h2>Login</h2>
-    <?php if(isset($loginError)) { ?>
+    <?php if(isset($loginError) && $loginError != "") { ?>
         <p><?php echo $loginError; ?></p>
     <?php } ?>
     <form method="POST" action="">
@@ -61,6 +70,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <input type="submit" value="Login">
         </div>
     </form>
+
+    <div>
+        <a href="restore-password.php">Passwort vergessen?</a>
+    </div>
 </body>
 </html>
 
