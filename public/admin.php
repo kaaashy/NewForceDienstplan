@@ -8,43 +8,51 @@ include_once 'pages.php';
 
 ensureLoggedIn();
 
+function handleUserCreation()
+{
+    $login = $_POST['login'];
+    $email = $_POST['email'];
+
+    $password = base64_encode(random_bytes(12));
+    $password = str_replace(['+', '/', '='], ['-', '_', ''], $password);
+
+    list($existingId, $existingLogin) = fetchUserCredentialsByEmail($email);
+    if ($existingId) {
+        if ($existingLogin != $login) {
+            return array(false, "Email-Adresse '$email' wird bereits von login '$existingLogin' genutzt.");
+        }
+    }
+
+    list($token, $userId) = initializeUser($login, $email, $password);
+
+    $mail = makePHPMail();
+
+    try {
+        $link = "dienstplan.newforce.de/finish-registration.php?token=$token";
+        $link = "$link localhost/nf-dienstplan/finish-registration.php?token=$token";
+
+        // Email headers and content
+        $mail->addAddress($email, '');
+        $mail->Subject = 'New Force Dienstplan Account-Registrierung';
+        $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
+
+        // Send email
+        $mail->send();
+
+        return array("Registrierungs-Email wurde verschickt an '$email'", false);
+    } catch (Exception $e) {
+        return array(false, "Registrierungs-Email konnte nicht verschickt werden. Mailer Error: {$mail->ErrorInfo}");;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['reinit_everything'])) {
         initialize();
         session_destroy();
         header('Location: index.php');
         die();
-    } elseif (isset($_POST['logout'])) {
-        session_destroy();
-        header('Location: index.php');
-        die();
     } elseif (isset($_POST['createuser'])) {
-        $login = $_POST['login'];
-        $email = $_POST['email'];
-
-        $password = base64_encode(random_bytes(12));
-        $password = str_replace(['+', '/', '='], ['-', '_', ''], $password);
-
-        list($token, $userId) = initializeUser($login, $email, $password);
-
-        $mail = makePHPMail();
-
-        try {
-
-            $link = "dienstplan.newforce.de/finish-registration.php?token=$token";
-            $link = "$link localhost/nf-dienstplan/finish-registration.php?token=$token";
-
-            // Email headers and content
-            $mail->addAddress($email, '');
-            $mail->Subject = 'New Force Dienstplan Account-Registrierung';
-            $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
-
-            // Send email
-            $mail->send();
-            $userCreatedInfo = "Registration Email has been sent to '$email'";
-        } catch (Exception $e) {
-            $userCreatedError = "Registration email could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
+        list($userCreatedInfo, $userCreatedError) = handleUserCreation();
 
     } elseif (isset($_POST['deleteuser'])) {
         $login = $_POST['login'];
@@ -57,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Email headers and content
             $mail->addAddress('konstantin.kronfeldner@gmail.com', 'Recipient Name');
-            $mail->Subject = 'Test Email via Google SMTP';
-            $mail->Body = 'This is a test email sent through Google SMTP using PHPMailer.';
+            $mail->Subject = 'Test Email via New Force STMP';
+            $mail->Body = 'This is a test email sent through New Force SMTP using PHPMailer.';
 
             // Send email
             $mail->send();
@@ -89,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Dev Maintenance</h1>
 
             <h2>Mitarbeitende Anlegen</h2>
-            <p> Für existierende Mitarbeitende: Setzt Passwort zurück und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
+            <p> Für existierende Logins: Setzt Passwort und Email zurück und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
             <form method="POST" action="">
                 <div>
                     <label for="login">Login:</label>
@@ -105,13 +113,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <?php
-            if (isset($userCreatedInfo)) {
+            if (isset($userCreatedInfo) && $userCreatedInfo) {
                 echo '<div class="info-box">';
                 echo "<p>$userCreatedInfo</p>";
                 echo '</div>';
             }
 
-            if (isset($userCreatedError)) {
+            if (isset($userCreatedError) && $userCreatedError) {
                 echo '<div class="error-box">';
                 echo "<p>$userCreatedError</p>";
                 echo '</div>';
@@ -129,12 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" name="deleteuser" value="Löschen"></input>
             </form>
 
-
-            <h2>Logout</h2>
-            <form method="POST" action="">
-                <!-- Form 2 fields -->
-                <input type="submit" name="logout" value="Ausloggen"></input>
-            </form>
 
             <h2>Testmail</h2>
             <form method="POST" action="">

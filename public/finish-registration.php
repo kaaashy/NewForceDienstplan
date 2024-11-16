@@ -25,14 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_password = $_POST['password'];
         $new_password_repeat = $_POST['password_repeat'];
 
-        // $password = $_POST['password'];
-        // $email = $_POST['email'];
-        // $login = $_SESSION['login'];
         $updateData = true;
 
         if ($new_password != "" && $new_password != $new_password_repeat) {
             $errorMessage = "Passwörter stimmen nicht überein!";
             $updateData = false;
+        }
+
+        // not strictly necessary since email can't be changed here, but better safe than sorry
+        list($existingId, $existingLogin) = fetchUserCredentialsByEmail($email);
+        if ($existingId) {
+            if ($existingLogin != $login) {
+                $errorMessage = "Email-Adresse '$email' wird bereits von einer anderen Person genutzt.";
+                $updateData = false;
+            }
         }
 
         if ($updateData) {

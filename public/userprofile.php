@@ -24,6 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $login = $_SESSION['login'];
         $updateData = true;
         
+        list($existingId, $existingLogin) = fetchUserCredentialsByEmail($email);
+        if ($existingId) {
+            if ($existingLogin != $login) {
+                jsErrorMessage("Email-Adresse '$email' wird bereits von einer anderen Person genutzt!");
+                $updateData = false;
+            }
+        }
+
         list($loginCorrect, $userId) = checkLogin($login, $password);
 
         if (!$loginCorrect) {
