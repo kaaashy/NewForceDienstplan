@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Dev Maintenance</h1>
 
             <h2>Mitarbeitende Anlegen</h2>
-            <p> Für existierende Logins: Setzt Passwort und Email zurück und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
+            <p> Für existierende Logins: Setzt Passwort zurück und Email neu und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
             <form method="POST" action="">
                 <div>
                     <label for="login">Login:</label>

@@ -134,7 +134,7 @@ function removeFromSchedule(userId) {
     console.log("remove from event " + currentEventId);
 }
 
-function showEvent(dateStr, id) {
+function showEvent(dateStr, id, edit) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
     }
@@ -237,6 +237,7 @@ function showEvent(dateStr, id) {
 
                 let handStyle = ' style="cursor: pointer;" ';
 
+                eventUsers += "<table>";
                 for (let i in eventUsersSorted) {
                     let eventUser = eventUsersSorted[i];
                     let user = userData[eventUser.user_id];
@@ -247,23 +248,30 @@ function showEvent(dateStr, id) {
 
                     if (user) {
                         let removeOnClick = ' onclick="removeFromSchedule(' + user.id + '); "';
+                        eventUsers += '<tr><td>';
                         if (eventUser.deliberate) {
-                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen">' + user.display_name + ' ✅</div>';
+                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> ✅ ' + user.display_name + '</div>';
                         } else if (user.active && user.visible){
-                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen">' + user.display_name + ' 📅</div>';
+                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅 ' + user.display_name + '</div>';
                         }
+                        eventUsers += '</td></tr>';
                     }
                 }
+                eventUsers += "</table>";
 
+                nonEventUsers += "<table>";
                 for (let i in allUsersSorted) {
                     let user = allUsersSorted[i];
 
                     if (remainingUsers.has(user.id) && user.active && user.visible) {
                         let addOnClick = ' onclick="insertIntoSchedule(' + user.id + '); "';
 
+                        nonEventUsers += '<tr><td>';
                         nonEventUsers += '<div ' + addOnClick + handStyle + ' class="event_user">' + user.display_name + '</div>';
+                        nonEventUsers += '</td></tr>';
                     }
                 }
+                nonEventUsers += "</table>";
             }
         }
     } else {
@@ -289,75 +297,143 @@ function showEvent(dateStr, id) {
                 + '</tr>';
     }
 
-    // template info
-    let data = '<a href="#" class="hideEvent" '
-            + 'onclick="return hideEvent();">&times;</a>'
-            + '<h3>' + headline + '</h3>'
 
-            + '<div class="create_event_wrapper">'
-            + '<form method="POST" action="">'
+    let data = '';
 
-            + '<table class="userlist">'
-            + '<tr>'
-            + '<th>Eingetragen</th>'
-            + '<th>Ausgetragen</th>'
-            + '</tr>'
-            + '<tr>'
-            + '<td>' + eventUsers + '</td>'
-            + '<td>' + nonEventUsers + '</td>'
-            + '</tr>'
-            + addRemoveButtons
-            + '</table>'
+    if (edit) {
 
-            + '<div class="input_line">'
-            + '<label for="title">Titel:</label>'
-            + '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="' + title + '" required>'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="date">Datum:</label>'
-            + '<input type="date" id="date" name="date" value="' + date + '" ' + dateFlags + '>'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="time">Start:</label>'
-            + '<input type="time" id="time" name="time" value="' + time + '" required>'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="time">Ende:</label>'
-            + '<input type="time" id="end_time" name="end_time" value="' + endTime + '" required>'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="organizer">Verantwortlich:</label>'
-            + '<input type="text" id="organizer" name="organizer" placeholder="Verantwortlich" value="' + organizer + '">'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
-            + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="venue">Ort:</label>'
-            + '<input type="text" id="venue" name="venue" value="' + venue + '" placeholder="Ort">'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<label for="address">Adresse:</label>'
-            + '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
-            + '</div>'
-            + '<div class="input_line">'
-            + '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">' + description + '</textarea>'
-            + '</div>'
+        // template info
+        data = ''
+                + '<div class="headline-container">'
+                + `<span> ${headline} </span>`
+                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> 🔒 </a>`
+                + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
+                + '</div>'
 
-            + '<input type="hidden" id="id" name="id" value="' + id + '">'
-            + '<div class="input_line">'
-            + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '"/>'
-            + '</div>'
-            + '<div class="input_line">'
-            + deleteButton
-            + '</div>'
-            + '</form>'
-            + '</div>';
+                + '<div class="create_event_wrapper">'
+                + '<form method="POST" action="">'
 
-    setTimeout(function () {
-        document.getElementById('event_title_input').focus();
-    }, 100);
+                + '<div class="input_line">'
+                + '<label for="title">Titel:</label>'
+                + '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="' + title + '" required>'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="date">Datum:</label>'
+                + '<input type="date" id="date" name="date" value="' + date + '" ' + dateFlags + '>'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="time">Start:</label>'
+                + '<input type="time" id="time" name="time" value="' + time + '" required>'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="time">Ende:</label>'
+                + '<input type="time" id="end_time" name="end_time" value="' + endTime + '" required>'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="organizer">Verantwortlich:</label>'
+                + '<input type="text" id="organizer" name="organizer" placeholder="Verantwortlich" value="' + organizer + '">'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
+                + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="venue">Ort:</label>'
+                + '<input type="text" id="venue" name="venue" value="' + venue + '" placeholder="Ort">'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<label for="address">Adresse:</label>'
+                + '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">' + description + '</textarea>'
+                + '</div>'
+
+                + '<input type="hidden" id="id" name="id" value="' + id + '">'
+                + '<div class="input_line">'
+                + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '"/>'
+                + '</div>'
+                + '<div class="input_line">'
+                + deleteButton
+                + '</div>'
+                + '</form>'
+                + '</div>'
+                ;
+
+        if (id) {
+            data += ''
+                + '<div class="create_event_wrapper" style="margin-top: 50px">'
+                + '<h4>Dienste</h4>'
+                + '<table class="userlist">'
+                + '<tr>'
+                + `<th>Eingetragen (${users}/${minUsers})</th>`
+                + '<th>Ausgetragen</th>'
+                + '</tr>'
+                + '<tr>'
+                + '<td>' + eventUsers + '</td>'
+                + '<td>' + nonEventUsers + '</td>'
+                + '</tr>'
+                + '</table>'
+                + '</div>'
+                ;
+        }
+
+        setTimeout(function () {
+            document.getElementById('event_title_input').focus();
+        }, 100);
+
+    } else {
+        time = String(time);
+        endTime = String(endTime);
+
+        if (time.endsWith(":00:00")) time = time.replace(":00:00", ":00");
+        if (endTime.endsWith(":00:00")) endTime = endTime.replace(":00:00", ":00");
+
+        const options = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        };
+
+        date = new Date(date);
+        date = date.toLocaleDateString("de-DE", options);
+
+        let eventId = event.id;
+
+        // template info
+        data = ''
+                + '<div class="headline-container">'
+                + `<span> ${headline} </span>`
+                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, false);"> 🔒 </a>`
+                + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
+                + '</div>'
+
+                + '<div class="create_event_wrapper">'
+
+                + `<div class="data_line"> <p> ${date} - ${time}-${endTime} Uhr </p></div>`
+                + (organizer != "" ? `<div class="data_line"> <p> Verantwortlich: ${organizer} </p></div>` : "")
+                + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`
+
+                + '<h4>Dienste</h4>'
+                + '<table class="userlist">'
+                + '<tr>'
+                + `<th>Eingetragen (${users}/${minUsers})</th>`
+                + '<th>Ausgetragen</th>'
+                + '</tr>'
+                + '<tr>'
+                + '<td>' + eventUsers + '</td>'
+                + '<td>' + nonEventUsers + '</td>'
+                + '</tr>'
+                + addRemoveButtons
+                + '</table>'
+
+                + `<div class="data_line"> <p> ${description} </p></div>`
+
+                + '</div>';
+
+    }
 
     return (_("#calendar_data").innerHTML = data);
 }
@@ -387,9 +463,9 @@ function buildEventAssigneeOverview(event) {
 
         if (user) {
             if (eventUser.deliberate) {
-                html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '">' + user.display_name + ' ✅</div></td></tr>';
+                html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> ✅ ' + user.display_name + '</div></td></tr>';
             } else if (user.active && user.visible){
-                html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '">' + user.display_name + ' 📅</div></td></tr>';
+                html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
             }
         }
     }
@@ -444,7 +520,7 @@ function buildCalendarEventHtml(event) {
     if (mode === weekMode)
         assignedUsers = buildEventAssigneeOverview(event);
 
-    return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ")\">"
+    return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ', false)">'
             + '<span class="event_title">' + event.title + '</span>'
             + '<span class="event_time">' + readableTime(event.time)
             + " bis " + readableTime(event.end_time) + '</span>'
@@ -481,7 +557,7 @@ function addEvents(eventData, startDate) {
         if (_('[data-id="' + dateStr + '"]')) {
             let div = document.createElement("div");
             div.classList.add("calendar_event_adder");
-            div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "');\">"
+            div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
                     + "+ Neue Veranstaltung"
                     + "</a>";
 

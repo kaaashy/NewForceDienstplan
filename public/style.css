@@ -217,7 +217,8 @@ tbody.days_cal .today {
     position: absolute;
     top: 5%;
     left: 5%;
-    width: 90%;
+    width: 60%;
+    max-width: 500px;
     height: 90%;
     background: #fff;
     color: #c5c5c5;
@@ -229,16 +230,22 @@ tbody.days_cal .today {
     box-shadow: 0 10px 9px -6px #c5c5c5;
     z-index: 2;
 }
- 
-#calendar_data h3 {
+
+#calendar_data h4 {
     text-align: center;
     font-size: 20px;
     padding: 5px 10px;
     margin: 0;
-    background: #f2f2f2;
-    color: #43aeef;
-    border-bottom: 1px solid #dfdfdf;
-    text-transform: capitalize;
+    color: #666;
+}
+
+.data_line {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 90%;
+    color: #666; /* hehe */
 }
 
 .input_line {
@@ -246,6 +253,7 @@ tbody.days_cal .today {
     margin-bottom: 10px;
     margin-top: 10px;
     width: 90%;
+    color: #666; /* hehe */
 }
 
 .create_event_wrapper {
@@ -318,6 +326,42 @@ input.delete_event:hover {
     width: 50%;
     color: #666; /* hehe */
     text-align: center;
+}
+
+#calendar_data .headline-container {
+    text-align: center;
+    font-size: 20px;
+    padding: 5px 10px;
+    margin: 0;
+    background: #f2f2f2;
+    color: #43aeef;
+    border-bottom: 1px solid #dfdfdf;
+    text-transform: capitalize;
+
+    display: flex; /* or use display: inline */
+    justify-content: flex-end;
+    gap: 10px; /* Add some padding for a better look */
+}
+
+#calendar_data .headline-container a {
+    color: #fff;
+    text-decoration: none; /* Remove underline */
+    border: none;
+    padding: 0px;
+}
+
+#calendar_data .headline-container .close {
+    color: #666;
+    text-decoration: none; /* Remove underline */
+    border: none;
+    padding-left: 10px;
+    font-size: 20px;
+}
+
+#calendar_data .headline-container span {
+    margin-right: auto; /* Remove right margin from the last link */
+    margin-left: auto; /* Remove right margin from the last link */
+    font-weight: bold;
 }
 
 .deliberate_event_user {
