@@ -20,7 +20,7 @@ let dataReceived = 0;
 let currentEventId = null;
 
 
-function onEventsReceived(refresh) {
+function onEventsReceived(refresh, callback) {
     console.log(refresh);
     console.log(refreshCounter);
 
@@ -33,10 +33,12 @@ function onEventsReceived(refresh) {
     if (dataReceived === 2) {
         _("#calendar").innerHTML = buildCalendarHtml();
         addEvents(eventData, indexDate);
+
+        if (callback) callback();
     }
 }
 
-function refresh() {
+function refresh(callback) {
     // declare and fill event data
     eventData = {};
     userData = {};
@@ -68,7 +70,7 @@ function refresh() {
             userData[user.id] = user;
         }
 
-        onEventsReceived(counter);
+        onEventsReceived(counter, callback);
     });
 
     requestEvents(from, to, function (data) {
@@ -77,7 +79,7 @@ function refresh() {
         // after querying events, rebuild calendar
         eventData = data;
 
-        onEventsReceived(counter);
+        onEventsReceived(counter, callback);
     });
 
     // build the calendar
@@ -138,6 +140,17 @@ function removeFromSchedule(userId) {
     console.log("remove from event " + currentEventId);
 }
 
+function findEvent(id) {
+    if (id && eventData) {
+        for (let key in eventData) {
+            let event = eventData[key];
+
+            if (event.id === id)
+                return event;
+         }
+    }
+}
+
 function showEvent(dateStr, id, edit) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
@@ -187,6 +200,7 @@ function showEvent(dateStr, id, edit) {
     let nonEventUsers = "";
     let dateFlags = "required";
     let selfInUserList = false;
+    let locked = false;
 
     currentEventId = null;
 
@@ -218,6 +232,7 @@ function showEvent(dateStr, id, edit) {
                 venue = event.venue;
                 address = event.address;
                 description = event.description;
+                locked = event.locked;
                 buttonCaption = "Änderungen Speichern";
                 headline = title;
                 dateFlags = "disabled";
@@ -282,8 +297,6 @@ function showEvent(dateStr, id, edit) {
         id = "";
     }
 
-    console.log(id);
-
     let addRemoveButtons = "";
     if (id !== "") {
 
@@ -301,6 +314,14 @@ function showEvent(dateStr, id, edit) {
                 + '</tr>';
     }
 
+    let lockButton = "";
+    if (id !== "") {
+        let sentEventLockedStatus = !locked;
+        let lockIcon = locked ? "&#128274" : "&#128275";
+        let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, false)});}`;
+
+        lockButton = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
+    }
 
     let data = '';
 
@@ -310,7 +331,7 @@ function showEvent(dateStr, id, edit) {
         data = ''
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
-                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> 🔒 </a>`
+                + lockButton
                 + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 
@@ -394,10 +415,10 @@ function showEvent(dateStr, id, edit) {
         if (endTime.endsWith(":00:00")) endTime = endTime.replace(":00:00", ":00");
 
         const options = {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
+           weekday: 'long',
+           year: 'numeric',
+           month: 'long',
+           day: 'numeric',
         };
 
         date = new Date(date);
@@ -410,7 +431,7 @@ function showEvent(dateStr, id, edit) {
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
                 + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
-                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, false);"> 🔒 </a>`
+                + lockButton
                 + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 

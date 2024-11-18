@@ -81,5 +81,13 @@ if (isset($_POST['event_schedule'])) {
     return;
 }
 
+if (isset($_POST['event_locked'])) {
+    $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
+    $locked = filter_input(INPUT_POST, 'locked', FILTER_SANITIZE_NUMBER_INT) > 0;
+
+    setEventLockedStatus($eventId, $locked);
+    return;
+}
+
 
 ?>

@@ -180,6 +180,29 @@ function updateEvent($event_id, $type, $title, $description, $time, $end_time, $
     }
 }
 
+function setEventLockedStatus($event_id, $locked)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Events
+            SET locked = :locked
+            WHERE id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $event_id);
+    $stmt->bindValue(':locked', $locked ? 1 : 0);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Event updated successfully.";
+    } else {
+        echo "Error updating event.";
+    }
+}
+
 function updateOutlineDay($userId, $day, $active)
 {
     // Create a connection

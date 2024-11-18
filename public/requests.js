@@ -36,6 +36,16 @@ function sendUserEventActivity(userId, eventId, active, callback) {
     sendRequest(data, callback);
 }
 
+function sendEventLockedStatus(eventId, locked, callback) {
+
+    var data = 'login=' + loggedInUserLogin;
+    data = data + "&event_locked=y";
+    data = data + "&event_id=" + eventId;
+    data = data + "&locked=" + (locked ? 1 : 0);
+
+    sendRequest(data, callback);
+}
+
 function requestEvents(start, end, callback) {
 
     var data = 'login=' + loggedInUserLogin;
