@@ -97,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="narrowwrapper">
         <div class="info_page">
             <script > document.write(buildNavHtml()); </script>
-            <h1>Dev Maintenance</h1>
 
             <h2>Mitarbeitende Anlegen</h2>
             <p> Für existierende Logins: Setzt Passwort zurück und Email neu und schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>
@@ -130,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ?>
 
             <h2>Mitarbeitende Löschen</h2>
+            <p> Kann nicht rückgängig gemacht werden. Löscht Mitarbeitende sofort, restlos und ohne Nachfrage. Mitarbeitende werden aus allen Veranstaltungen entfernt. </p>
             <form method="POST" action="">
                 <div>
                     <label for="login">Login:</label>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" name="deleteuser" value="Löschen"></input>
             </form>
 
-
+            <h1>Dev Maintenance</h1>
             <h2>Testmail</h2>
             <form method="POST" action="">
                 <!-- Form 1 fields -->
