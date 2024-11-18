@@ -364,13 +364,13 @@ function showEvent(dateStr, id, edit) {
                 + '</div>'
                 ;
 
-        if (id) {
+        if (id && minUsers > 0) {
             data += ''
                 + '<div class="create_event_wrapper" style="margin-top: 50px">'
-                + '<h4>Dienste</h4>'
+                + `<h4>Dienste (${users} von ${minUsers})</h4>`
                 + '<table class="userlist">'
                 + '<tr>'
-                + `<th>Eingetragen (${users}/${minUsers})</th>`
+                + `<th>Eingetragen</th>`
                 + '<th>Ausgetragen</th>'
                 + '</tr>'
                 + '<tr>'
@@ -418,23 +418,26 @@ function showEvent(dateStr, id, edit) {
 
                 + `<div class="data_line"> <p> ${date} - ${time}-${endTime} Uhr </p></div>`
                 + (organizer != "" ? `<div class="data_line"> <p> Verantwortlich: ${organizer} </p></div>` : "")
-                + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`
+                + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`;
 
-                + '<h4>Dienste</h4>'
-                + '<table class="userlist">'
-                + '<tr>'
-                + `<th>Eingetragen (${users}/${minUsers})</th>`
-                + '<th>Ausgetragen</th>'
-                + '</tr>'
-                + '<tr>'
-                + '<td>' + eventUsers + '</td>'
-                + '<td>' + nonEventUsers + '</td>'
-                + '</tr>'
-                + addRemoveButtons
-                + '</table>'
+        if (minUsers > 0) {
+            data += ''
+                    + (minUsers > 0 ? `<h4>Dienste (${users} von ${minUsers})</h4>` : '<h4>Dienste</h4>')
+                    + '<table class="userlist">'
+                    + '<tr>'
+                    + `<th>Eingetragen</th>`
+                    + '<th>Ausgetragen</th>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td>' + eventUsers + '</td>'
+                    + '<td>' + nonEventUsers + '</td>'
+                    + '</tr>'
+                    + addRemoveButtons
+                    + '</table>';
+        }
 
+        data += ''
                 + `<div class="data_line"> <p> ${description} </p></div>`
-
                 + '</div>';
 
     }
@@ -500,8 +503,10 @@ function buildCalendarEventHtml(event) {
     };
 
     let usersOverview = function (event) {
-        let users = event.users.length;
         let min = event.minimum_users;
+        if (min <= 0) return "";
+
+        let users = event.users.length;
 
         let allGood = "good";
         if (users === min - 1)
