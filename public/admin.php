@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $login = $_POST['login'];
 
         deleteUser($login);
+    } elseif (isset($_POST['update_db'])) {
+
+        updateDB($login);
     } elseif (isset($_POST['send_testmail'])) {
 
         $mail = makePHPMail();
@@ -142,6 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="">
                 <!-- Form 1 fields -->
                 <input type="submit" name="send_testmail" value="Test-Email verschicken"></input>
+            </form>
+
+            <h2>Update DB</h2>
+            <form method="POST" action="">
+                <!-- Form 1 fields -->
+                <input type="submit" name="update_db" value="Update Database Schema"></input>
             </form>
 
             <h2>Auf Werkseinstellungen Zurücksetzen</h2>

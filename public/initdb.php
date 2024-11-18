@@ -47,7 +47,8 @@ function initializeTables()
         date DATE,
         time TIME,
         end_time TIME,
-        minimum_users INT UNSIGNED, 
+        minimum_users INT UNSIGNED,
+        locked BOOL,
         
         organizer VARCHAR(255),
         description TEXT,
@@ -244,6 +245,26 @@ function initialize()
     updateEventSchedule(4, $id, true, true);
     updateEventSchedule(4, $id, true, true);
     updateEventSchedule(4, $id, true, false);
+}
+
+// mostly for debugging / database altering
+function updateDB()
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "ALTER TABLE Events
+            ADD locked BOOL;";
+
+    $stmt = $pdo->prepare($sql);
+
+    try {
+        $stmt->execute();
+    } catch(Exception $e) {
+        $msg = $e->getMessage();
+        echo "$msg";
+    }
+
 }
 
 
