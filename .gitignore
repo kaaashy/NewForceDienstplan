@@ -2,3 +2,9 @@
 public/vendor/
 
 public/composer.json
+
+nbproject/private/private.xml
+
+.hg/wcache/checkisexec
+
+.hg/wcache/checknoexec
