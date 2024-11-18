@@ -3,9 +3,6 @@ TODO:
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 
 ### User-Rechte (admin/manager/bearbeiter/viewer) ########################
-* Ein-/Austragen bei Veranstaltungen (Alle)
-** Unterschiedliche Formulare für Eintragen / Veranstaltung erstellen
-* Eigenes Profil & Rahmendienstplan bearbeiten (Alle)
 * Statistiken einsehen (Dienstplan-Manager)
 * Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
 * Andere MA ein-/austragen bei Veranstaltungen (Dienstplan-Manager)
@@ -74,6 +71,13 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Veranstaltung sperren/entsperren
+
+### Rechte ###
+* Unterschiedliche Formulare für Eintragen / Veranstaltung erstellen
+* Ein-/Austragen bei Veranstaltungen (kein separates Recht nötig)
+* Eigenes Profil & Rahmendienstplan bearbeiten (kein separates Recht nötig)
+
 ### User Management ########################
 * Keine doppelten Emails erlauben
 * Passwort-Reset

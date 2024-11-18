@@ -68,6 +68,11 @@ if (isset($_POST['event_schedule'])) {
     $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
     $deliberate = true;
     
+    if (getEventLocked($eventId)) {
+        echo 'ERROR_EVENT_LOCKED';
+        return;
+    }
+
     if (!$active) {
         $users = getNumUsersAtEvent($eventId);
         $minUsers = getMinUsersAtEvent($eventId);
@@ -76,7 +81,7 @@ if (isset($_POST['event_schedule'])) {
             return;
         }
     }
-    
+
     updateEventSchedule($userId, $eventId, $deliberate, $active);
     return;
 }

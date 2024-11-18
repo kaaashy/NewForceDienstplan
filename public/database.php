@@ -590,10 +590,26 @@ function getNumUsersAtEvent($eventId)
 
 function getMinUsersAtEvent($eventId)
 {
+    $row = getEventDetails($eventId);
+    if (!$row) return false;
+
+    return $row['minimum_users'];
+}
+
+function getEventLocked($eventId)
+{
+    $row = getEventDetails($eventId);
+    if (!$row) return false;
+
+    return $row['locked'];
+}
+
+function getEventDetails($eventId)
+{
     $pdo = connect();
 
     // Retrieve the outline schedule
-    $sql = "SELECT minimum_users
+    $sql = "SELECT *
             FROM Events
             WHERE id = :event_id;";
 
@@ -602,8 +618,9 @@ function getMinUsersAtEvent($eventId)
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $row['minimum_users'];
+    return $row;
 }
+
 
 function respondEvents($startDate, $endDate) {
     $pdo = connect();
