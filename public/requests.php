@@ -19,6 +19,11 @@ function logInAsUser($userId)
             return;
         }
 
+        if ($details['active'] == 0) {
+            echo 'ERR_USER_INACTIVE';
+            return;
+        }
+
         $_SESSION['overrider_id'] = $_SESSION['user_id'];
         $_SESSION['loggedin'] = true;
         $_SESSION['login'] = $details['login'];
