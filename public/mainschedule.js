@@ -226,7 +226,7 @@ function showEvent(dateStr, id, edit) {
                 date = event.date;
                 time = event.time;
                 endTime = event.end_time;
-                users = event.users.length;
+                users = 0;
                 minUsers = event.minimum_users;
                 organizer = event.organizer;
                 venue = event.venue;
@@ -270,8 +270,10 @@ function showEvent(dateStr, id, edit) {
                         eventUsers += '<tr><td>';
                         if (eventUser.deliberate) {
                             eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> ✅ ' + user.display_name + '</div>';
+                            users++;
                         } else if (user.active && user.visible){
                             eventUsers += '<div ' + removeOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅 ' + user.display_name + '</div>';
+                            users++;
                         }
                         eventUsers += '</td></tr>';
                     }
@@ -528,7 +530,14 @@ function buildCalendarEventHtml(event) {
         let min = event.minimum_users;
         if (min <= 0) return "";
 
-        let users = event.users.length;
+        let users = 0;
+
+        for (const i in event.users) {
+            let user = userData[event.users[i].user_id];
+
+            if (event.users[i].deliberate || (user.visible && user.active))
+                users++;
+        }
 
         let allGood = "good";
         if (users === min - 1)

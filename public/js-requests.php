@@ -57,8 +57,8 @@ if (isset($_POST['user_status'])) {
 
     updateUserStatus($userId, $visible, $active);
 
-    // when a user is set to "inactive", they're removed from the outline schedule
-    if (!$active) {
+    // when a user is set to "inactive" or "invisible", they're removed from the outline schedule
+    if (!$active || !$visible) {
         for ($day = 0; $day < 7; ++$day) {
             updateOutlineDay($userId, $day, false);
         }
