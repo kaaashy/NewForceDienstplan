@@ -316,9 +316,10 @@ function showEvent(dateStr, id, edit) {
 
     let lockButton = "";
     if (id !== "") {
+        let editable = edit ? "true" : "false";
         let sentEventLockedStatus = !locked;
         let lockIcon = locked ? "&#128274" : "&#128275";
-        let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, false)});}`;
+        let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, ${editable})});}`;
 
         lockButton = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
     }
