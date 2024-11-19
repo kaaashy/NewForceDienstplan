@@ -541,7 +541,11 @@ function buildCalendarEventHtml(event) {
         else
             html += users + '/' + min;
 
-        html += ' MA</span>';
+        let locked = "";
+        if (event.locked)
+            locked = "&#128274";
+
+        html += ` MA ${locked}</span>`;
 
         return html;
     };
