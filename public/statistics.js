@@ -159,15 +159,15 @@ function buildIndexHtml()
     html += '<table class="statistics">';
     html += '<tr>';
     html += '<th></th>';
-    html += '<th>Dienste</th>';
-    html += '<th>Doppel+</th>';
-    html += '<th>Mo</th>';
-    html += '<th>Di</th>';
-    html += '<th>Mi</th>';
-    html += '<th>Do</th>';
-    html += '<th>Fr</th>';
-    html += '<th>Sa</th>';
-    html += '<th>So</th>';
+    html += '<th title="Anzahl Dienste im gewählten Zeitraum">Dienste</th>';
+    html += '<th title="Doppel- oder Mehrfachdienste">Doppel+</th>';
+    html += '<th title="Dienste an Montagen">Mo</th>';
+    html += '<th title="Dienste an Dienstagen">Di</th>';
+    html += '<th title="Dienste an Mittwöchern">Mi</th>';
+    html += '<th title="Dienste an Donnerstagen">Do</th>';
+    html += '<th title="Dienste an Freitagen">Fr</th>';
+    html += '<th title="Dienste an Samstagen">Sa</th>';
+    html += '<th title="Dienste an Sonntagen">So</th>';
     html += '</tr>';
 
     let sorted = [];
