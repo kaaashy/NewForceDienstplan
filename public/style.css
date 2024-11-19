@@ -33,13 +33,7 @@ body {
 }
 
 .narrowwrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     width: 50%;
-    height: 1000px;
     background: #fff;
     margin: 1em auto;
     border: 4px solid #e2e2e2;
@@ -47,7 +41,6 @@ body {
     border-top-width: 25px;
     border-bottom-width: 32px;
     border-radius: 8px;
-    overflow: hidden;
 }
 
 div#calendar {
