@@ -45,7 +45,6 @@ TODO:
 * Events automatisch einfügen? 
 * Event Automatisch erstellt? 
 * Hintergrund-Infos (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
-* Dienst-Statistiken (wer hat wie oft Dienst gemacht?)
 
 
 ### Fragen: ########################
@@ -71,6 +70,8 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Als andere MA einloggen
+* Dienst-Statistiken (wer hat wie oft Dienst gemacht?)
 * Veranstaltung sperren/entsperren
 
 ### Rechte ###

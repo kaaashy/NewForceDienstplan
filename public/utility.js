@@ -9,7 +9,12 @@ function buildNavHtml()
     html += '<a href="users.php">Mitarbeitende</a>';
     html += '<a href="statistics.php">Statistiken</a>';
     html += '<a href="userprofile.php">Mein Profil (' + loggedInUserLogin + ') </a>';
-    html += '<a href="logout.php">⤷🚪Logout </a>';
+
+    let overrider = '';
+    if (overridingUserId) {
+        overrider = `(Als: ${loggedInUserLogin})`;
+    }
+    html += `<a href="logout.php">⤷🚪Logout ${overrider}</a>`;
 
     html += '</div>';
 

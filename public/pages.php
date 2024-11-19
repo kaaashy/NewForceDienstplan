@@ -25,15 +25,21 @@ function backToLogin($msg = "not logged in")
 function jsUserId()
 {
     echo "<script>";
-    echo "var loggedInUserLogin = " . json_encode($_SESSION['login']) . ";";
-    echo "var loggedInUserId = " . json_encode($_SESSION['user_id']) . ";";
+    echo "let loggedInUserLogin = " . json_encode($_SESSION['login']) . ";";
+    echo "let loggedInUserId = " . json_encode($_SESSION['user_id']) . ";";
+    if (isset($_SESSION['overrider_id'])) {
+        echo "let overridingUserId = " . json_encode($_SESSION['overrider_id']) . ";";
+    } else {
+        echo "let overridingUserId";
+    }
+
     echo "</script>";
 }
 
 function jsErrorMessage($errorMessage)
 {
     echo "<script>";
-    echo "var phpError = " . json_encode($errorMessage) . ";";
+    echo "let phpError = " . json_encode($errorMessage) . ";";
     echo "</script>";
 }
 

@@ -78,7 +78,7 @@ function sendRequest(data, callback) {
     var xhr = new XMLHttpRequest();
 
     // Set the request URL and method
-    var url = 'requests.php'; // Replace with the actual server endpoint URL
+    var url = 'js-requests.php';
     var method = 'POST';
 
     // Set up the request

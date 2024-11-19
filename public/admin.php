@@ -5,6 +5,7 @@ session_start();
 include_once 'initdb.php';
 include_once 'database.php';
 include_once 'pages.php';
+include_once 'requests.php';
 
 ensureLoggedIn();
 
@@ -58,6 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $login = $_POST['login'];
 
         deleteUser($login);
+    } elseif (isset($_POST['login_as'])) {
+        $userId = $_POST['user_id'];
+
+        logInAsUser($userId);
     } elseif (isset($_POST['update_db'])) {
 
         updateDB($login);
@@ -138,6 +143,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Form 2 fields -->
                 <input type="submit" name="deleteuser" value="Löschen"></input>
+            </form>
+
+            <h2>Als andere Mitarbeitende einloggen</h2>
+            <form method="POST" action="">
+                <div>
+                    <label for="user_id">User ID:</label>
+                    <input type="text" id="user_id" name="user_id" required></input>
+                </div>
+
+                <input type="submit" name="login_as" value="Als User Einloggen"></input>
             </form>
 
             <h1>Dev Maintenance</h1>
