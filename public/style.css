@@ -542,6 +542,26 @@ tbody.days_cal .calendar_event span {
     background: #f8f8f8;
 }
 
+.statistics {
+    border: 1px solid #d0d0d0;
+}
+
+.statistics td {
+    width:10%;
+    text-align: center;
+    border: 1px solid #d0d0d0;
+}
+
+.statistics th {
+    text-align: center;
+    border: 1px solid #d0d0d0;
+    background: #f0f0f0;
+}
+
+.statistics tr:hover {
+    background: #f8f8f8;
+}
+
 .user_overview td {
     text-align: center;
 }
