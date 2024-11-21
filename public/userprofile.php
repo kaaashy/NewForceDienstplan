@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         list($existingId, $existingLogin) = fetchUserCredentialsByEmail($email);
         if ($existingId) {
             if ($existingLogin != $login) {
-                jsErrorMessage("Email-Adresse '$email' wird bereits von einer anderen Person genutzt!");
+                jsMessage("phpError", "Email-Adresse '$email' wird bereits von einer anderen Person genutzt!");
                 $updateData = false;
             }
         }
@@ -35,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         list($loginCorrect, $userId) = checkLogin($login, $password);
 
         if (!$loginCorrect) {
-            jsErrorMessage("Falsches Passwort!");
+            jsMessage("phpError", "Falsches Passwort!");
             $updateData = false;
         } 
         
         if ($new_password != "" && $new_password != $new_password_repeat) {
-            jsErrorMessage("Neue Passwörter stimmen nicht überein!");
+            jsMessage("phpError", "Neue Passwörter stimmen nicht überein!");
             $updateData = false;
         }
         

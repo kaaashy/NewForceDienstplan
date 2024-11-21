@@ -56,25 +56,6 @@ function buildIndexHtml()
 
     html += buildNavHtml();
 
-    html += '<h2>Rahmendienstplan</h2>';
-    html += '<table class="outline_schedule">';
-    html += '<tr>';
-    html += '<th></th>';
-    html += '<th>Montag</th>';
-    html += '<th>Dienstag</th>';
-    html += '<th>Mittwoch</th>';
-    html += '<th>Donnerstag</th>';
-    html += '<th>Freitag</th>';
-    html += '<th>Samstag</th>';
-    html += '<th>Sonntag</th>';
-    html += '</tr>';
-
-    let outlineDay = function (value, id, day) {
-        let v = value ? "checked" : "";
-
-        return '<input type="checkbox" id="outline_check_' + id + '_' + day + '" onclick=setOutlineForUser(' + id + ',' + day + ') ' + v + '>';
-    };
-
     let sorted = [];
     for (let id in userData) {
         sorted.push(userData[id]);
@@ -86,24 +67,6 @@ function buildIndexHtml()
 
         return nameA.localeCompare(nameB);
     });
-
-    for (const i in sorted) {
-        let user = sorted[i];
-        let id = user.id;
-
-        html += '<tr>';
-        html += '<td>' + user.display_name + '</td>';
-        html += '<td>' + outlineDay(user.day_0, id, 0) + '</td>';
-        html += '<td>' + outlineDay(user.day_1, id, 1) + '</td>';
-        html += '<td>' + outlineDay(user.day_2, id, 2) + '</td>';
-        html += '<td>' + outlineDay(user.day_3, id, 3) + '</td>';
-        html += '<td>' + outlineDay(user.day_4, id, 4) + '</td>';
-        html += '<td>' + outlineDay(user.day_5, id, 5) + '</td>';
-        html += '<td>' + outlineDay(user.day_6, id, 6) + '</td>';
-        html += '</tr>';
-    }
-
-    html += '</table>';
 
     html += '<h2>Mitarbeitendenübersicht</h2>';
     html += '<table class="user_overview">';
@@ -146,6 +109,88 @@ function buildIndexHtml()
     }
 
     html += '</table>';
+
+    html += '<h2>Rahmendienstplan</h2>';
+    html += '<table class="outline_schedule">';
+    html += '<tr>';
+    html += '<th></th>';
+    html += '<th>Montag</th>';
+    html += '<th>Dienstag</th>';
+    html += '<th>Mittwoch</th>';
+    html += '<th>Donnerstag</th>';
+    html += '<th>Freitag</th>';
+    html += '<th>Samstag</th>';
+    html += '<th>Sonntag</th>';
+    html += '</tr>';
+
+    let outlineDay = function (value, id, day) {
+        let v = value ? "checked" : "";
+
+        return '<input type="checkbox" id="outline_check_' + id + '_' + day + '" onclick=setOutlineForUser(' + id + ',' + day + ') ' + v + '>';
+    };
+
+    for (const i in sorted) {
+        let user = sorted[i];
+        let id = user.id;
+
+        html += '<tr>';
+        html += '<td>' + user.display_name + '</td>';
+        html += '<td>' + outlineDay(user.day_0, id, 0) + '</td>';
+        html += '<td>' + outlineDay(user.day_1, id, 1) + '</td>';
+        html += '<td>' + outlineDay(user.day_2, id, 2) + '</td>';
+        html += '<td>' + outlineDay(user.day_3, id, 3) + '</td>';
+        html += '<td>' + outlineDay(user.day_4, id, 4) + '</td>';
+        html += '<td>' + outlineDay(user.day_5, id, 5) + '</td>';
+        html += '<td>' + outlineDay(user.day_6, id, 6) + '</td>';
+        html += '</tr>';
+    }
+
+    html += '</table>';
+
+    html += '<h2>Mitarbeitende Anlegen</h2>';
+    html += '<p> Für existierende Logins: Setzt Passwort zurück und ersetzt Email-Adresse. Schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>';
+    html += '<form method="POST" action="">';
+    html += '    <div>';
+    html += '        <label for="login">Login:</label>';
+    html += '        <input type="text" id="login" name="login" required> </input>';
+    html += '    </div>';
+    html += '    <div>';
+    html += '        <label for="email">Email:</label>';
+    html += '        <input type="text" id="email" name="email" required> </input>';
+    html += '    </div>';
+    html += '    <input type="submit" name="createuser" value="Neu Anlegen"> </input>';
+    html += '</form>';
+
+    if (typeof userCreatedInfo !== "undefined") {
+        html += '    <div class="info-box">';
+        html += `    <p>${userCreatedInfo}</p>`;
+        html += '    </div>';
+    }
+
+    if (typeof userCreatedError !== "undefined") {
+        html += '    <div class="error-box">';
+        html += `    <p>${userCreatedError}</p>`;
+        html += '    </div>';
+    }
+
+    html += '<h2>Mitarbeitende Löschen</h2>';
+    html += '<p> <strong>Achtung:</strong> Kann nicht rückgängig gemacht werden. Löscht Mitarbeitende sofort, restlos und <strong>ohne Nachfrage</strong>. Mitarbeitende werden aus allen Veranstaltungen entfernt. </p>';
+    html += '<form method="POST" action="">';
+    html += '    <div>';
+    html += '        <label for="login">Login:</label>';
+    html += '        <input type="text" id="login" name="login" required></input>';
+    html += '    </div>';
+    html += '    <input type="submit" name="deleteuser" value="Löschen"></input>';
+    html += '</form>';
+
+    html += '<h2>Als andere Mitarbeitende einloggen</h2>';
+    html += '<form method="POST" action="">';
+    html += '    <div>';
+    html += '        <label for="user_id">Id:</label>';
+    html += '        <input type="text" id="user_id" name="user_id" required></input>';
+    html += '    </div>';
+    html += '    <input type="submit" name="login_as" value="Als andere MA Einloggen"></input>';
+    html += '</form>';
 
 
 

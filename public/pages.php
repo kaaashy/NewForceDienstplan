@@ -36,10 +36,10 @@ function jsUserId()
     echo "</script>";
 }
 
-function jsErrorMessage($errorMessage)
+function jsMessage($name, $message)
 {
     echo "<script>";
-    echo "let phpError = " . json_encode($errorMessage) . ";";
+    echo "let $name = " . json_encode($message) . ";";
     echo "</script>";
 }
 
