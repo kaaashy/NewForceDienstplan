@@ -38,6 +38,16 @@ function setOutlineForUser(id, day) {
     });
 }
 
+function setPermissionForUser(id, permission) {
+
+    let checkBoxId = 'permission_check_' + id + '_' + permission;
+    let checked = _("#" + checkBoxId).checked;
+
+    sendUserPermission(id, permission, checked, function () {
+        refresh();
+    });
+}
+
 function setUserStatus(id) {
 
     let visibleCheckBoxId = 'visible_check_' + id;
@@ -65,8 +75,28 @@ function buildIndexHtml()
         let nameA = a.display_name;
         let nameB = b.display_name;
 
+        if (!a.active) nameA = "zzzzzz" + nameA;
+        else if (!a.visible) nameA = "zzzzzy" + nameA;
+
+        if (!b.active) nameB = "zzzzzz" + nameB;
+        else if (!b.visible) nameB = "zzzzzy" + nameB;
+
         return nameA.localeCompare(nameB);
     });
+
+    html += buildOutlineScheduleHtml(sorted);
+    html += buildUsersOverviewHtml(sorted);
+    html += buildInviteUsersHtml();
+    html += buildDeleteUsersHtml();
+    html += buildLoginAsOthersHtml();
+    html += buildPermissionsHtml();
+
+    return html;
+}
+
+function buildUsersOverviewHtml(users)
+{
+    let html = '';
 
     html += '<h2>Mitarbeitendenübersicht</h2>';
     html += '<table class="user_overview">';
@@ -86,8 +116,8 @@ function buildIndexHtml()
         return "-";
     };
 
-    for (const i in sorted) {
-        let user = sorted[i];
+    for (const i in users) {
+        let user = users[i];
         let id = user.id;
 
         html += '<tr>';
@@ -109,6 +139,12 @@ function buildIndexHtml()
     }
 
     html += '</table>';
+    return html;
+}
+
+function buildOutlineScheduleHtml(users)
+{
+    let html = '';
 
     html += '<h2>Rahmendienstplan</h2>';
     html += '<table class="outline_schedule">';
@@ -129,8 +165,10 @@ function buildIndexHtml()
         return '<input type="checkbox" id="outline_check_' + id + '_' + day + '" onclick=setOutlineForUser(' + id + ',' + day + ') ' + v + '>';
     };
 
-    for (const i in sorted) {
-        let user = sorted[i];
+    for (const i in users) {
+        let user = users[i];
+        if (!user.visible) continue;
+
         let id = user.id;
 
         html += '<tr>';
@@ -146,6 +184,13 @@ function buildIndexHtml()
     }
 
     html += '</table>';
+
+    return html;
+}
+
+function buildInviteUsersHtml()
+{
+    let html = '';
 
     html += '<h2>Mitarbeitende Anlegen</h2>';
     html += '<p> Für existierende Logins: Setzt Passwort zurück und ersetzt Email-Adresse. Schickt eine Mail, mit der das Passwort neu gesetzt werden kann. </p>';
@@ -173,6 +218,13 @@ function buildIndexHtml()
         html += '    </div>';
     }
 
+    return html;
+}
+
+function buildDeleteUsersHtml()
+{
+    let html = '';
+
     html += '<h2>Mitarbeitende Löschen</h2>';
     html += '<p> <strong>Achtung:</strong> Kann nicht rückgängig gemacht werden. Löscht Mitarbeitende sofort, restlos und <strong>ohne Nachfrage</strong>. Mitarbeitende werden aus allen Veranstaltungen entfernt. </p>';
     html += '<form method="POST" action="">';
@@ -183,6 +235,13 @@ function buildIndexHtml()
     html += '    <input type="submit" name="deleteuser" value="Löschen"></input>';
     html += '</form>';
 
+    return html;
+}
+
+function buildLoginAsOthersHtml()
+{
+    let html = '';
+
     html += '<h2>Als andere Mitarbeitende einloggen</h2>';
     html += '<form method="POST" action="">';
     html += '    <div>';
@@ -192,7 +251,78 @@ function buildIndexHtml()
     html += '    <input type="submit" name="login_as" value="Als andere MA Einloggen"></input>';
     html += '</form>';
 
+    return html;
+}
 
+function buildPermissionsHtml()
+{
+    let html = '';
+
+    let names = Array();
+    names['lock_event_schedule'] = "Dienste Sperren";
+    names['manage_other_schedules'] = "Dienste Planen";
+    names['manage_events'] = "Veranstaltungen Planen";
+    names['change_other_outline_schedule'] = "Rahmendienstplan Ändern";
+    names['view_statistics'] = "Statistiken Einsehen";
+    names['invite_users'] = "MA Einladen";
+    names['manage_users'] = "MA Verwalten";
+    names['delete_users'] = "MA Löschen";
+    names['login_as_others'] = "Als andere Einloggen *";
+    names['manage_permissions'] = "Rechte Verwalten *";
+    names['admin_dev_maintenance'] = "Dev/Admin Maintenance *";
+
+    html += '<h2>Berechtigungen</h2>';
+    html += '<table class="permissions">';
+    html += '<tr>';
+    html += '<th></th>';
+
+    html += '<th>Eigenes Profil Bearbeiten</th>';
+    html += '<th>Dienste Ein- / Austragen</th>';
+
+    for (const n in names) {
+        html += '<th>'+names[n]+'</th>';
+    }
+
+    html += '</tr>';
+
+    let permissionCheck = function (value, id, permission) {
+        let v = value ? "checked" : "";
+
+        return '<input type="checkbox" id="permission_check_' + id + '_' + permission + '" onclick=setPermissionForUser(' + id + ',' + permission + ') ' + v + '>';
+    };
+
+    let sorted = [];
+    for (let id in userData) {
+        sorted.push(userData[id]);
+    }
+
+    sorted.sort(function (a, b) {
+        let nameA = a.display_name;
+        let nameB = b.display_name;
+
+        if (a.id === 1) nameA = "aaaaaaa";
+        if (b.id === 1) nameB = "aaaaaaa";
+
+        return nameA.localeCompare(nameB);
+    });
+
+    for (const i in sorted) {
+        let user = sorted[i];
+        if (!user.active) continue;
+
+        html += '<tr>';
+        html += '<td>' + user.display_name + '</td>';
+        html += '<td> <input type="checkbox" checked disabled> </td>';
+        html += '<td> <input type="checkbox" checked disabled> </td>';
+
+        for (const pn in names) {
+            html += '<td>' + permissionCheck(user.permissions[pn], user.id, pn) + '</td>';
+        }
+
+        html += '</tr>';
+    }
+
+    html += '</table>';
 
     return html;
 }

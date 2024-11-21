@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die();
     } elseif (isset($_POST['update_db'])) {
 
-        updateDB($login);
+        updateDB();
+
     } elseif (isset($_POST['send_testmail'])) {
 
         $mail = makePHPMail();

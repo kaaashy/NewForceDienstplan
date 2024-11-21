@@ -56,7 +56,14 @@ function addUser($login, $password, $email, $first, $last)
     $stmt->bindValue(':last_name', $last);
     $stmt->execute();
 
-    return $pdo->lastInsertId();
+    $id = $pdo->lastInsertId();
+
+    $stmt = $pdo->prepare('INSERT INTO Permissions (user_id) '
+            . 'VALUES (:user_id)');
+    $stmt->bindValue(':user_id', $id);
+    $stmt->execute();
+
+    return $id;
 }
 
 function deleteUser($login) {
@@ -385,6 +392,61 @@ function updateUserStatus($id, $visible, $active)
     }
 }
 
+function updateUserPermissions($user_id,
+        $lock_event_schedule,
+        $manage_other_schedules,
+        $manage_events,
+        $change_other_outline_schedule,
+        $view_statistics,
+        $invite_users,
+        $manage_users,
+        $delete_users,
+        $login_as_others,
+        $manage_permissions,
+        $admin_dev_maintenance)
+{
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Permissions
+            SET
+                lock_event_schedule = :lock_event_schedule,
+                manage_other_schedules = :manage_other_schedules,
+                manage_events = :manage_events,
+                change_other_outline_schedule = :change_other_outline_schedule,
+                view_statistics = :view_statistics,
+                invite_users = :invite_users,
+                manage_users = :manage_users,
+                delete_users = :delete_users,
+                login_as_others = :login_as_others,
+                manage_permissions = :manage_permissions,
+                admin_dev_maintenance = :admin_dev_maintenance
+            WHERE user_id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $user_id);
+    $stmt->bindValue(':lock_event_schedule', $lock_event_schedule ? 1 : 0);
+    $stmt->bindValue(':manage_other_schedules', $manage_other_schedules ? 1 : 0);
+    $stmt->bindValue(':manage_events', $manage_events ? 1 : 0);
+    $stmt->bindValue(':change_other_outline_schedule', $change_other_outline_schedule ? 1 : 0);
+    $stmt->bindValue(':view_statistics', $view_statistics ? 1 : 0);
+    $stmt->bindValue(':invite_users', $invite_users ? 1 : 0);
+    $stmt->bindValue(':manage_users', $manage_users ? 1 : 0);
+    $stmt->bindValue(':delete_users', $delete_users ? 1 : 0);
+    $stmt->bindValue(':login_as_others', $login_as_others ? 1 : 0);
+    $stmt->bindValue(':manage_permissions', $manage_permissions ? 1 : 0);
+    $stmt->bindValue(':admin_dev_maintenance', $admin_dev_maintenance ? 1 : 0);
+    $stmt->execute();
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User Permissions updated successfully.";
+    } else {
+        echo "Error updating user permissions.";
+    }
+}
+
 function deleteEvent($id)
 {
     // Create a connection
@@ -705,6 +767,32 @@ function respondUsers() {
         while ($dayRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
             $row["day_".$dayRow["day"]] = true;
         }
+
+        // Retrieve oermissions
+        $sql = "SELECT *
+                FROM Permissions
+                WHERE user_id = :user_id;";
+
+        $stmt3 = $pdo->prepare($sql);
+        $stmt3->bindValue("user_id", $row["id"]);
+        $stmt3->execute();
+
+        $permissions = array();
+        while ($permissionRow = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+            $permissions['lock_event_schedule'] = $permissionRow['lock_event_schedule'];
+            $permissions['manage_other_schedules'] = $permissionRow['manage_other_schedules'];
+            $permissions['manage_events'] = $permissionRow['manage_events'];
+            $permissions['change_other_outline_schedule'] = $permissionRow['change_other_outline_schedule'];
+            $permissions['view_statistics'] = $permissionRow['view_statistics'];
+            $permissions['invite_users'] = $permissionRow['invite_users'];
+            $permissions['manage_users'] = $permissionRow['manage_users'];
+            $permissions['delete_users'] = $permissionRow['delete_users'];
+            $permissions['login_as_others'] = $permissionRow['login_as_others'];
+            $permissions['manage_permissions'] = $permissionRow['manage_permissions'];
+            $permissions['admin_dev_maintenance'] = $permissionRow['admin_dev_maintenance'];
+        }
+
+        $row['permissions'] = $permissions;
 
         $rows[] = $row;
     }

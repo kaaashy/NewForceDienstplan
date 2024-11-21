@@ -88,33 +88,30 @@ function initializeTables()
         echo "Table Users created successfully";
     }
     
-    $createRolesTable = "CREATE TABLE Roles (
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        
-        name VARCHAR(50) NOT NULL,
+    $createPermissionsTable = "CREATE TABLE Permissions (
+        user_id INT UNSIGNED PRIMARY KEY,
 
-        change_own_outline_schedule BOOL,
-        change_own_schedule BOOL,
-        change_own_profile BOOL,
-        
+        lock_event_schedule BOOL,
+        manage_other_schedules BOOL,
+
         manage_events BOOL,
-        change_event_description BOOL,
 
-        manage_users BOOL,
-        manage_roles BOOL,
-        
         change_other_outline_schedule BOOL,
-        change_other_schedule BOOL,
-        change_other_profile BOOL,
+        view_statistics BOOL,
 
-        manage_database BOOL,
-        view_as_others BOOL,
+        invite_users BOOL,
+        manage_users BOOL,
+        delete_users BOOL,
+
+        login_as_others BOOL,
+        manage_permissions BOOL,
+        admin_dev_maintenance BOOL,
 
         creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
-    if ($pdo->query($createRolesTable) === TRUE) {
-        echo "Table Roles created successfully";
+    if ($pdo->query($createPermissionsTable) === TRUE) {
+        echo "Table Permissions created successfully";
     }
     
     $createSchedulesTable = "CREATE TABLE Schedule (
@@ -172,8 +169,9 @@ function initialize()
         addUser($name, $password, $email, $first, $last);
     }
 
-    // set admin user to invisible
-    updateUserStatus(0, false, true);
+    // set admin user to invisible & allow everything
+    updateUserStatus(1, false, true);
+    updateUserPermissions(1, true, true, true, true, true, true, true, true, true, true, true);
 
     // set Tascha for Do, Sa
     updateOutlineDay(2, 3, true);
@@ -200,45 +198,43 @@ function initialize()
     updateOutlineDay(9, 5, false);
     updateOutlineDay(9, 5, true);
 
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-12");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-13");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-19");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-20");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-05-26");           
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-05-27");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
     // set Andi for Fr, Sa
     updateOutlineDay(7, 4, true);
     updateOutlineDay(7, 5, true);
-    
+
     // set Domi for Do, Fr
     updateOutlineDay(8, 3, true);
     updateOutlineDay(8, 4, true);
 
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-15");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2023-06-02");           
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-16");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-22");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-23");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-29");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-30");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-12-06");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2023-06-03");
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-12-07");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2023-06-08");           
+    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2024-12-13");
     updateEvent($id, "Veranstaltung", "Spielmannstreiben", "Rudelgedudel", "20:00", "02:00", 4, "DomiTheWall", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Großputz", "2023-06-25");
+    $id = addEvent("Veranstaltung", "Großputz", "2024-12-15");
     updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
     
     updateEventSchedule(2, $id, true, true);
     updateEventSchedule(5, $id, true, true);
@@ -260,6 +256,63 @@ function updateDB()
 
     try {
         $stmt->execute();
+    } catch(Exception $e) {
+        $msg = $e->getMessage();
+        echo "$msg";
+    }
+
+    try {
+        if ($pdo->query("DROP TABLE Permissions") === TRUE) {
+            echo "Table Permissions deleted successfully";
+        }
+
+        $createPermissionsTable = "CREATE TABLE Permissions (
+            user_id INT UNSIGNED PRIMARY KEY,
+
+            lock_event_schedule BOOL,
+            manage_other_schedules BOOL,
+
+            manage_events BOOL,
+
+            change_other_outline_schedule BOOL,
+            view_statistics BOOL,
+
+            invite_users BOOL,
+            manage_users BOOL,
+            delete_users BOOL,
+
+            login_as_others BOOL,
+            manage_permissions BOOL,
+            admin_dev_maintenance BOOL,
+
+            creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if ($pdo->query($createPermissionsTable) === TRUE) {
+            echo "Table Permissions created successfully";
+        }
+
+        $stmt = $pdo->prepare("INSERT INTO Permissions (user_id,
+            lock_event_schedule,
+            manage_other_schedules,
+            manage_events,
+            change_other_outline_schedule,
+            view_statistics,
+            invite_users,
+            manage_users,
+            delete_users,
+            login_as_others,
+            manage_permissions,
+            admin_dev_maintenance
+            ) VALUES (0, true, true, true, true, true, true, true, true, true, true, true)");
+        $stmt->execute();
+
+        for ($i = 1; $i < 10; ++$i) {
+            $stmt = $pdo->prepare("INSERT INTO Permissions (user_id) VALUES ($i)");
+            $stmt->execute();
+        }
+
     } catch(Exception $e) {
         $msg = $e->getMessage();
         echo "$msg";
