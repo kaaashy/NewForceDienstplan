@@ -18,7 +18,7 @@ function validateLogin()
     // Check if the form is submitted
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         // Validate the login credentials
-        $login = $_POST['login'];
+        $login = trim($_POST['login']);
         $password = $_POST['password'];
 
         list($loginCorrect, $userId) = checkLogin($login, $password);

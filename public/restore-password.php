@@ -10,7 +10,7 @@ include_once 'initdb.php';
 function validateReset()
 {
     // Validate the login credentials
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
 
     list($userId, $login) = fetchUserCredentialsByEmail($email);
     if ($userId) {

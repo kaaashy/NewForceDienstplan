@@ -18,9 +18,9 @@ $userDetails = getUserDetails($userId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['init_user'])) {
-        $display_name = $_POST['display_name'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
+        $display_name = trim($_POST['display_name']);
+        $first_name = trim($_POST['first_name']);
+        $last_name = trim($_POST['last_name']);
 
         $new_password = $_POST['password'];
         $new_password_repeat = $_POST['password_repeat'];

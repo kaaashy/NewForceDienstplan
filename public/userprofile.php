@@ -11,10 +11,10 @@ ensureLoggedIn();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_userprofile'])) {
-        $display_name = $_POST['display_name'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
+        $display_name = trim($_POST['display_name']);
+        $first_name = trim($_POST['first_name']);
+        $last_name = trim($_POST['last_name']);
+        $email = trim($_POST['email']);
         
         $new_password = $_POST['new_password'];
         $new_password_repeat = $_POST['new_password_repeat'];
