@@ -21,9 +21,6 @@ let currentEventId = null;
 
 
 function onEventsReceived(refresh, callback) {
-    console.log(refresh);
-    console.log(refreshCounter);
-
     if (refresh !== refreshCounter)
         return;
 
