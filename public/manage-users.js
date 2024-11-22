@@ -272,7 +272,7 @@ function buildPermissionsHtml()
     titles['lock_event_schedule'] = "Dienste von Veranstaltungen sperren und entsperren, sodass sich niemand mehr ein/austragen kann";
     titles['manage_other_schedules'] = "Andere Mitarbeitende in Veranstaltungen ein- oder austragen";
     titles['manage_events'] = "Veranstaltungen erstellen, bearbeiten und löschen";
-    titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitender ändern";
+    titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitenden ändern";
     titles['view_statistics'] = "Statistiken über wer hat wann wie viele Dienste gemacht";
     titles['invite_users'] = "Neue Mitarbeitende einladen";
     titles['manage_users'] = "Email-Adressen neu setzen, Mitarbeitende ausblenden oder deaktivieren";
@@ -282,6 +282,8 @@ function buildPermissionsHtml()
     titles['admin_dev_maintenance'] = "Zugriff auf Dev/Admin Maintenance Seite";
 
     html += '<h2>Berechtigungen</h2>';
+    html += '<p>&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein.</p>';
+    html += '<p>Tip: Für mehr Infos mit der Maus über die entsprechende Berechtigung hovern.</p>';
     html += '<table class="permissions">';
     html += '<tr>';
     html += '<th></th>';
