@@ -58,7 +58,7 @@ function setUserStatus(id) {
 }
 
 function buildIndexHtml()
-{
+{    
     let html = "";
 
     html += buildNavHtml();
@@ -81,12 +81,31 @@ function buildIndexHtml()
         return nameA.localeCompare(nameB);
     });
 
+    let canViewUserManagement = (userData[loggedInUserId].permissions['invite_users']
+                                || userData[loggedInUserId].permissions['manage_users']
+                                || userData[loggedInUserId].permissions['delete_users']
+                                || userData[loggedInUserId].permissions['login_as_others']
+                                || userData[loggedInUserId].permissions['manage_permissions']
+                                || userData[loggedInUserId].permissions['admin_dev_maintenance']
+                                || userData[loggedInUserId].permissions['change_other_outline_schedule']);
+
+    if (!canViewUserManagement) return html;
+
     html += buildOutlineScheduleHtml(sorted);
     html += buildUsersOverviewHtml(sorted);
-    html += buildInviteUsersHtml();
-    html += buildDeleteUsersHtml();
-    html += buildLoginAsOthersHtml();
-    html += buildPermissionsHtml();
+
+    if (userData[loggedInUserId].permissions['invite_users']
+            || userData[loggedInUserId].permissions['manage_users'])
+        html += buildInviteUsersHtml();
+
+    if (userData[loggedInUserId].permissions['delete_users'])
+        html += buildDeleteUsersHtml();
+
+    if (userData[loggedInUserId].permissions['login_as_others'])
+        html += buildLoginAsOthersHtml();
+
+    if (userData[loggedInUserId].permissions['manage_permissions'])
+        html += buildPermissionsHtml();
 
     return html;
 }

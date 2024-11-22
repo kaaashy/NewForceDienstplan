@@ -132,6 +132,14 @@ function getDateInputFormat(date)
 
 function buildIndexHtml()
 {
+    let html = "";
+
+    html += buildNavHtml();
+
+    let canViewStatistics = (userData[loggedInUserId].permissions['view_statistics']
+                            || userData[loggedInUserId].permissions['admin_dev_maintenance']);
+    if (!canViewStatistics) return html;
+
     let statistics = createStatistics();
 
     const options = {
@@ -141,12 +149,8 @@ function buildIndexHtml()
        day: 'numeric',
     };
 
-    let html = "";
-
     let startDateAsInputStr = getDateInputFormat(startDate);
     let endDateAsInputStr = getDateInputFormat(endDate);
-
-    html += buildNavHtml();
 
     html += '<h2>Statistik</h2>';
     html += '<span> Zeitraum: </span><br/>';

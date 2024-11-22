@@ -1,13 +1,23 @@
 
 function buildNavHtml()
 {
+    let canViewUserManagement = (userData[loggedInUserId].permissions['invite_users']
+                                || userData[loggedInUserId].permissions['manage_users']
+                                || userData[loggedInUserId].permissions['delete_users']
+                                || userData[loggedInUserId].permissions['login_as_others']
+                                || userData[loggedInUserId].permissions['manage_permissions']
+                                || userData[loggedInUserId].permissions['admin_dev_maintenance']
+                                || userData[loggedInUserId].permissions['change_other_outline_schedule']);
+
+    let canViewStatistics = (userData[loggedInUserId].permissions['view_statistics']
+                            || userData[loggedInUserId].permissions['admin_dev_maintenance']);
+
     let html = "";
     html += '<div class="link-container">';
-
-    html += '<a href="dienstplan.php">Dienstplan</a>';
+    html += '<a href="dienstplan.php">Di^enstplan</a>';
     html += '<a href="users.php">Rahmendienstplan</a>';
-    html += '<a href="manage-users.php">MA-Management</a>';
-    html += '<a href="statistics.php">Statistiken</a>';
+    html += canViewUserManagement ? '<a href="manage-users.php">MA-Management</a>' : '';
+    html += canViewStatistics ? '<a href="statistics.php">Statistiken</a>' : '';
     html += '<a href="admin.php">Admin</a>';
     html += '<a href="userprofile.php">Mein Profil (' + loggedInUserLogin + ') </a>';
 
