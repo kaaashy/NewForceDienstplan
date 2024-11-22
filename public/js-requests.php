@@ -80,6 +80,18 @@ if (isset($_POST['user_permission'])) {
     $permission = trim($_POST['permission']);
     $enabled = filter_input(INPUT_POST, 'enabled', FILTER_SANITIZE_NUMBER_INT) > 0;
 
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = getUserHasPermission($callingUser, 'manage_permissions');
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_PERMISSIONS';
+        return;
+    }
+
+    if ($userId == $callingUser && $permission == 'manage_permissions' && !$enabled) {
+        echo 'ERROR_NO_SELF_PERMISSION_REMOVAL';
+        return;
+    }
+
     updateUserPermission($userId, $permission, $enabled);
     return;
 }
