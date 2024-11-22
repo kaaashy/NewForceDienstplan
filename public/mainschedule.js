@@ -251,7 +251,10 @@ function showEvent(dateStr, id, edit) {
                     return nameA.localeCompare(nameB);
                 });
 
-                let handStyle = ' style="cursor: pointer;" ';
+                let handStyle = '';
+                if (!edit && userData[loggedInUserId].permissions['manage_other_schedules']) {
+                    handStyle = ' style="cursor: pointer;" '
+                }
 
                 eventUsers += "<table>";
                 for (let i in eventUsersSorted) {
@@ -263,7 +266,9 @@ function showEvent(dateStr, id, edit) {
                         selfInUserList = true;
 
                     if (user) {
-                        let removeOnClick = ' onclick="removeFromSchedule(' + user.id + '); "';
+                        let removeOnClick = ` onclick="removeFromSchedule(${user.id}); "`;
+                        if (edit) removeOnClick = "";
+
                         eventUsers += '<tr><td>';
                         if (eventUser.deliberate) {
                             eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> ✅ ' + user.display_name + '</div>';
@@ -282,7 +287,8 @@ function showEvent(dateStr, id, edit) {
                     let user = allUsersSorted[i];
 
                     if (remainingUsers.has(user.id) && user.active && user.visible) {
-                        let addOnClick = ' onclick="insertIntoSchedule(' + user.id + '); "';
+                        let addOnClick = ` onclick="insertIntoSchedule(${user.id}); "`;
+                        if (edit) addOnClick = "";
 
                         nonEventUsers += '<tr><td>';
                         nonEventUsers += '<div ' + addOnClick + handStyle + ' class="event_user">' + user.display_name + '</div>';
