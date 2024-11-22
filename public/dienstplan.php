@@ -15,6 +15,13 @@ ensureLoggedIn();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['newevent'])) {
         
+        $callingUser = $_SESSION['user_id'];
+        $managingPermitted = getUserHasPermission($callingUser, 'manage_events');
+        if (!$managingPermitted) {
+            echo 'ERROR_NO_PERMISSION_FOR_EVENT_MANAGING';
+            return;
+        }
+
         $type = "Veranstaltung";
         $details = "";
         
@@ -41,6 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: dienstplan.php');
         die();
     } else if (isset($_POST['deleteevent'])) {
+
+        $callingUser = $_SESSION['user_id'];
+        $managingPermitted = getUserHasPermission($callingUser, 'manage_events');
+        if (!$managingPermitted) {
+            echo 'ERROR_NO_PERMISSION_FOR_EVENT_MANAGING';
+            return;
+        }
+
         $id = filter_input(INPUT_POST, 'id');
         deleteEvent($id);
         
