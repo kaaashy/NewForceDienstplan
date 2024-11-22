@@ -264,9 +264,22 @@ function buildPermissionsHtml()
     names['invite_users'] = "MA Einladen";
     names['manage_users'] = "MA Verwalten";
     names['delete_users'] = "MA Löschen";
-    names['login_as_others'] = "Als andere Einloggen *";
-    names['manage_permissions'] = "Rechte Verwalten *";
-    names['admin_dev_maintenance'] = "Dev/Admin Maintenance *";
+    names['login_as_others'] = "Als andere Einloggen &#x1F3C6;";
+    names['manage_permissions'] = "Rechte Verwalten &#x1F3C6;";
+    names['admin_dev_maintenance'] = "Dev/Admin Maintenance";
+
+    let titles = Array();
+    titles['lock_event_schedule'] = "Dienste von Veranstaltungen sperren und entsperren, sodass sich niemand mehr ein/austragen kann";
+    titles['manage_other_schedules'] = "Andere Mitarbeitende in Veranstaltungen ein- oder austragen";
+    titles['manage_events'] = "Veranstaltungen erstellen, bearbeiten und löschen";
+    titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitender ändern";
+    titles['view_statistics'] = "Statistiken über wer hat wann wie viele Dienste gemacht";
+    titles['invite_users'] = "Neue Mitarbeitende einladen";
+    titles['manage_users'] = "Email-Adressen neu setzen, Mitarbeitende ausblenden oder deaktivieren";
+    titles['delete_users'] = "Mitarbeitende löschen";
+    titles['login_as_others'] = "Als andere Mitarbeitende einloggen (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
+    titles['manage_permissions'] = "Berechtigungen anderer Mitarbeitender können hierdurch erlaubt oder entzogen werden (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
+    titles['admin_dev_maintenance'] = "Zugriff auf Dev/Admin Maintenance Seite";
 
     html += '<h2>Berechtigungen</h2>';
     html += '<table class="permissions">';
@@ -277,7 +290,7 @@ function buildPermissionsHtml()
     html += '<th>Dienste Ein- / Austragen</th>';
 
     for (const n in names) {
-        html += '<th>'+names[n]+'</th>';
+        html += '<th title = "'+titles[n]+'">'+names[n]+'</th>';
     }
 
     html += '</tr>';
