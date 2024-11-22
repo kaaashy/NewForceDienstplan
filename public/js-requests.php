@@ -82,6 +82,14 @@ if (isset($_POST['event_schedule'])) {
     $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
     $deliberate = true;
     
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_other_schedules');
+
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_EVENT_SCHEDULING';
+        return;
+    }
+
     if (getEventLocked($eventId)) {
         echo 'ERROR_EVENT_LOCKED';
         return;

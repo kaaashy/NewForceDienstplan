@@ -497,6 +497,23 @@ function updateUserPermission($user_id, $permission, $value)
     }
 }
 
+function getUserHasPermission($user_id, $permission)
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT *
+            FROM Permissions
+            WHERE user_id = :user_id;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("user_id", $user_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row[$permission];
+}
+
 function deleteEvent($id)
 {
     // Create a connection
