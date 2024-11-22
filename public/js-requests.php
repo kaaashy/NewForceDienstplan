@@ -61,6 +61,13 @@ if (isset($_POST['user_status'])) {
         return;
     }
 
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = getUserHasPermission($callingUser, 'manage_users');
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_USER_MANAGEMENT';
+        return;
+    }
+
     if (!$active) $visible = false;
 
     updateUserStatus($userId, $visible, $active);
