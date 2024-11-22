@@ -156,11 +156,15 @@ function buildOutlineScheduleHtml(users)
     html += '<th>Sonntag</th>';
     html += '</tr>';
 
-    let outlineDay = function (value, id, day) {
+    let outlineDay = function (value, id, day, attributes) {
         let v = value ? "checked" : "";
 
-        return '<input type="checkbox" id="outline_check_' + id + '_' + day + '" onclick=setOutlineForUser(' + id + ',' + day + ') ' + v + '>';
+        return `<input type="checkbox" ${attributes} id="outline_check_${id}_${day}" onclick=setOutlineForUser(${id},${day}) ${v}>`;
     };
+
+    let attributes = "";
+    if (!userData[loggedInUserId].permissions['change_other_outline_schedule'])
+        attributes = "disabled";
 
     for (const i in users) {
         let user = users[i];
@@ -170,13 +174,13 @@ function buildOutlineScheduleHtml(users)
 
         html += '<tr>';
         html += '<td>' + user.display_name + '</td>';
-        html += '<td>' + outlineDay(user.day_0, id, 0) + '</td>';
-        html += '<td>' + outlineDay(user.day_1, id, 1) + '</td>';
-        html += '<td>' + outlineDay(user.day_2, id, 2) + '</td>';
-        html += '<td>' + outlineDay(user.day_3, id, 3) + '</td>';
-        html += '<td>' + outlineDay(user.day_4, id, 4) + '</td>';
-        html += '<td>' + outlineDay(user.day_5, id, 5) + '</td>';
-        html += '<td>' + outlineDay(user.day_6, id, 6) + '</td>';
+        html += '<td>' + outlineDay(user.day_0, id, 0, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_1, id, 1, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_2, id, 2, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_3, id, 3, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_4, id, 4, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_5, id, 5, attributes) + '</td>';
+        html += '<td>' + outlineDay(user.day_6, id, 6, attributes) + '</td>';
         html += '</tr>';
     }
 
