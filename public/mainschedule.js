@@ -426,11 +426,16 @@ function showEvent(dateStr, id, edit) {
 
         let eventId = event.id;
 
+        let editButton = "";
+        if (userData[loggedInUserId].permissions['manage_events']) {
+            editButton = `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+        }
+
         // template info
         data = ''
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
-                + `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+                + editButton
                 + lockButton
                 + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
@@ -590,24 +595,25 @@ function addEvents(eventData, startDate) {
         }
     }
 
-    // add little blobs for creating a new event
-    let date = new Date(startDate);
-    for (let i = 0; i <= 45; ++i) {
-        let dateStr = getPaddedDateString(date);
+    if (userData[loggedInUserId].permissions['manage_events']) {
+        // add little blobs for creating a new event
+        let date = new Date(startDate);
+        for (let i = 0; i <= 45; ++i) {
+            let dateStr = getPaddedDateString(date);
 
-        if (_('[data-id="' + dateStr + '"]')) {
-            let div = document.createElement("div");
-            div.classList.add("calendar_event_adder");
-            div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
-                    + "+ Neue Veranstaltung"
-                    + "</a>";
+            if (_('[data-id="' + dateStr + '"]')) {
+                let div = document.createElement("div");
+                div.classList.add("calendar_event_adder");
+                div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
+                        + "+ Neue Veranstaltung"
+                        + "</a>";
 
-            _('[data-id="' + dateStr + '"]').appendChild(div);
+                _('[data-id="' + dateStr + '"]').appendChild(div);
+            }
+
+            date.setDate(date.getDate() + 1);
         }
-
-        date.setDate(date.getDate() + 1);
     }
-
 }
 
 function gotoToday() {
