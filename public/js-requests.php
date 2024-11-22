@@ -38,7 +38,15 @@ if (isset($_POST['outline_schedule'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $day = filter_input(INPUT_POST, 'day', FILTER_SANITIZE_NUMBER_INT);
     $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
-    
+
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'change_other_outline_schedule');
+
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_OUTLINE_SCHEDULING';
+        return;
+    }
+
     updateOutlineDay($userId, $day, $active);
     return;
 }
