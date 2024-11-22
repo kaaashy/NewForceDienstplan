@@ -301,10 +301,10 @@ function buildPermissionsHtml()
 
     html += '</tr>';
 
-    let permissionCheck = function (value, id, permission) {
+    let permissionCheck = function (value, id, permission, attributes) {
         let v = value ? "checked" : "";
 
-        return `<input type="checkbox" id="permission_check_${id}_${permission}" onclick=setPermissionForUser(${id},"${permission}") ${v}>`;
+        return `<input type="checkbox" ${attributes} id="permission_check_${id}_${permission}" onclick=setPermissionForUser(${id},"${permission}") ${v}>`;
     };
 
     let sorted = [];
@@ -328,11 +328,15 @@ function buildPermissionsHtml()
 
         html += '<tr>';
         html += '<td>' + user.display_name + '</td>';
-        html += '<td> <input type="checkbox" checked disabled> </td>';
-        html += '<td> <input type="checkbox" checked disabled> </td>';
+        html += '<td> <input type="checkbox" checked disabled title="Diese Berechtigung kann nicht entzogen werden."> </td>';
+        html += '<td> <input type="checkbox" checked disabled title="Diese Berechtigung kann nicht entzogen werden."> </td>';
 
         for (const pn in names) {
-            html += '<td>' + permissionCheck(user.permissions[pn], user.id, pn) + '</td>';
+            let attributes = "";
+            if (user.id === 1) attributes = 'disabled title="Admin-Berechtigungen können aus Sicherheitsgründen nicht entzogen werden."';
+            if (user.id === loggedInUserId && pn === 'manage_permissions') attributes = 'disabled title="Diese Berechtigung kannst du dir aus Sicherheitsgründen nicht selbst entziehen. Jemand anderes muss diese Berechtigung entfernen."';
+
+            html += '<td>' + permissionCheck(user.permissions[pn], user.id, pn, attributes) + '</td>';
         }
 
         html += '</tr>';
