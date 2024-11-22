@@ -112,6 +112,13 @@ if (isset($_POST['event_locked'])) {
     $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
     $locked = filter_input(INPUT_POST, 'locked', FILTER_SANITIZE_NUMBER_INT) > 0;
 
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = getUserHasPermission($callingUser, 'lock_event_schedule');
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_EVENT_LOCKING';
+        return;
+    }
+
     setEventLockedStatus($eventId, $locked);
     return;
 }
