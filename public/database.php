@@ -447,6 +447,56 @@ function updateUserPermissions($user_id,
     }
 }
 
+function isChangeablePermission($permission)
+{
+    if ($permission == 'lock_event_schedule') return true;
+    if ($permission == 'manage_other_schedules') return true;
+    if ($permission == 'manage_events') return true;
+    if ($permission == 'change_other_outline_schedule') return true;
+    if ($permission == 'view_statistics') return true;
+    if ($permission == 'invite_users') return true;
+    if ($permission == 'manage_users') return true;
+    if ($permission == 'delete_users') return true;
+    if ($permission == 'login_as_others') return true;
+    if ($permission == 'manage_permissions') return true;
+    if ($permission == 'admin_dev_maintenance') return true;
+
+    return false;
+}
+
+function updateUserPermission($user_id, $permission, $value)
+{
+    if (!isChangeablePermission($permission)) {
+        echo "User Permission $permission unchangeable.";
+        return;
+    }
+
+    if ($user_id == 1 && !$value) {
+        echo 'Cannot disable admin permissions for safety reasons.';
+        return;
+    }
+
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE Permissions
+            SET $permission = :value
+            WHERE user_id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $user_id);
+    $stmt->bindValue(':value', $value ? 1 : 0);
+    $stmt->execute();
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User Permissions updated successfully.";
+    } else {
+        echo "Error updating user permissions.";
+    }
+}
+
 function deleteEvent($id)
 {
     // Create a connection

@@ -67,6 +67,15 @@ if (isset($_POST['user_status'])) {
     return;
 }
 
+if (isset($_POST['user_permission'])) {
+    $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+    $permission = trim($_POST['permission']);
+    $enabled = filter_input(INPUT_POST, 'enabled', FILTER_SANITIZE_NUMBER_INT) > 0;
+
+    updateUserPermission($userId, $permission, $enabled);
+    return;
+}
+
 if (isset($_POST['event_schedule'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);

@@ -36,6 +36,17 @@ function sendUserEventActivity(userId, eventId, active, callback) {
     sendRequest(data, callback);
 }
 
+function sendUserPermission(userId, permission, enabled, callback) {
+
+    var data = 'login=' + loggedInUserLogin;
+    data = data + "&user_permission=y";
+    data = data + "&user_id=" + userId;
+    data = data + "&permission=" + permission;
+    data = data + "&enabled=" + (enabled ? 1 : 0);
+
+    sendRequest(data, callback);
+}
+
 function sendEventLockedStatus(eventId, locked, callback) {
 
     var data = 'login=' + loggedInUserLogin;

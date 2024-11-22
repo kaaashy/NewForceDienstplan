@@ -288,7 +288,7 @@ function buildPermissionsHtml()
     let permissionCheck = function (value, id, permission) {
         let v = value ? "checked" : "";
 
-        return '<input type="checkbox" id="permission_check_' + id + '_' + permission + '" onclick=setPermissionForUser(' + id + ',' + permission + ') ' + v + '>';
+        return `<input type="checkbox" id="permission_check_${id}_${permission}" onclick=setPermissionForUser(${id},"${permission}") ${v}>`;
     };
 
     let sorted = [];
