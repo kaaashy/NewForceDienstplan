@@ -56,7 +56,7 @@ if (isset($_POST['user_status'])) {
     $visible = filter_input(INPUT_POST, 'visible', FILTER_SANITIZE_NUMBER_INT) > 0;
     $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
 
-    if ($_SESSION['user_id'] == $userId) {
+    if (!$active && $_SESSION['user_id'] == $userId) {
         echo 'ERROR_CANT_DISABLE_SELF';
         return;
     }
