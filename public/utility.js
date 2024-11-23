@@ -1,20 +1,28 @@
 
 function buildNavHtml()
 {
-    let canViewUserManagement = (userData[loggedInUserId].permissions['invite_users']
-                                || userData[loggedInUserId].permissions['manage_users']
-                                || userData[loggedInUserId].permissions['delete_users']
-                                || userData[loggedInUserId].permissions['login_as_others']
-                                || userData[loggedInUserId].permissions['manage_permissions']
-                                || userData[loggedInUserId].permissions['admin_dev_maintenance']
-                                || userData[loggedInUserId].permissions['change_other_outline_schedule']);
+    let canViewUserManagement = false;
+    let canViewStatistics = false;
+    let canViewAdminPage = false;
 
-    let canViewStatistics = (userData[loggedInUserId].permissions['view_statistics']
-                            || userData[loggedInUserId].permissions['admin_dev_maintenance']);
+    if (typeof userData[loggedInUserId] !== 'undefined') {
+        canViewUserManagement = (userData[loggedInUserId].permissions['invite_users']
+                                    || userData[loggedInUserId].permissions['manage_users']
+                                    || userData[loggedInUserId].permissions['delete_users']
+                                    || userData[loggedInUserId].permissions['login_as_others']
+                                    || userData[loggedInUserId].permissions['manage_permissions']
+                                    || userData[loggedInUserId].permissions['admin_dev_maintenance']
+                                    || userData[loggedInUserId].permissions['change_other_outline_schedule']);
+
+        canViewStatistics = (userData[loggedInUserId].permissions['view_statistics']
+                                || userData[loggedInUserId].permissions['admin_dev_maintenance']);
+
+        canViewAdminPage = (userData[loggedInUserId].permissions['admin_dev_maintenance']);
+    }
 
     let html = "";
     html += '<div class="link-container">';
-    html += '<a href="dienstplan.php">Di^enstplan</a>';
+    html += '<a href="dienstplan.php">Dienstplan</a>';
     html += '<a href="users.php">Rahmendienstplan</a>';
     html += canViewUserManagement ? '<a href="manage-users.php">MA-Management</a>' : '';
     html += canViewStatistics ? '<a href="statistics.php">Statistiken</a>' : '';
