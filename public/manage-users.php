@@ -14,15 +14,45 @@ function handleUserCreation()
     $login = trim($_POST['login']);
     $email = trim($_POST['email']);
 
-    $password = base64_encode(random_bytes(12));
-    $password = str_replace(['+', '/', '='], ['-', '_', ''], $password);
+    $loginExistsAlready = false;
 
     list($existingId, $existingLogin) = fetchUserCredentialsByEmail($email);
     if ($existingId) {
         if ($existingLogin != $login) {
             return array(false, "Email-Adresse '$email' wird bereits von login '$existingLogin' genutzt.");
         }
+    } else {
+        $existingId = getUserId($login);
+
+        if ($existingId)
+        {
+            $details = getUserDetails($existingId);
+
+            $loginExistsAlready = true;
+            $existingLogin = $details['login'];
+        }
     }
+
+    // permissions check
+    $callingUser = $_SESSION['user_id'];
+
+    if ($loginExistsAlready) {
+        // if the login exists, it counts as user management
+        // however, inviters should be able to change their invited users' email
+        $operationPermitted = getUserHasPermission($callingUser, 'invite_users')
+                              || getUserHasPermission($callingUser, 'manage_users');
+        if (!$operationPermitted) {
+            return array(false, "Keine Berechtigung.");
+        }
+    } else {
+        $operationPermitted = getUserHasPermission($callingUser, 'invite_users');
+        if (!$operationPermitted) {
+            return array(false, "Keine Berechtigung.");
+        }
+    }
+
+    $password = base64_encode(random_bytes(12));
+    $password = str_replace(['+', '/', '='], ['-', '_', ''], $password);
 
     list($token, $userId) = initializeUser($login, $email, $password);
 
@@ -38,9 +68,19 @@ function handleUserCreation()
         $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
 
         // Send email
-        $mail->send();
+        if (!$mail->send()) {
+            return array(false, "Registrierungs-Email konnte nicht verschickt werden. Mailer Error: {$mail->ErrorInfo}");
+        }
 
-        return array("Registrierungs-Email wurde verschickt an '$email'", false);
+        $msg = "";
+
+        if ($loginExistsAlready) {
+            $msg = "Email von '$existingLogin' geändert. ";
+        }
+
+        $msg .= "Registrierungs-Email wurde verschickt an '$email'";
+
+        return array($msg, false);
     } catch (Exception $e) {
         return array(false, "Registrierungs-Email konnte nicht verschickt werden. Mailer Error: {$mail->ErrorInfo}");;
     }

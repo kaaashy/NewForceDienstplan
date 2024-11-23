@@ -617,6 +617,24 @@ function getUserDetails($user_id)
     return $row;
 }
 
+function getUserId($login)
+{
+    $pdo = connect();
+
+    // Retrieve the outline schedule
+    $sql = "SELECT id
+            FROM Users
+            WHERE login = :login;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue("login", $login);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row)
+        return $row['id'];
+}
+
 function fetchUserCredentialsByEmail($email)
 {
     $pdo = connect();

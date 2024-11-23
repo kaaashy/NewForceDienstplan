@@ -309,7 +309,7 @@ function buildPermissionsHtml()
     titles['manage_events'] = "Veranstaltungen erstellen, bearbeiten und löschen";
     titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitenden ändern";
     titles['view_statistics'] = "Statistiken über wer hat wann wie viele Dienste gemacht";
-    titles['invite_users'] = "Neue Mitarbeitende einladen";
+    titles['invite_users'] = "Neue Mitarbeitende einladen, Email-Adressen neu setzen";
     titles['manage_users'] = "Email-Adressen neu setzen, Mitarbeitende ausblenden oder deaktivieren";
     titles['delete_users'] = "Mitarbeitende löschen";
     titles['login_as_others'] = "Als andere Mitarbeitende einloggen (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
