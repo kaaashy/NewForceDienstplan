@@ -30,6 +30,10 @@ function onEventsReceived(refresh, callback) {
     if (dataReceived === 2) {
         _("#calendar").innerHTML = buildCalendarHtml();
         addEvents(eventData, indexDate);
+        if (mode == weekMode)
+            _("#schedule_summary").innerHTML = buildWeekSummaryHtml();
+        else
+            _("#schedule_summary").innerHTML = "";
 
         if (callback) callback();
     }
@@ -863,6 +867,63 @@ function buildCalendarHead(month1, month2, year) {
 
     html += "</tr>";
     html += "</thead>";
+
+    return html;
+}
+
+function buildWeekSummaryHtml()
+{
+    let fromDate = getStartOfWeek(indexDate)
+    let endDate = new Date(indexDate);
+    endDate.setDate(endDate.getDate() + 6);
+
+    let sortedEvents = [...eventData];
+    sortedEvents.sort(function (a, b) {
+        let dateA = new Date(a.date);
+        let dateB = new Date(b.date);
+
+        return dateA - dateB;
+    });
+
+    let html = "";
+
+    for (let key in sortedEvents) {
+        let event = sortedEvents[key];
+        let date = new Date(event.date);
+
+        if (date < fromDate) continue;
+        if (date > endDate) continue;
+
+        date = date.toLocaleDateString("de-DE", { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric', });
+
+        let time = String(event.time);
+        let endTime = String(event.end_time);
+
+        if (time.endsWith(":00:00")) time = time.replace(":00:00", ":00");
+        if (endTime.endsWith(":00:00")) endTime = endTime.replace(":00:00", ":00");
+
+        let sorted = [...event.users];
+        sorted.sort(function (a, b) {
+            let userA = userData[a.user_id];
+            let userB = userData[b.user_id];
+
+            return userA.display_name.localeCompare(userB.display_name);
+        });
+
+        let users = "";
+        for (let ui in sorted) {
+            let user = userData[sorted[ui].user_id];
+
+            if (users != "")
+                users = users + ", ";
+
+            users = users + user.display_name;
+        }
+
+        html += `<p >${date}: <strong>${event.title}</strong> ${time}-${endTime} <br/>Dienst: ${users}</p>`;
+    }
+
+    console.log(html)
 
     return html;
 }
