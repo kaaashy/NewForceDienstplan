@@ -104,8 +104,7 @@ function buildIndexHtml()
     if (userData[loggedInUserId].permissions['login_as_others'])
         html += buildLoginAsOthersHtml();
 
-    if (userData[loggedInUserId].permissions['manage_permissions'])
-        html += buildPermissionsHtml();
+    html += buildPermissionsHtml();
 
     return html;
 }
@@ -364,8 +363,12 @@ function buildPermissionsHtml()
 
         for (const pn in names) {
             let attributes = "";
+
             if (user.id === 1) attributes = 'disabled title="Admin-Berechtigungen können aus Sicherheitsgründen nicht entzogen werden."';
             if (user.id === loggedInUserId && pn === 'manage_permissions') attributes = 'disabled title="Diese Berechtigung kannst du dir aus Sicherheitsgründen nicht selbst entziehen. Jemand anderes muss diese Berechtigung entfernen."';
+
+            if (!userData[loggedInUserId].permissions['manage_permissions'])
+                attributes = 'disabled';
 
             html += '<td>' + permissionCheck(user.permissions[pn], user.id, pn, attributes) + '</td>';
         }
