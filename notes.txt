@@ -19,6 +19,7 @@ TODO:
 * MA löschen+einladen+verwalten -> 1 Berechtigung
 * Dienste planen + sperren -> 1 Berechtigung
 * Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
+* Rahmendienstplan Summe anzeigen
 
 ### Mobile-Version ########################
 * Exakte Details bisher unklar, muss aber vollständig über Mobile benutzbar sein
