@@ -1,13 +1,8 @@
 TODO:  
 ### Core Functionality ########################
+* Error handling: Proper error messages everywhere, kein echo in .php files
+* Logfiles
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
-
-### User-Rechte (admin/manager/bearbeiter/viewer) ########################
-* Statistiken einsehen (Dienstplan-Manager)
-* Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
-* Andere MA ein-/austragen bei Veranstaltungen (Dienstplan-Manager)
-* Als andere MA einloggen (Dienstplan-Manager, Vorstand?)
-* MA verwalten (anlegen/einladen, deaktivieren, Rechte verwalten) (Dienstplan-Manager, Vorstand?)
 * Datenbank-Infos & Technisches verwalten (Admin)
 
 ### Mobile-Version ########################
@@ -15,15 +10,12 @@ TODO:
 
 ### Sperrungen ########################
 * Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
-* Dienstplan/Woche/Veranstaltung sperren
 
 ### Putzdienst ########################
 * Lösung für Putzdienst finden - eigene Veranstaltung?
 
 ### Übersichten ########################
 * Export für Posting in MatterMost, Senden via Email (html)
-* Übersicht über wer hat wie viele Dienste gemacht (letzte 1-12 Monate, inklusive Wochentage Auflistung)
-* Doppeldienste hervorheben
 
 ### Doku ########################
 * Wie installieren? 
@@ -48,10 +40,8 @@ TODO:
 
 
 ### Fragen: ########################
-* Security: Passwort-Sicherheit checken?
-* Wie soll die Registrierung ablaufen? 
-** Ich nehme an eine Art Admin/Manager legt neue User an und die bekommen einen Login-Link per Mail oder ähnliches?
-* Emails verschicken?
+* Veranstaltungen: Braucht es separate Rechte für Bearbeiten/Erstellen/Löschen?
+* Mitarbeitende: Braucht es separate Rechte für Verstecken/Deaktivieren?
 
 
 Mitarbeiterrechte lt Oli
@@ -70,9 +60,19 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+### User-Rechte (admin/manager/bearbeiter/viewer) ########################
+* Statistiken einsehen (Dienstplan-Manager)
+* Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
+* Andere MA ein-/austragen bei Veranstaltungen (Dienstplan-Manager)
+* Als andere MA einloggen (Dienstplan-Manager, Vorstand?)
+* MA verwalten (anlegen/einladen, deaktivieren, Rechte verwalten) (Dienstplan-Manager, Vorstand?)
+* Technisches verwalten (Admin)
 * Als andere MA einloggen
 * Dienst-Statistiken (wer hat wie oft Dienst gemacht?)
 * Veranstaltung sperren/entsperren
+
+### Übersichten ###
+* Übersicht über wer hat wie viele Dienste gemacht (letzte 1-12 Monate, inklusive Wochentage Auflistung)
 
 ### Rechte ###
 * Unterschiedliche Formulare für Eintragen / Veranstaltung erstellen
