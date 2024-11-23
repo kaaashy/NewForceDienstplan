@@ -48,7 +48,7 @@ function initializeTables()
         time TIME,
         end_time TIME,
         minimum_users INT UNSIGNED,
-        locked BOOL,
+        locked BOOL NOT NULL DEFAULT 0,
         
         organizer VARCHAR(255),
         description TEXT,

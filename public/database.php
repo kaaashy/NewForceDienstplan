@@ -239,7 +239,7 @@ function updateOutlineDay($userId, $day, $active)
 
     // Now, update all events of today or in the future with the new outline day
     $sql = "SELECT id, date FROM Events
-        WHERE locked = 0 AND date >= CURDATE() AND DAYOFWEEK(date) = :day;";
+        WHERE locked != 1 AND date >= CURDATE() AND DAYOFWEEK(date) = :day;";
 
     // $day is 0 -> 6 for mon -> sun
     // we must convert it to 1 -> 7 for sun -> sat
