@@ -154,9 +154,18 @@ function initializeTables()
 function initialize()
 {
     initializeDatabase();
-    initializeTables(); 
-    
-    $users = ["admin", "Tascha", "Oli", "Sophia", "Lina", "Tom", "Andi", "Domi", "Max"]; 
+    initializeTables();
+
+    addUser("admin", "adminPW", "admin@newforcedienstplan.de", "", "");
+
+    // set admin user to invisible & allow everything
+    updateUserStatus(1, false, true);
+    updateUserPermissions(1, true, true, true, true, true, true, true, true, true, true, true);
+}
+
+function createExampleDB()
+{
+    $users = ["Tascha", "Oli", "Sophia", "Lina", "Andi", "Domi", "Max", "Justus", "Diego", "Ole", "Willy", "Matze", "Sebi", "Tom", "Ben", "Finn", "Johannes", "Martin", "Michl", "Tobi"];
     
     foreach ($users as $name) {
         $displayName = $name; 
@@ -166,51 +175,61 @@ function initialize()
         $last = strtoupper($displayName)[0] . ".";
         $email = strtolower($name) . "@email.de";
         
-        addUser($name, $password, $email, $first, $last);
+        $id = addUser($name, $password, $email, $first, $last);
+
+        if (rand() % 3 == 1) updateOutlineDay($id, 3, true);
+        if (rand() % 3 == 1) updateOutlineDay($id, 4, true);
+        if (rand() % 3 == 1) updateOutlineDay($id, 5, true);
+
+        if ($name == "Domi") {
+            updateUserStatus($id, false, false);
+        }
+
+        if ($name == "Andi" || $name == "Johannes") {
+            updateUserPermission($id, 'lock_event_schedule', true);
+            updateUserPermission($id, 'manage_other_schedules', true);
+            updateUserPermission($id, 'manage_events', true);
+            updateUserPermission($id, 'change_other_outline_schedule', true);
+            updateUserPermission($id, 'view_statistics', true);
+            updateUserPermission($id, 'invite_users', true);
+            updateUserPermission($id, 'manage_users', true);
+            updateUserPermission($id, 'delete_users', true);
+            updateUserPermission($id, 'login_as_others', true);
+            updateUserPermission($id, 'manage_permissions', true);
+        }
+
+        if ($name == "Oli") {
+            updateUserPermission($id, 'lock_event_schedule', true);
+            updateUserPermission($id, 'manage_other_schedules', true);
+            updateUserPermission($id, 'change_other_outline_schedule', true);
+        }
+
+        if ($name == "Max") {
+            updateUserPermission($id, 'invite_users', true);
+            updateUserPermission($id, 'manage_users', true);
+            updateUserPermission($id, 'delete_users', true);
+            updateUserPermission($id, 'login_as_others', true);
+            updateUserPermission($id, 'manage_permissions', true);
+            updateUserPermission($id, 'admin_dev_maintenance', true);
+        }
+
+        if ($name == "Tascha" || $name == "Michl") {
+            updateUserPermission($id, 'manage_events', true);
+        }
     }
 
-    // set admin user to invisible & allow everything
-    updateUserStatus(1, false, true);
-    updateUserPermissions(1, true, true, true, true, true, true, true, true, true, true, true);
-
-    // set Tascha for Do, Sa
-    updateOutlineDay(2, 3, true);
-    updateOutlineDay(2, 5, true);
-    
-    // set Oli for Fr
-    updateOutlineDay(3, 4, true);
-    
-    // set Sophia for Do, Sa
-    updateOutlineDay(4, 3, true);
-    updateOutlineDay(4, 5, true);
-    
-    // set Lina for Fr, Sa
-    updateOutlineDay(5, 4, true);
-    updateOutlineDay(5, 5, true);
-    
-    // set Tom for Do, Fr
-    updateOutlineDay(6, 3, true);
-    updateOutlineDay(6, 4, true);
-    
-    // set Max for Fr, Sa
-    updateOutlineDay(9, 4, true);
-    updateOutlineDay(9, 5, true);
-    updateOutlineDay(9, 5, false);
-    updateOutlineDay(9, 5, true);
-
-    // set Andi for Fr, Sa
-    updateOutlineDay(7, 4, true);
-    updateOutlineDay(7, 5, true);
-
-    // set Domi for Do, Fr
-    updateOutlineDay(8, 3, true);
-    updateOutlineDay(8, 4, true);
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-14");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-15");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
+
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-16");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-21");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-22");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
@@ -218,11 +237,19 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-23");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-28");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-29");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-30");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-12-05");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-12-06");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
@@ -230,17 +257,14 @@ function initialize()
     $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-12-07");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-12-12");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
     $id = addEvent("Veranstaltung", "Spielmannstreiben", "2024-12-13");
     updateEvent($id, "Veranstaltung", "Spielmannstreiben", "Rudelgedudel", "20:00", "02:00", 4, "DomiTheWall", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
     $id = addEvent("Veranstaltung", "Großputz", "2024-12-15");
     updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    updateEventSchedule(2, $id, true, true);
-    updateEventSchedule(5, $id, true, true);
-    updateEventSchedule(4, $id, true, true);
-    updateEventSchedule(4, $id, true, true);
-    updateEventSchedule(4, $id, true, false);
 }
 
 // mostly for debugging / database altering
