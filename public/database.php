@@ -14,6 +14,7 @@ function connect()
     $dsn = "mysql:host={$dbInfo->serverName};dbname={$dbInfo->dbName};charset=utf8mb4";
     $pdo = new PDO($dsn, $dbInfo->userName, $dbInfo->password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
     return $pdo;
 }
@@ -812,13 +813,22 @@ function echoEvents($pdo, $stmt)
         $stmt2->bindValue("event_id", $row["id"]);
         $stmt2->execute();
 
+        $row['id'] = intval($row['id']);
+        $row['minimum_users'] = intval($row['minimum_users']);
+        $row['locked'] = intval($row['locked']);
+
         $row["users"] = array();
         while ($usersRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            $usersRow['user_id'] = intval($usersRow['user_id']);
+            $usersRow['deliberate'] = intval($usersRow['deliberate']);
+
             $row["users"][] = $usersRow;
         }
 
         $rows[] = $row;
     }
+
+    // var_dump($rows);
 
     echo json_encode($rows);
 }
@@ -852,6 +862,10 @@ function respondUsers() {
             $row["day_".$dayRow["day"]] = true;
         }
 
+        $row['id'] = intval($row['id']);
+        $row['active'] = intval($row['active']);
+        $row['visible'] = intval($row['visible']);
+
         // Retrieve oermissions
         $sql = "SELECT *
                 FROM Permissions
@@ -863,17 +877,17 @@ function respondUsers() {
 
         $permissions = array();
         while ($permissionRow = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-            $permissions['lock_event_schedule'] = $permissionRow['lock_event_schedule'];
-            $permissions['manage_other_schedules'] = $permissionRow['manage_other_schedules'];
-            $permissions['manage_events'] = $permissionRow['manage_events'];
-            $permissions['change_other_outline_schedule'] = $permissionRow['change_other_outline_schedule'];
-            $permissions['view_statistics'] = $permissionRow['view_statistics'];
-            $permissions['invite_users'] = $permissionRow['invite_users'];
-            $permissions['manage_users'] = $permissionRow['manage_users'];
-            $permissions['delete_users'] = $permissionRow['delete_users'];
-            $permissions['login_as_others'] = $permissionRow['login_as_others'];
-            $permissions['manage_permissions'] = $permissionRow['manage_permissions'];
-            $permissions['admin_dev_maintenance'] = $permissionRow['admin_dev_maintenance'];
+            $permissions['lock_event_schedule'] = intval($permissionRow['lock_event_schedule']);
+            $permissions['manage_other_schedules'] = intval($permissionRow['manage_other_schedules']);
+            $permissions['manage_events'] = intval($permissionRow['manage_events']);
+            $permissions['change_other_outline_schedule'] = intval($permissionRow['change_other_outline_schedule']);
+            $permissions['view_statistics'] = intval($permissionRow['view_statistics']);
+            $permissions['invite_users'] = intval($permissionRow['invite_users']);
+            $permissions['manage_users'] = intval($permissionRow['manage_users']);
+            $permissions['delete_users'] = intval($permissionRow['delete_users']);
+            $permissions['login_as_others'] = intval($permissionRow['login_as_others']);
+            $permissions['manage_permissions'] = intval($permissionRow['manage_permissions']);
+            $permissions['admin_dev_maintenance'] = intval($permissionRow['admin_dev_maintenance']);
         }
 
         $row['permissions'] = $permissions;

@@ -26,9 +26,9 @@ function jsUserId()
 {
     echo "<script>";
     echo "let loggedInUserLogin = " . json_encode($_SESSION['login']) . ";";
-    echo "let loggedInUserId = " . json_encode($_SESSION['user_id']) . ";";
+    echo "let loggedInUserId = " . json_encode(intval($_SESSION['user_id'])) . ";";
     if (isset($_SESSION['overrider_id'])) {
-        echo "let overridingUserId = " . json_encode($_SESSION['overrider_id']) . ";";
+        echo "let overridingUserId = " . json_encode(intval($_SESSION['overrider_id'])) . ";";
     } else {
         echo "let overridingUserId";
     }
