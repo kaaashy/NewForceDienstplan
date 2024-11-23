@@ -195,7 +195,7 @@ tbody.days_cal tr td {
 tbody.days_cal .today {
     font-weight: bold;
     transition: all 0.1s ease;
-    border: 3px solid #dfdfdf;
+    border: 3px solid #0069b6;
     color: #85baff !important;
 }
 
@@ -376,7 +376,6 @@ input.delete_event:hover {
     font-size: 0.75rem;
     color: white;
     border: none;
-    font-weight: bold;
 }
 
 .event_user {
@@ -642,6 +641,5 @@ tr.spacer-row {
 }
 
 .calendar_event a.assigned-highlight {
-    border: 2px solid #6c6cf7; /* Darker red border */   
-    background-color: #448
+    background-color: #0069b6
 }
