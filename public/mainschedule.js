@@ -1,24 +1,25 @@
 
-// index date
-let indexDate = new Date();
-indexDate = getStartOfWeek(indexDate);
-if (sessionStorage.getItem('indexDate'))
-    indexDate = new Date(Date.parse(sessionStorage.getItem('indexDate')));
-sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
-
 const monthMode = "month";
 const weekMode = "week";
+
+// index date
+let indexDate = new Date();
+indexDate.setDate(1);
+
 let mode = monthMode;
 
-if (sessionStorage.getItem('mode') && mode !== sessionStorage.getItem('mode')) {
+if (sessionStorage.getItem('mode') && sessionStorage.getItem('indexDate')) {
     mode = sessionStorage.getItem('mode');
+    indexDate = new Date(Date.parse(sessionStorage.getItem('indexDate')));
+} else {
+    sessionStorage.setItem('mode', mode);
+    sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
 }
 
 let refreshCounter = 0;
 let dataReceived = 0;
 
 let currentEventId = null;
-
 
 function onEventsReceived(refresh, callback) {
     if (refresh !== refreshCounter)
