@@ -1,21 +1,34 @@
 TODO:  
 ### Core Functionality ########################
+* Verantwortliche Person in Wochenansicht anzeigen
+* Doppeldienste in einer Woche hervorheben
+* MA-Übersicht: Haken für "inaktive MA ausblenden"
+* Separater Veranstaltungstyp Putzdienst
+* Eingeteilt vs. Eingetragen -> Markierung nicht "DIENST" sondern "EINGETRAGEN"
+* Veranstaltung nach Bearbeiten nicht unbedingt schließen
 * Error handling: Proper error messages everywhere, kein echo in .php files
 * Logfiles
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
+* Registrierungs-Email: Passwort zurücksetzen
+* Berechtigungen für alle einsehbar machen
+* Angemeldet bleiben? -> Auswahl
+* PW-Reset-Email verfallen lassen
+* Do: 2 MA, Fr+Sa: 4 MA
+* Email-Verification bei Änderung der Email
+* MA löschen+einladen+verwalten -> 1 Berechtigung
+* Dienste planen + sperren -> 1 Berechtigung
+* Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
 
 ### Mobile-Version ########################
 * Exakte Details bisher unklar, muss aber vollständig über Mobile benutzbar sein
 
 ### Sperrungen ########################
-* Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
+* ABGELEHNT: Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
 
 ### Putzdienst ########################
 * Lösung für Putzdienst finden - eigene Veranstaltung?
 
-### Übersichten ########################
-* Export für Posting in MatterMost, Senden via Email (html)
 
 ### Doku ########################
 * Wie installieren? 
@@ -32,14 +45,11 @@ TODO:
 * Events copy-pasten (evtl. button für Daten kopieren/einfügen)
 
 
-### Unklar ########################
+### Fragen: ########################
 * Mehrtägige Events?
 * Events automatisch einfügen? 
 * Event Automatisch erstellt? 
 * Hintergrund-Infos (wer hat's wann erstellt, wer hat's wann zuletzt bearbeitet)
-
-
-### Fragen: ########################
 * Veranstaltungen: Braucht es separate Rechte für Bearbeiten/Erstellen/Löschen?
 * Mitarbeitende: Braucht es separate Rechte für Verstecken/Deaktivieren?
 
@@ -60,6 +70,9 @@ Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
 Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+### Übersichten ########################
+* Export für Posting in MatterMost, Senden via Email (html)
+
 ### User-Rechte (admin/manager/bearbeiter/viewer) ########################
 * Statistiken einsehen (Dienstplan-Manager)
 * Veranstaltungen erstellen & bearbeiten (Veranstaltungsperson, Dienstplan-Manager)
@@ -116,7 +129,5 @@ DONE:
 * Bug: Veranstaltungen mit "" MA gehen kaputt & machen den Kalender kaputt
 
 Offene Fragen: 
-* Hacking-Sicherheit? Eingeloggte MA könnten mit Technikkenntnissen Dinge außerhalb ihrer Rollen tun.
-* Email-Verification gewünscht?
 
 
