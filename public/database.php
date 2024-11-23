@@ -72,8 +72,6 @@ function deleteUser($login) {
         return 'Cannot delete admin for safety reasons.';
     }
 
-    return;
-
     $pdo = connect();
 
     // Retrieve the user id
