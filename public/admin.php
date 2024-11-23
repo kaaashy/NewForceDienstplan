@@ -10,7 +10,14 @@ include_once 'requests.php';
 ensureLoggedIn();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $callingUser = $_SESSION['user_id'];
+    $operationPermitted = getUserHasPermission($callingUser, 'admin_dev_maintenance');
+    if (!$operationPermitted) {
+        echo "Keine Berechtigung.";
+    }
+
     if (isset($_POST['reinit_everything'])) {
+
         initialize();
         session_destroy();
         header('Location: index.php');
@@ -21,17 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } elseif (isset($_POST['send_testmail'])) {
 
+        $details = getUserDetails(1);
+        $address = $details['email'];
+
         $mail = makePHPMail();
 
         try {
             // Email headers and content
-            $mail->addAddress('konstantin.kronfeldner@gmail.com', 'Recipient Name');
+            $mail->addAddress($address, 'Recipient Name');
             $mail->Subject = 'Test Email via New Force STMP';
             $mail->Body = 'This is a test email sent through New Force SMTP using PHPMailer.';
 
             // Send email
             $mail->send();
-            echo 'Message has been sent';
+            echo "Test-Message has been sent to '$address'";
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
@@ -49,33 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php jsUserId(); ?>
-    <script src="utility.js" ></script>
+    <script src="utility.js" defer></script>
+    <script src="requests.js" defer></script>
+    <script src="admin.js" defer></script>
 </head>
 <body>
     <div class="narrowwrapper">
-        <div class="info_page">
-            <script > document.write(buildNavHtml()); </script>
-
-            <h1>Dev Maintenance</h1>
-            <h2>Testmail</h2>
-            <form method="POST" action="">
-                <!-- Form 1 fields -->
-                <input type="submit" name="send_testmail" value="Test-Email verschicken"></input>
-            </form>
-
-            <h2>Update DB</h2>
-            <form method="POST" action="">
-                <!-- Form 1 fields -->
-                <input type="submit" name="update_db" value="Update Database Schema"></input>
-            </form>
-
-            <h2>Auf Werkseinstellungen Zurücksetzen</h2>
-            <form method="POST" action="">
-                <!-- Form 1 fields -->
-                <input type="submit" name="reinit_everything" value="Auf Werkseinstellungen zurücksetzen"></input>
-            </form>
-
-        </div>
+        <div id="mainpage" class="info_page"> </div>
     </div>
 
 </body>

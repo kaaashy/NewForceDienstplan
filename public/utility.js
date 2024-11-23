@@ -18,7 +18,7 @@ function buildNavHtml()
     html += '<a href="users.php">Rahmendienstplan</a>';
     html += canViewUserManagement ? '<a href="manage-users.php">MA-Management</a>' : '';
     html += canViewStatistics ? '<a href="statistics.php">Statistiken</a>' : '';
-    html += '<a href="admin.php">Admin</a>';
+    html += canViewAdminPage ? '<a href="admin.php">Admin</a>' : '';
     html += '<a href="userprofile.php">Mein Profil (' + loggedInUserLogin + ') </a>';
 
     let overrider = '';
