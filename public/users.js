@@ -20,9 +20,6 @@ function refresh() {
 
         _("#user_index").innerHTML = buildIndexHtml();
     });
-
-    // build the calendar
-    _("#user_index").innerHTML = buildIndexHtml();
 }
 
 refresh();

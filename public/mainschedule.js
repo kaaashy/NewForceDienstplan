@@ -78,9 +78,6 @@ function refresh(callback) {
 
         onEventsReceived(counter, callback);
     });
-
-    // build the calendar
-    _("#calendar").innerHTML = buildCalendarHtml();
 }
 
 refresh();
