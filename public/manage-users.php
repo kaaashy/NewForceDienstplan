@@ -46,23 +46,48 @@ function handleUserCreation()
     }
 }
 
+function handleUserDeletion()
+{
+    $login = trim($_POST['login']);
+
+    $callingUser = $_SESSION['user_id'];
+    $operationPermitted = getUserHasPermission($callingUser, 'delete_users');
+    if (!$operationPermitted) {
+        return array(false, "Keine Berechtigung.");
+    }
+
+    if ($_SESSION['login'] == $login) {
+        return array(false, "Selbst-Löschung nicht möglich.");
+    }
+
+    $error = deleteUser($login);
+
+    if ($error)
+        return array(false, $error);
+
+    return array("Benutzer '$login' gelöscht.", false);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['createuser'])) {
         list($userCreatedInfo, $userCreatedError) = handleUserCreation();
 
         if ($userCreatedInfo) jsMessage("userCreatedInfo", $userCreatedInfo);
         if ($userCreatedError) jsMessage("userCreatedError", $userCreatedError);
-
     } elseif (isset($_POST['deleteuser'])) {
-        $login = trim($_POST['login']);
+        list($userDeletedInfo, $userDeletedError) = handleUserDeletion();
 
-        deleteUser($login);
+        if ($userDeletedInfo) jsMessage("userDeletedInfo", $userDeletedInfo);
+        if ($userDeletedError) jsMessage("userDeletedError", $userDeletedError);
     } elseif (isset($_POST['login_as'])) {
         $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
 
         logInAsUser($userId);
     }
+
 }
+
+
 
 ?>
 

@@ -255,6 +255,18 @@ function buildDeleteUsersHtml()
     html += '    <input type="submit" name="deleteuser" value="Löschen"></input>';
     html += '</form>';
 
+    if (typeof userDeletedInfo !== "undefined") {
+        html += '    <div class="info-box">';
+        html += `    <p>${userDeletedInfo}</p>`;
+        html += '    </div>';
+    }
+
+    if (typeof userDeletedError !== "undefined") {
+        html += '    <div class="error-box">';
+        html += `    <p>${userDeletedError}</p>`;
+        html += '    </div>';
+    }
+
     return html;
 }
 

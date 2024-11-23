@@ -69,9 +69,10 @@ function addUser($login, $password, $email, $first, $last)
 function deleteUser($login) {
 
     if ($login == "admin") {
-        echo 'Cannot delete admin for safety reasons.';
-        return;
+        return 'Cannot delete admin for safety reasons.';
     }
+
+    return;
 
     $pdo = connect();
 
