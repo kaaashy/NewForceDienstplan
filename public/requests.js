@@ -101,7 +101,7 @@ function sendRequest(data, callback) {
         if (xhr.status === 200) {
             // Request succeeded
             let response = xhr.responseText.trim();
-            console.log("response text: '" + response + "'");
+            // console.log("response text: '" + response + "'");
 
             let result = response;
             if (response !== "") {
@@ -109,6 +109,7 @@ function sendRequest(data, callback) {
                     result = JSON.parse(xhr.responseText);
                 } catch (e) {
                     console.log(e);
+                    console.log("response text: '" + response + "'");
                 }
             }
 
