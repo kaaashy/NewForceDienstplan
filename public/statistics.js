@@ -92,6 +92,7 @@ function createStatistics()
 
         for (let ui in event.users) {
             let user = event.users[ui];
+            if (!user.scheduled) continue;
 
             let userStats = statistics[user.user_id];
             userStats.days += 1;
