@@ -505,29 +505,33 @@ function showEvent(dateStr, id, edit) {
         let insertOtherButtonHtml = '<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>📅 Eintragen</button>';
         let removeOtherButtonHtml = '<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>';
 
-        let insertRemoveOthersHtml = ''
-            + '<table class="userlist">'
-            + '<tr><th colspan="2">Andere Ein-/Austragen</th></tr>'
-            + '<tr>'
-            + '<td>'
-            + unavailableUsersSelect
-            + '</td>'
-            + '<td>'
-            + availableUsersSelect
-            + '</td>'
-            + '</tr>'
+        let insertRemoveOthersHtml = '';
 
-            + '<tr>'
-            + '<td>'
-            + insertOtherButtonHtml
-            + '</td>'
-            + '<td>'
-            + removeOtherButtonHtml
-            + '</td>'
-            + '</tr>'
-            + '</table>'
-            + ''
-            ;
+        if (userData[loggedInUserId].permissions['manage_other_schedules']) {
+            insertRemoveOthersHtml = ''
+                + '<table class="userlist">'
+                + '<tr><th colspan="2">Andere Ein-/Austragen</th></tr>'
+                + '<tr>'
+                + '<td>'
+                + unavailableUsersSelect
+                + '</td>'
+                + '<td>'
+                + availableUsersSelect
+                + '</td>'
+                + '</tr>'
+
+                + '<tr>'
+                + '<td>'
+                + insertOtherButtonHtml
+                + '</td>'
+                + '<td>'
+                + removeOtherButtonHtml
+                + '</td>'
+                + '</tr>'
+                + '</table>'
+                + ''
+                ;
+        }
 
         // template info
         data = ''
