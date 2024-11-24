@@ -114,7 +114,7 @@ function initializeTables()
         echo "Table Permissions created successfully";
     }
     
-    $createSchedulesTable = "CREATE TABLE Schedule (
+    $createAvailabilitiesTable = "CREATE TABLE Availabilities (
         user_id INT UNSIGNED,
         event_id INT UNSIGNED,
         deliberate BOOL,
@@ -122,10 +122,21 @@ function initializeTables()
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (user_id, event_id)
     )";
-    if ($pdo->query($createSchedulesTable) === TRUE) {
-        echo "Table Duties created successfully";
+    if ($pdo->query($createAvailabilitiesTable) === TRUE) {
+        echo "Table Availabilities created successfully";
     }
-    
+
+    $createSchedulesTable = "CREATE TABLE Schedule (
+        user_id INT UNSIGNED,
+        event_id INT UNSIGNED,
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, event_id)
+    )";
+    if ($pdo->query($createSchedulesTable) === TRUE) {
+        echo "Table Schedule created successfully";
+    }
+
     $createOutlineScheduleTable = "CREATE TABLE OutlineSchedule (
         user_id INT UNSIGNED,
         day INT UNSIGNED,
@@ -135,7 +146,7 @@ function initializeTables()
         PRIMARY KEY (user_id, day)
     )";
     if ($pdo->query($createOutlineScheduleTable) === TRUE) {
-        echo "Table Duties created successfully";
+        echo "Table OutlineSchedule created successfully";
     }
 
     $createPasswordTokensTable = "CREATE TABLE PasswordTokens (
@@ -146,7 +157,7 @@ function initializeTables()
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     if ($pdo->query($createPasswordTokensTable) === TRUE) {
-        echo "Table Roles created successfully";
+        echo "Table PasswordTokens created successfully";
     }
 
 }

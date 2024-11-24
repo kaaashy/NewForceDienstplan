@@ -306,6 +306,7 @@ input.delete_event:hover {
 
 #calendar_data .userlist {
     margin: auto;
+    margin-top: 10px;
     width: 90%;
 }
 #calendar_data .userlist td {
@@ -360,7 +361,7 @@ input.delete_event:hover {
     padding: 20px;
 }
 
-.deliberate_event_user {
+.scheduled_event_user {
     display: inline-block;
     border-radius: 4px;
     margin-top: 2px;
@@ -375,6 +376,24 @@ input.delete_event:hover {
     background: #666;  /* hehe */
     font-size: 0.75rem;
     color: white;
+    border: none;
+}
+
+.deliberate_event_user {
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+
+    text-decoration: none;
+    font-family: sans-serif;
+
+    background: #666;  /* hehe */
+    font-size: 0.75rem;
+    color: lightgreen;
     border: none;
 }
 
@@ -642,4 +661,15 @@ tr.spacer-row {
 
 .calendar_event a.assigned-highlight {
     background-color: #0069b6
+}
+
+.hint {
+    color: grey;
+    font-size: 14px;
+    font-style: italic;
+}
+
+select {
+    height: 30px;
+    width: 100%;
 }

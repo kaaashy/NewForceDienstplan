@@ -21,6 +21,11 @@ let dataReceived = 0;
 
 let currentEventId = null;
 
+// short querySelector
+function _(s) {
+    return document.querySelector(s);
+}
+
 function onEventsReceived(refresh, callback) {
     if (refresh !== refreshCounter)
         return;
@@ -109,34 +114,97 @@ function refreshEvent(eventId) {
     });
 }
 
-
-// short querySelector
-function _(s) {
-    return document.querySelector(s);
-}
-
-function insertIntoSchedule(userId) {
+function insertIntoAvailabilityList(userId) {
     if (!userId) {
         userId = loggedInUserId;
     }
 
-    sendUserEventActivity(userId, currentEventId, true, function () {
+    sendUserEventAvailability(userId, currentEventId, true, function () {
         refreshEvent(currentEventId);
     });
 
     console.log("insert into event " + currentEventId);
 }
 
-function removeFromSchedule(userId) {
+function removeFromAvailabilityList(userId) {
     if (!userId) {
         userId = loggedInUserId;
     }
 
-    sendUserEventActivity(userId, currentEventId, false, function () {
+    sendUserEventAvailability(userId, currentEventId, false, function () {
         refreshEvent(currentEventId);
     });
 
     console.log("remove from event " + currentEventId);
+}
+
+function scheduleForEvent(userId) {
+    if (!userId) {
+        userId = loggedInUserId;
+    }
+
+    sendUserEventSchedule(userId, currentEventId, true, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("remove from event " + currentEventId);
+}
+
+function unscheduleFromEvent(userId) {
+    if (!userId) {
+        userId = loggedInUserId;
+    }
+
+    sendUserEventSchedule(userId, currentEventId, false, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("remove from event " + currentEventId);
+}
+
+function insertOtherIntoAvailabilityList() {
+    let select = _("#unavailableUsersSelect");
+    if (!select.value) return;
+
+    let userId = select.value;
+    sendUserEventAvailability(userId, currentEventId, true, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("insert into event " + currentEventId);
+}
+
+function removeOtherFromAvailabilityList() {
+    let select = _("#availableUsersSelect");
+    if (!select.value) return;
+
+    let userId = select.value;
+    sendUserEventAvailability(userId, currentEventId, false, function () {
+        refreshEvent(currentEventId);
+    });
+
+    console.log("remove from event " + currentEventId);
+}
+
+function refreshInsertRemoveOthersButtons() {
+    let availableUsersSelect = _("#availableUsersSelect");
+    let unavailableUsersSelect = _("#unavailableUsersSelect");
+
+    let insertButton = _("#insertOtherButton");
+    let removeButton = _("#removeOtherButton");
+
+    insertButton.disabled = (unavailableUsersSelect.value === "");
+    removeButton.disabled = (availableUsersSelect.value === "");
+
+    console.log(insertButton);
+
+    if (!insertButton.disabled) {
+        insertButton.innerText = "📅 " + userData[unavailableUsersSelect.value].display_name + " Eintragen";
+    }
+
+    if (!removeButton.disabled) {
+        removeButton.innerText = userData[availableUsersSelect.value].display_name + " Austragen";
+    }
 }
 
 function findEvent(id) {
@@ -187,19 +255,27 @@ function showEvent(dateStr, id, edit) {
     let date = dateStr;
     let time = startTimes[getGermanWeekDay(new Date(dateStr))];
     let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
-    let users = 0;
     let minUsers = minUsersOfDay[getGermanWeekDay(new Date(dateStr))];
     let organizer = "";
     let venue = "New Force";
     let address = "Buckenhofer Weg 69, 91058 Erlangen";
     let description = "";
     let buttonCaption = "Veranstaltung Anlegen";
-    let deleteButton = "";
-    let eventUsers = "";
-    let nonEventUsers = "";
+
+    let scheduledUserCount = 0;
+    let availableUserCount = 0;
+    let scheduledUsersHtml = "";
+    let availableUsersHtml = "";
+    let unavailableUsersHtml = "";
+    let deleteButtonHtml = "";
+    let addRemoveButtonsHtml = "";
+    let lockButtonHtml = "";
     let dateFlags = "required";
-    let selfInUserList = false;
+    let selfInScheduledList = false;
+    let selfInAvailabilityList = false;
     let locked = false;
+    let eventUsersSorted = [];
+    let remainingUsers = new Set();
 
     currentEventId = null;
 
@@ -214,121 +290,119 @@ function showEvent(dateStr, id, edit) {
         return nameA.localeCompare(nameB);
     });
 
-    if (id && eventData) {
-        for (let key in eventData) {
-            let event = eventData[key];
+    let event = findEvent(id);
+    if (event) {
+        currentEventId = id;
 
-            if (event.id === id) {
-                currentEventId = id;
+        title = event.title;
+        date = event.date;
+        time = event.time;
+        endTime = event.end_time;
+        minUsers = event.minimum_users;
+        organizer = event.organizer;
+        venue = event.venue;
+        address = event.address;
+        description = event.description;
+        locked = event.locked;
+        buttonCaption = "Änderungen Speichern";
+        headline = title;
+        dateFlags = "disabled";
+        deleteButtonHtml = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen" formnovalidate/>';
 
-                title = event.title;
-                date = event.date;
-                time = event.time;
-                endTime = event.end_time;
-                users = 0;
-                minUsers = event.minimum_users;
-                organizer = event.organizer;
-                venue = event.venue;
-                address = event.address;
-                description = event.description;
-                locked = event.locked;
-                buttonCaption = "Änderungen Speichern";
-                headline = title;
-                dateFlags = "disabled";
-                deleteButton = '<input class="delete_event" type="submit" name="deleteevent" value="&#x1F5D1; Löschen" formnovalidate/>';
+        for (let uid in userData) {
+            remainingUsers.add(userData[uid].id);
+        }
 
-                let remainingUsers = new Set();
-                for (let uid in userData) {
-                    remainingUsers.add(userData[uid].id);
-                }
+        for (let i in event.users) {
+            eventUsersSorted.push(event.users[i]);
+        }
 
-                let eventUsersSorted = [];
-                for (let i in event.users) {
-                    eventUsersSorted.push(event.users[i]);
-                }
+        eventUsersSorted.sort(function (a, b) {
+            let nameA = userData[a.user_id].display_name;
+            let nameB = userData[b.user_id].display_name;
+            return nameA.localeCompare(nameB);
+        });
 
-                eventUsersSorted.sort(function (a, b) {
-                    let nameA = userData[a.user_id].display_name;
-                    let nameB = userData[b.user_id].display_name;
-                    return nameA.localeCompare(nameB);
-                });
+        let handStyle = '';
+        if (!edit && userData[loggedInUserId].permissions['manage_other_schedules']) {
+            handStyle = ' style="cursor: pointer;" '
+        }
 
-                let handStyle = '';
-                if (!edit && userData[loggedInUserId].permissions['manage_other_schedules']) {
-                    handStyle = ' style="cursor: pointer;" '
-                }
+        for (let i in eventUsersSorted) {
+            let eventUser = eventUsersSorted[i];
+            let user = userData[eventUser.user_id];
 
-                eventUsers += "<table>";
-                for (let i in eventUsersSorted) {
-                    let eventUser = eventUsersSorted[i];
-                    let user = userData[eventUser.user_id];
-                    remainingUsers.delete(eventUser.user_id);
+            if (eventUser.user_id === loggedInUserId)
+                selfInScheduledList = true;
 
-                    if (eventUser.user_id === loggedInUserId)
-                        selfInUserList = true;
+            if (user && eventUser.scheduled) {
+                let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
+                scheduledUsersHtml += '<div ' + unscheduleOnClick + handStyle + ' class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅ ' + user.display_name + '</div>';
 
-                    if (user) {
-                        let removeOnClick = ` onclick="removeFromSchedule(${user.id}); "`;
-                        if (edit) removeOnClick = "";
-
-                        eventUsers += '<tr><td>';
-                        if (eventUser.deliberate) {
-                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> ✅ ' + user.display_name + '</div>';
-                            users++;
-                        } else if (user.active && user.visible){
-                            eventUsers += '<div ' + removeOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅 ' + user.display_name + '</div>';
-                            users++;
-                        }
-                        eventUsers += '</td></tr>';
-                    }
-                }
-                eventUsers += "</table>";
-
-                nonEventUsers += "<table>";
-                for (let i in allUsersSorted) {
-                    let user = allUsersSorted[i];
-
-                    if (remainingUsers.has(user.id) && user.active && user.visible) {
-                        let addOnClick = ` onclick="insertIntoSchedule(${user.id}); "`;
-                        if (edit) addOnClick = "";
-
-                        nonEventUsers += '<tr><td>';
-                        nonEventUsers += '<div ' + addOnClick + handStyle + ' class="event_user">' + user.display_name + '</div>';
-                        nonEventUsers += '</td></tr>';
-                    }
-                }
-                nonEventUsers += "</table>";
+                scheduledUserCount++;
             }
         }
-    } else {
-        id = "";
-    }
 
-    let addRemoveButtons = "";
-    if (id !== "") {
+        if (scheduledUsersHtml != "") {
+            scheduledUsersHtml = ''
+                + '<table class="userlist">'
+                + `<tr><th>Eingeteilt</th></tr>`
+                + '<tr><td>' + scheduledUsersHtml + '</td></tr>'
+                + '</table>';
+        }
+
+        for (let i in eventUsersSorted) {
+            let eventUser = eventUsersSorted[i];
+            let user = userData[eventUser.user_id];
+            remainingUsers.delete(eventUser.user_id);
+
+            if (eventUser.user_id === loggedInUserId)
+                selfInAvailabilityList = true;
+
+            if (user) {
+                let scheduleOnClick = edit ? '' : ` onclick="scheduleForEvent(${user.id}); "`;
+                let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
+
+                if (eventUser.scheduled) {
+                    availableUsersHtml += '<div ' + unscheduleOnClick + handStyle + ' class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅ ' + user.display_name + '</div>';
+                    availableUserCount++;
+                } else if (eventUser.deliberate) {
+                    availableUsersHtml += '<div ' + scheduleOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> 📅 ' + user.display_name + '</div>';
+                    availableUserCount++;
+                } else if (user.active && user.visible){
+                    availableUsersHtml += '<div ' + scheduleOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅 ' + user.display_name + '</div>';
+                    availableUserCount++;
+                }
+            }
+        }
+
+        for (let i in allUsersSorted) {
+            let user = allUsersSorted[i];
+
+            if (remainingUsers.has(user.id) && user.active && user.visible) {
+                unavailableUsersHtml += '<div class="event_user">' + user.display_name + '</div>';
+            }
+        }
 
         let addDisabled = "";
-        if (selfInUserList)
+        if (selfInAvailabilityList)
             addDisabled = "disabled";
 
         let removeDisabled = "";
-        if (!selfInUserList || users <= minUsers)
+        if (!selfInAvailabilityList || availableUserCount <= minUsers)
             removeDisabled = "disabled";
 
-        addRemoveButtons += '<tr>'
-                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoSchedule();"' + addDisabled + '>Mich Eintragen</button></td>'
-                + '<td><button type="button" class="schedule_remove" onclick="return removeFromSchedule();"' + removeDisabled + '>Mich Austragen</button></td>'
+        addRemoveButtonsHtml += '<tr>'
+                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoAvailabilityList();"' + addDisabled + '>📅 Mich Eintragen</button></td>'
+                + '<td><button type="button" class="schedule_remove" onclick="return removeFromAvailabilityList();"' + removeDisabled + '>Mich Austragen</button></td>'
                 + '</tr>';
-    }
 
-    let lockButton = "";
-    if (id !== "") {
         let editable = edit ? "true" : "false";
         let sentEventLockedStatus = !locked;
         let lockIcon = locked ? "&#128274" : "&#128275";
         let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, ${editable})});}`;
 
-        lockButton = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
+        lockButtonHtml = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
     }
 
     let data = '';
@@ -339,7 +413,7 @@ function showEvent(dateStr, id, edit) {
         data = ''
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
-                + lockButton
+                + lockButtonHtml
                 + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 
@@ -387,7 +461,7 @@ function showEvent(dateStr, id, edit) {
                 + '<input class="create_event" type="submit" name="newevent" value="' + buttonCaption + '"/>'
                 + '</div>'
                 + '<div class="input_line">'
-                + deleteButton
+                + deleteButtonHtml
                 + '</div>'
                 + '</form>'
                 + '</div>'
@@ -396,15 +470,16 @@ function showEvent(dateStr, id, edit) {
         if (id && minUsers > 0) {
             data += ''
                 + '<div class="create_event_wrapper" style="margin-top: 50px">'
-                + `<h4>Dienste (${users} von ${minUsers})</h4>`
+                + `<h4>Dienste (${scheduledUserCount} von ${minUsers})</h4>`
+                + scheduledUsersHtml
                 + '<table class="userlist">'
                 + '<tr>'
                 + `<th>Eingetragen</th>`
                 + '<th>Ausgetragen</th>'
                 + '</tr>'
                 + '<tr>'
-                + '<td>' + eventUsers + '</td>'
-                + '<td>' + nonEventUsers + '</td>'
+                + '<td>' + availableUsersHtml + '</td>'
+                + '<td>' + unavailableUsersHtml + '</td>'
                 + '</tr>'
                 + '</table>'
                 + '</div>'
@@ -434,17 +509,69 @@ function showEvent(dateStr, id, edit) {
 
         let eventId = event.id;
 
-        let editButton = "";
+        let editButtonHtml = "";
         if (userData[loggedInUserId].permissions['manage_events']) {
-            editButton = `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+            editButtonHtml = `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
         }
+
+        let availableUsersSelect = '<select id="availableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
+        availableUsersSelect += `<option value=""></option>`;
+
+        for (let i in eventUsersSorted) {
+            let eventUser = eventUsersSorted[i];
+            let user = userData[eventUser.user_id];
+
+            availableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
+        }
+
+        availableUsersSelect += '</select>';
+
+        let unavailableUsersSelect = '<select id="unavailableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
+        unavailableUsersSelect += `<option value=""></option>`;
+
+        for (let i in allUsersSorted) {
+            let user = allUsersSorted[i];
+            if (!user.active || !user.visible) continue;
+
+            if (remainingUsers.has(user.id)) {
+                unavailableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
+            }
+        }
+        unavailableUsersSelect += '</select>';
+
+        let insertOtherButtonHtml = '<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>📅 Eintragen</button>';
+        let removeOtherButtonHtml = '<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>';
+
+        let insertRemoveOthersHtml = ''
+            + '<table class="userlist">'
+            + '<tr><th colspan="2">Andere Aus-/Eintragen</th></tr>'
+            + '<tr>'
+            + '<td>'
+            + availableUsersSelect
+            + '</td>'
+            + '<td>'
+            + unavailableUsersSelect
+            + '</td>'
+            + '</tr>'
+
+            + '<tr>'
+            + '<td>'
+            + removeOtherButtonHtml
+            + '</td>'
+            + '<td>'
+            + insertOtherButtonHtml
+            + '</td>'
+            + '</tr>'
+            + '</table>'
+            + ''
+            ;
 
         // template info
         data = ''
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
-                + editButton
-                + lockButton
+                + editButtonHtml
+                + lockButtonHtml
                 + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 
@@ -452,26 +579,28 @@ function showEvent(dateStr, id, edit) {
 
                 + `<div class="data_line"> <p> ${date} - ${time}-${endTime} Uhr </p></div>`
                 + (organizer != "" ? `<div class="data_line"> <p> Verantwortlich: ${organizer} </p></div>` : "")
-                + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`;
-
-        if (minUsers > 0) {
-            data += ''
-                    + (minUsers > 0 ? `<h4>Dienste (${users} von ${minUsers})</h4>` : '<h4>Dienste</h4>')
-                    + '<table class="userlist">'
-                    + '<tr>'
-                    + `<th>Eingetragen</th>`
-                    + '<th>Ausgetragen</th>'
-                    + '</tr>'
-                    + '<tr>'
-                    + '<td>' + eventUsers + '</td>'
-                    + '<td>' + nonEventUsers + '</td>'
-                    + '</tr>'
-                    + addRemoveButtons
-                    + '</table>';
-        }
-
-        data += ''
+                + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`
                 + `<div class="data_line"> <p> ${description} </p></div>`
+
+                + (minUsers > 0 ? `<h4>Dienste (${scheduledUserCount} von ${minUsers})</h4>` : '<h4>Dienste</h4>')
+                + '<div class="data_line"><p class="hint">Klicke auf eingetragene Mitarbeitende, um sie einzuteilen.</p></div>'
+
+                + scheduledUsersHtml
+
+                + '<table class="userlist">'
+                + '<tr>'
+                + `<th>Eingetragen</th>`
+                + '<th>Ausgetragen</th>'
+                + '</tr>'
+                + '<tr>'
+                + '<td>' + availableUsersHtml + '</td>'
+                + '<td>' + unavailableUsersHtml + '</td>'
+                + '</tr>'
+                + addRemoveButtonsHtml
+                + '</table>'
+
+                + insertRemoveOthersHtml
+
                 + '</div>';
 
     }
@@ -479,7 +608,7 @@ function showEvent(dateStr, id, edit) {
     return (_("#calendar_data").innerHTML = data);
 }
 
-function buildEventAssigneeOverview(event) {
+function buildEventAvailabilityOverview(event) {
     let html = "";
 
     console.log(event);
@@ -504,12 +633,13 @@ function buildEventAssigneeOverview(event) {
 
         if (user) {
             if (eventUser.deliberate) {
-                html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> ✅ ' + user.display_name + '</div></td></tr>';
+                html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
             } else if (user.active && user.visible){
                 html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
             }
         }
     }
+
     html += "</table>";
 
     return html;
@@ -572,7 +702,7 @@ function buildCalendarEventHtml(event) {
 
     let assignedUsers = "";
     if (mode === weekMode)
-        assignedUsers = buildEventAssigneeOverview(event);
+        assignedUsers = buildEventAvailabilityOverview(event);
 
     return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ', false)">'
             + `<span class="event_title">${event.title}</span>`
@@ -583,7 +713,6 @@ function buildCalendarEventHtml(event) {
             + (selfAssigned ? '<span class="event_title">Dienst!</span>' : '')
             + assignedUsers
             + "</a>";
-
 }
 
 function addEvents(eventData, startDate) {

@@ -91,6 +91,10 @@ function deleteUser($login) {
         $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
 
+        $stmt = $pdo->prepare('DELETE FROM Availabilities WHERE user_id = :user_id');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+
         // Prepare and execute the SQL statement
         $stmt = $pdo->prepare('DELETE FROM OutlineSchedule WHERE user_id = :user_id');
         $stmt->bindValue(':user_id', $user_id);
@@ -136,7 +140,7 @@ function addEvent($type, $title, $date)
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+        $sql = "INSERT IGNORE INTO Availabilities (user_id, event_id, deliberate)
             VALUES (:user_id, :event_id, false)";
 
         $stmt2 = $pdo->prepare($sql);
@@ -252,11 +256,11 @@ function updateOutlineDay($userId, $day, $active)
     $stmt->execute();
 
     if ($active) {
-        $sql = "INSERT IGNORE INTO Schedule (user_id, event_id, deliberate)
+        $sql = "INSERT IGNORE INTO Availabilities (user_id, event_id, deliberate)
             VALUES (:user_id, :event_id, false)";
 
     } else {
-        $sql = "DELETE IGNORE FROM Schedule
+        $sql = "DELETE IGNORE FROM Availabilities
             WHERE user_id = :user_id AND event_id = :event_id AND deliberate = false;";
     }
 
@@ -269,16 +273,48 @@ function updateOutlineDay($userId, $day, $active)
     }
 }
 
-function updateEventSchedule($userId, $eventId, $deliberate, $active)
+function updateEventAvailability($userId, $eventId, $deliberate, $available)
 {
     // Create a connection
     $pdo = connect();
 
     // Prepare the SQL statement
-    if ($active) {
-        $sql = "INSERT INTO Schedule (user_id, event_id, deliberate)
+    if ($available) {
+        $sql = "INSERT INTO Availabilities (user_id, event_id, deliberate)
             VALUES (:user_id, :event_id, :deliberate)
             ON DUPLICATE KEY UPDATE deliberate = :deliberate;";
+    } else {
+        $sql = "DELETE IGNORE FROM Availabilities
+            WHERE user_id = :user_id AND event_id = :event_id;";
+    }
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':event_id', $eventId);
+
+    if ($available) {
+        $stmt->bindParam(':deliberate', $deliberate);
+    }
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Availabilities updated successfully.";
+    } else {
+        echo "Error updating availabilities.";
+    }
+}
+
+function updateUserEventSchedule($userId, $eventId, $scheduled)
+{
+    // Create a connection
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    if ($scheduled) {
+        $sql = "INSERT INTO Schedule (user_id, event_id)
+            VALUES (:user_id, :event_id)
+            ON DUPLICATE KEY UPDATE event_id = :event_id;";
     } else {
         $sql = "DELETE IGNORE FROM Schedule
             WHERE user_id = :user_id AND event_id = :event_id;";
@@ -289,15 +325,11 @@ function updateEventSchedule($userId, $eventId, $deliberate, $active)
     $stmt->bindParam(':user_id', $userId);
     $stmt->bindParam(':event_id', $eventId);
 
-    if ($active) {
-        $stmt->bindParam(':deliberate', $deliberate);
-    }
-
     // Execute the statement
     if ($stmt->execute()) {
         echo "Schedule updated successfully.";
     } else {
-        echo "Error updating schedule.";
+        echo "Error updating Schedule.";
     }
 }
 
@@ -501,7 +533,7 @@ function getUserHasPermission($user_id, $permission)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
+    // Retrieve the permissions
     $sql = "SELECT *
             FROM Permissions
             WHERE user_id = :user_id;";
@@ -603,7 +635,6 @@ function getUserDetails($user_id)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
     $sql = "SELECT *
             FROM Users
             WHERE id = :user_id;";
@@ -620,7 +651,6 @@ function getUserId($login)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
     $sql = "SELECT id
             FROM Users
             WHERE login = :login;";
@@ -638,7 +668,6 @@ function fetchUserCredentialsByEmail($email)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
     $sql = "SELECT id, login
             FROM Users
             WHERE email = :email;";
@@ -718,13 +747,12 @@ function removeInitializationToken($userId, $token)
     $stmt->execute();
 }
 
-function getNumUsersAtEvent($eventId)
+function getNumUsersAvailableAtEvent($eventId)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
     $sql = "SELECT COUNT(*) as row_count
-            FROM Schedule
+            FROM Availabilities
             WHERE event_id = :event_id;";
 
     $stmt = $pdo->prepare($sql);
@@ -755,7 +783,6 @@ function getEventDetails($eventId)
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
     $sql = "SELECT *
             FROM Events
             WHERE id = :event_id;";
@@ -804,10 +831,19 @@ function echoEvents($pdo, $stmt)
 {
     $rows = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // Retrieve the outline schedule
-        $sql = "SELECT user_id, deliberate
-                FROM Schedule
-                WHERE event_id = :event_id;";
+        // select users
+        $sql = "SELECT
+                    A.user_id,
+                    A.deliberate,
+                    S.event_id
+                FROM
+                    Availabilities A
+                LEFT JOIN
+                    Schedule S
+                ON
+                    A.user_id = S.user_id AND A.event_id = S.event_id
+                WHERE
+                    A.event_id = :event_id;";
 
         $stmt2 = $pdo->prepare($sql);
         $stmt2->bindValue("event_id", $row["id"]);
@@ -818,11 +854,15 @@ function echoEvents($pdo, $stmt)
         $row['locked'] = intval($row['locked']);
 
         $row["users"] = array();
-        while ($usersRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-            $usersRow['user_id'] = intval($usersRow['user_id']);
-            $usersRow['deliberate'] = intval($usersRow['deliberate']);
+        while ($userRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            //var_dump($userRow);
 
-            $row["users"][] = $usersRow;
+            $userRow['user_id'] = intval($userRow['user_id']);
+            $userRow['deliberate'] = intval($userRow['deliberate']);
+            $userRow['scheduled'] = $userRow['event_id'] ? 1 : 0;
+            unset($userRow['event_id']);
+
+            $row["users"][] = $userRow;
         }
 
         $rows[] = $row;

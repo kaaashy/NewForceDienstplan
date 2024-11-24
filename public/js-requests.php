@@ -103,10 +103,10 @@ if (isset($_POST['user_permission'])) {
     return;
 }
 
-if (isset($_POST['event_schedule'])) {
+if (isset($_POST['event_availability'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
-    $active = filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_INT) > 0;
+    $available = filter_input(INPUT_POST, 'available', FILTER_SANITIZE_NUMBER_INT) > 0;
     $deliberate = true;
     
     $callingUser = $_SESSION['user_id'];
@@ -122,8 +122,8 @@ if (isset($_POST['event_schedule'])) {
         return;
     }
 
-    if (!$active) {
-        $users = getNumUsersAtEvent($eventId);
+    if (!$available) {
+        $users = getNumUsersAvailableAtEvent($eventId);
         $minUsers = getMinUsersAtEvent($eventId);
         if ($users <= $minUsers) {
             echo 'ERROR_NOT_ENOUGH_USERS';
@@ -131,7 +131,29 @@ if (isset($_POST['event_schedule'])) {
         }
     }
 
-    updateEventSchedule($userId, $eventId, $deliberate, $active);
+    updateEventAvailability($userId, $eventId, $deliberate, $available);
+    return;
+}
+
+if (isset($_POST['event_scheduled'])) {
+    $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+    $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
+    $scheduled = filter_input(INPUT_POST, 'scheduled', FILTER_SANITIZE_NUMBER_INT) > 0;
+
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_other_schedules');
+
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_EVENT_SCHEDULING';
+        return;
+    }
+
+    if (getEventLocked($eventId)) {
+        echo 'ERROR_EVENT_LOCKED';
+        return;
+    }
+
+    updateUserEventSchedule($userId, $eventId, $scheduled);
     return;
 }
 

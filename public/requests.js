@@ -25,13 +25,24 @@ function sendUserStatus(userId, visible, active, callback) {
     sendRequest(data, callback);
 }
 
-function sendUserEventActivity(userId, eventId, active, callback) {
+function sendUserEventAvailability(userId, eventId, available, callback) {
 
     var data = 'login=' + loggedInUserLogin;
-    data = data + "&event_schedule=y";
+    data = data + "&event_availability=y";
     data = data + "&user_id=" + userId;
     data = data + "&event_id=" + eventId;
-    data = data + "&active=" + (active ? 1 : 0);
+    data = data + "&available=" + (available? 1 : 0);
+
+    sendRequest(data, callback);
+}
+
+function sendUserEventSchedule(userId, eventId, scheduled, callback) {
+
+    var data = 'login=' + loggedInUserLogin;
+    data = data + "&event_scheduled=y";
+    data = data + "&user_id=" + userId;
+    data = data + "&event_id=" + eventId;
+    data = data + "&scheduled=" + (scheduled? 1 : 0);
 
     sendRequest(data, callback);
 }
