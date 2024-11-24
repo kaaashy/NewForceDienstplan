@@ -660,10 +660,16 @@ tr.spacer-row {
 }
 
 .assigned-highlight {
-    border: 2px solid #fff; /* Darker red border */   
+    border: 2px solid #fff; /* White border */
 }
 
 .calendar_event a.assigned-highlight {
+    border: none;
+    background-color: #225465
+}
+
+.calendar_event a.scheduled-highlight {
+    border: none;
     background-color: #0069b6
 }
 

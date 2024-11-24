@@ -624,14 +624,15 @@ function buildEventAvailabilityOverview(event) {
 
 function buildCalendarEventHtml(event) {
 
-    let selfHighlightClass = "";
-    let selfAssigned = false;
+    let selfAvailable = false;
+    let selfScheduled = false;
     for (let i in event.users) {
         let eventUser = event.users[i];
 
         if (eventUser.user_id === loggedInUserId) {
-            selfHighlightClass = "assigned-highlight";
-            selfAssigned = true;
+            selfAvailable = true;
+            selfScheduled = eventUser.scheduled;
+
             break;
         }
     }
@@ -684,13 +685,30 @@ function buildCalendarEventHtml(event) {
     if (mode === weekMode)
         assignedUsers = buildEventAvailabilityOverview(event);
 
+    let highlightText = "";
+    let icon = "";
+
+    if (selfScheduled) {
+        highlightText = '<span class="event_title">Dienst!</span>';
+        icon = "✅";
+    } else if (selfAvailable && !event.locked) {
+        highlightText = '<span class="event_title">Eingetragen!</span>';
+        icon = "📅";
+    }
+
+    let selfHighlightClass = "";
+    if (selfScheduled)
+        selfHighlightClass = "scheduled-highlight";
+    else if (selfAvailable && !event.locked)
+        selfHighlightClass = "assigned-highlight";
+
     return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ', false)">'
-            + `<span class="event_title">${event.title}</span>`
+            + `<span class="event_title">${icon} ${event.title}</span>`
             + (event.organizer !== "" ? `<span class="event_time">by ${event.organizer}</span>` : "")
             + '<span class="event_time">' + readableTime(event.time)
             + " bis " + readableTime(event.end_time) + '</span>'
             + usersOverview(event)
-            + (selfAssigned ? '<span class="event_title">Dienst!</span>' : '')
+            + highlightText
             + assignedUsers
             + "</a>";
 }
