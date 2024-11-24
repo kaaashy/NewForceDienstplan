@@ -1,24 +1,22 @@
 TODO:  
 ### Core Functionality ########################
-* Verantwortliche Person in Wochenansicht anzeigen
+* Separater Veranstaltungstyp Putzdienst
+* PW-Reset-Email verfallen lassen
+* Do: 2 MA, Fr+Sa: 4 MA
+* Email-Verification bei Änderung der Email
+* Angemeldet bleiben? -> Auswahl
+* MA löschen+einladen+verwalten -> 1 Berechtigung
+* Dienste planen + sperren -> 1 Berechtigung
+* Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
 * Doppeldienste in einer Woche hervorheben
 * MA-Übersicht: Haken für "inaktive MA ausblenden"
-* Separater Veranstaltungstyp Putzdienst
-* Eingeteilt vs. Eingetragen -> Markierung nicht "DIENST" sondern "EINGETRAGEN"
 * Veranstaltung nach Bearbeiten nicht unbedingt schließen
-* Error handling: Proper error messages everywhere, kein echo in .php files
+* Error handling: Richtige Fehlermeldungen, kein echo in .php files
 * Logfiles
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
 * Registrierungs-Email: Passwort zurücksetzen
 * Berechtigungen für alle einsehbar machen
-* Angemeldet bleiben? -> Auswahl
-* PW-Reset-Email verfallen lassen
-* Do: 2 MA, Fr+Sa: 4 MA
-* Email-Verification bei Änderung der Email
-* MA löschen+einladen+verwalten -> 1 Berechtigung
-* Dienste planen + sperren -> 1 Berechtigung
-* Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
 * Rahmendienstplan Summe anzeigen
 
 ### Mobile-Version ########################
@@ -26,9 +24,6 @@ TODO:
 
 ### Sperrungen ########################
 * ABGELEHNT: Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
-
-### Putzdienst ########################
-* Lösung für Putzdienst finden - eigene Veranstaltung?
 
 
 ### Doku ########################
@@ -59,18 +54,12 @@ Mitarbeiterrechte lt Oli
 - Ein- und Austragen
 - Veranstaltungsrechte
 
-Vorschläge: 
-- Trennung von Ansichten "ich will mich nur ein/austragen" vs. "ich kann bearbeiten"
-- Beschreibung in Wochenansicht mit anzeigen
-- MA-Übersicht alphabetisch
-- MA deaktivieren, nicht löschen
-
-Vorgehen: 
-Montag Morgen, Wer ist wo, wie könnte es passen, sodass keine Doppeldienste passieren.
-Eintragen signalisiert: "Ich habe hier verbindlich Zeit."
-Austragen signalisiert: "Ich habe hier verbindlich keine Zeit."
 
 DONE: 
+* Beschreibung in Wochenansicht mit anzeigen
+* Eingeteilt vs. Eingetragen -> Markierung nicht "DIENST" sondern "EINGETRAGEN"
+* Verantwortliche Person in Wochenansicht anzeigen
+
 ### Übersichten ########################
 * Export für Posting in MatterMost, Senden via Email (html)
 
