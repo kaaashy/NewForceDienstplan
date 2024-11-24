@@ -594,8 +594,12 @@ function buildEventAvailabilityOverview(event) {
         if (eventUser.user_id === loggedInUserId)
             selfClass = "assigned-highlight";
 
-        if (user) {
-            if (eventUser.deliberate) {
+        let showUser = event.locked ? eventUser.scheduled : true;
+
+        if (showUser && user) {
+            if (eventUser.scheduled) {
+                html += '<tr><td><div title="Für Dienst eingeteilt" class="scheduled_event_user ' + selfClass + '"> ✅ ' + user.display_name + '</div></td></tr>';
+            } else if (eventUser.deliberate) {
                 html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
             } else if (user.active && user.visible){
                 html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
@@ -633,14 +637,21 @@ function buildCalendarEventHtml(event) {
         let min = event.minimum_users;
         if (min <= 0) return "";
 
-        let users = 0;
+        let scheduledUsers = 0;
+        let availableUsers = 0;
 
         for (const i in event.users) {
             let user = userData[event.users[i].user_id];
 
+            if (event.users[i].scheduled)
+                scheduledUsers++;
+
             if (event.users[i].deliberate || (user.visible && user.active))
-                users++;
+                availableUsers++;
         }
+
+        let users = availableUsers;
+        if (scheduledUsers > 0) users = scheduledUsers;
 
         let allGood = "good";
         if (users === min - 1)
@@ -654,9 +665,7 @@ function buildCalendarEventHtml(event) {
         else
             html += users + '/' + min;
 
-        let locked = "";
-        if (event.locked)
-            locked = "&#128274";
+        let locked = event.locked ? "&#128274" : "";
 
         html += ` MA ${locked}</span>`;
 
