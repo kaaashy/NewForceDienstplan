@@ -114,28 +114,10 @@ function refreshEvent(eventId) {
     });
 }
 
-function insertIntoAvailabilityList(userId) {
-    if (!userId) {
-        userId = loggedInUserId;
-    }
-
-    sendUserEventAvailability(userId, currentEventId, true, function () {
+function sendSelfAvailability(available) {
+    sendUserEventAvailability(loggedInUserId, currentEventId, available, function () {
         refreshEvent(currentEventId);
     });
-
-    console.log("insert into event " + currentEventId);
-}
-
-function removeFromAvailabilityList(userId) {
-    if (!userId) {
-        userId = loggedInUserId;
-    }
-
-    sendUserEventAvailability(userId, currentEventId, false, function () {
-        refreshEvent(currentEventId);
-    });
-
-    console.log("remove from event " + currentEventId);
 }
 
 function scheduleForEvent(userId) {
@@ -266,7 +248,6 @@ function showEvent(dateStr, id, edit) {
     let availableUserCount = 0;
     let scheduledUsersHtml = "";
     let availableUsersHtml = "";
-    let unavailableUsersHtml = "";
     let deleteButtonHtml = "";
     let addRemoveButtonsHtml = "";
     let lockButtonHtml = "";
@@ -376,25 +357,11 @@ function showEvent(dateStr, id, edit) {
             }
         }
 
-        for (let i in allUsersSorted) {
-            let user = allUsersSorted[i];
-
-            if (remainingUsers.has(user.id) && user.active && user.visible) {
-                unavailableUsersHtml += '<div class="event_user">' + user.display_name + '</div>';
-            }
-        }
-
-        let addDisabled = "";
-        if (selfInAvailabilityList)
-            addDisabled = "disabled";
-
-        let removeDisabled = "";
-        if (!selfInAvailabilityList || availableUserCount <= minUsers)
-            removeDisabled = "disabled";
+        let newAvailability = !selfInAvailabilityList;
+        let buttonText = selfInAvailabilityList ? "Mich Austragen" : "📅 Mich Eintragen";
 
         addRemoveButtonsHtml += '<tr>'
-                + '<td><button type="button" class="schedule_insert" onclick="return insertIntoAvailabilityList();"' + addDisabled + '>📅 Mich Eintragen</button></td>'
-                + '<td><button type="button" class="schedule_remove" onclick="return removeFromAvailabilityList();"' + removeDisabled + '>Mich Austragen</button></td>'
+                + `<td><button type="button" class="schedule_insert" onclick="return sendSelfAvailability(${newAvailability});">${buttonText}</button></td>`
                 + '</tr>';
 
         let editable = edit ? "true" : "false";
@@ -475,11 +442,9 @@ function showEvent(dateStr, id, edit) {
                 + '<table class="userlist">'
                 + '<tr>'
                 + `<th>Eingetragen</th>`
-                + '<th>Ausgetragen</th>'
                 + '</tr>'
                 + '<tr>'
                 + '<td>' + availableUsersHtml + '</td>'
-                + '<td>' + unavailableUsersHtml + '</td>'
                 + '</tr>'
                 + '</table>'
                 + '</div>'
@@ -544,22 +509,22 @@ function showEvent(dateStr, id, edit) {
 
         let insertRemoveOthersHtml = ''
             + '<table class="userlist">'
-            + '<tr><th colspan="2">Andere Aus-/Eintragen</th></tr>'
+            + '<tr><th colspan="2">Andere Ein-/Austragen</th></tr>'
             + '<tr>'
             + '<td>'
-            + availableUsersSelect
+            + unavailableUsersSelect
             + '</td>'
             + '<td>'
-            + unavailableUsersSelect
+            + availableUsersSelect
             + '</td>'
             + '</tr>'
 
             + '<tr>'
             + '<td>'
-            + removeOtherButtonHtml
+            + insertOtherButtonHtml
             + '</td>'
             + '<td>'
-            + insertOtherButtonHtml
+            + removeOtherButtonHtml
             + '</td>'
             + '</tr>'
             + '</table>'
@@ -590,11 +555,9 @@ function showEvent(dateStr, id, edit) {
                 + '<table class="userlist">'
                 + '<tr>'
                 + `<th>Eingetragen</th>`
-                + '<th>Ausgetragen</th>'
                 + '</tr>'
                 + '<tr>'
                 + '<td>' + availableUsersHtml + '</td>'
-                + '<td>' + unavailableUsersHtml + '</td>'
                 + '</tr>'
                 + addRemoveButtonsHtml
                 + '</table>'
