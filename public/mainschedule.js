@@ -178,8 +178,6 @@ function refreshInsertRemoveOthersButtons() {
     insertButton.disabled = (unavailableUsersSelect.value === "");
     removeButton.disabled = (availableUsersSelect.value === "");
 
-    console.log(insertButton);
-
     if (!insertButton.disabled) {
         insertButton.innerText = "📅 " + userData[unavailableUsersSelect.value].display_name + " Eintragen";
     }
@@ -420,7 +418,7 @@ function showEvent(dateStr, id, edit) {
                 + '<input type="text" id="address" name="address" placeholder="Adresse" value="' + address + '">'
                 + '</div>'
                 + '<div class="input_line">'
-                + '<textarea id="description" name="description" placeholder="Beschreibung" rows="8">' + description + '</textarea>'
+                + '<textarea id="description" name="description" placeholder="Anmerkung" rows="8">' + description + '</textarea>'
                 + '</div>'
 
                 + '<input type="hidden" id="id" name="id" value="' + id + '">'
@@ -573,8 +571,6 @@ function showEvent(dateStr, id, edit) {
 
 function buildEventAvailabilityOverview(event) {
     let html = "";
-
-    console.log(event);
 
     html += '<table class="user_listing">';
 
@@ -1015,6 +1011,8 @@ function buildWeekSummaryHtml()
 
         let users = "";
         for (let ui in sorted) {
+            if (!sorted[ui].scheduled) continue;
+
             let user = userData[sorted[ui].user_id];
 
             if (users != "")
@@ -1023,10 +1021,11 @@ function buildWeekSummaryHtml()
             users = users + user.display_name;
         }
 
-        html += `<p >${date}: <strong>${event.title}</strong> ${time}-${endTime} <br/>Dienst: ${users}</p>`;
-    }
+        let note = "";
+        if (event.description.trim() !== "") note = "<br/> Anmerkung: " + event.description;
 
-    console.log(html)
+        html += `<p>${date}: <strong>${event.title}</strong> ${time}-${endTime} <br/>Dienst: ${users} ${note} </p>`;
+    }
 
     return html;
 }
