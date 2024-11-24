@@ -37,25 +37,26 @@
 
 <h2>Core Functionality</h2>
 <ul>
+    <li>Beim Dienstplan Erstellen: Unterscheidung Eingeteilt und Eingetragen</li>
     <li>Verantwortliche Person in Wochenansicht anzeigen</li>
     <li>Doppeldienste in einer Woche hervorheben</li>
     <li>MA-Übersicht: Haken für "inaktive MA ausblenden"</li>
     <li>Separater Veranstaltungstyp Putzdienst</li>
     <li>Eingeteilt vs. Eingetragen -> Markierung nicht "DIENST" sondern "EINGETRAGEN"</li>
-    <li>Veranstaltung nach Bearbeiten nicht unbedingt schließen</li>
-    <li>Error handling: Proper error messages everywhere, kein echo in .php files</li>
-    <li>Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche</li>
-    <li>Datenbank-Infos + Technisches verwalten (Admin)</li>
-    <li>Registrierungs-Email: Passwort zurücksetzen</li>
+    <li>Veranstaltung nach Bearbeiten nicht direkt schließen</li>
+    <li>Error handling + vernünftige Fehlermeldungen überall</li>
+    <li>Bug: Switchen zwischen Monat und Woche switcht langsam aber sicher in der Zeit zurück</li>
+    <li>Einstellungen für Datenbank-Infos + Technisches verwalten (Admin)</li>
+    <li>Registrierungs-Email: Seite sollte nicht "Passwort zurücksetzen" heißen</li>
     <li>Berechtigungen für alle einsehbar machen</li>
     <li>Angemeldet bleiben? -> Auswahl</li>
     <li>PW-Reset-Email verfallen lassen</li>
-    <li>Do: 2 MA, Fr+Sa: 4 MA</li>
+    <li>Default-Einstellungen für Veranstaltungen konfigurierbar machen. (Do: 2 MA, Fr+Sa: 4 MA)</li>
     <li>Email-Verification bei Änderung der Email</li>
-    <li>MA löschen+einladen+verwalten -> 1 Berechtigung</li>
+    <li>MA löschen + einladen + verwalten -> 1 Berechtigung</li>
     <li>Dienste planen + sperren -> 1 Berechtigung</li>
     <li>Als andere einloggen + Rechte Verwalten -> 1 Berechtigung</li>
-    <li>Rahmendienstplan Summe anzeigen</li>
+    <li>Rahmendienstplan Summen für die Wochentage anzeigen</li>
 </ul>
 
 <h2>Mobile-Version</h2>
@@ -84,6 +85,8 @@
 <ul>
     <li>Veranstaltungen: Braucht es separate Rechte für Bearbeiten/Erstellen/Löschen? -> Glaube nicht</li>
     <li>Mitarbeitende: Braucht es separate Rechte für Verstecken/Deaktivieren? -> Glaube nicht</li>
+    <li>Automatischer Logout bzw. Checkbox "Eingeloggt bleiben"? -> würde sagen ja</li>
+    <li>Email-Adresse verifizieren lassen bei Änderung? -> Denke schon</li>
 </ul>
 
 <h1>Done-Liste</h1>
