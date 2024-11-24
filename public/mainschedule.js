@@ -582,6 +582,16 @@ function buildEventAvailabilityOverview(event) {
         return userA.display_name.localeCompare(userB.display_name);
     });
 
+    let atLeastOneScheduled = false;
+
+    for (let i in sorted) {
+        let eventUser = sorted[i];
+        if (eventUser.scheduled) {
+            atLeastOneScheduled = true;
+            break;
+        }
+    }
+
     for (let i in sorted) {
         let eventUser = sorted[i];
         let user = userData[eventUser.user_id];
@@ -590,7 +600,7 @@ function buildEventAvailabilityOverview(event) {
         if (eventUser.user_id === loggedInUserId)
             selfClass = "assigned-highlight";
 
-        let showUser = event.locked ? eventUser.scheduled : true;
+        let showUser = (event.locked && atLeastOneScheduled) ? eventUser.scheduled : true;
 
         if (showUser && user) {
             if (eventUser.scheduled) {
@@ -649,21 +659,19 @@ function buildCalendarEventHtml(event) {
         let users = availableUsers;
         if (scheduledUsers > 0) users = scheduledUsers;
 
-        let allGood = "good";
+        let allGood = scheduledUsers > 0 ? "good" : "info";
         if (users === min - 1)
             allGood = "warning";
         if (users < min - 1)
             allGood = "bad";
 
         let html = '<span class="' + allGood + '">';
-        if (users > min)
-            html += users;
-        else
-            html += users + '/' + min;
+        let usersStr = users > min ? users : users + '/' + min;
 
         let locked = event.locked ? "&#128274" : "";
+        let availableStr = scheduledUsers > 0 ? "eingeteilt" : "eingetragen";
 
-        html += ` MA ${locked}</span>`;
+        html += `<span class="${allGood}"> ${usersStr} MA ${availableStr} ${locked}</span>`;
 
         return html;
     };

@@ -458,6 +458,10 @@ tbody.days_cal .calendar_event .good {
     color: #5f5; 
 }
 
+tbody.days_cal .calendar_event .info {
+    color: lightblue;
+}
+
 tbody.days_cal .calendar_event span {
     background: none; 
     color: white; 
