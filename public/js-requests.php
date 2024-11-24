@@ -129,6 +129,8 @@ if (isset($_POST['event_availability'])) {
             echo 'ERROR_NOT_ENOUGH_USERS';
             return;
         }
+
+        updateUserEventSchedule($userId, $eventId, false);
     }
 
     updateEventAvailability($userId, $eventId, $deliberate, $available);
