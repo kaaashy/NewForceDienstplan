@@ -474,6 +474,9 @@ function showEvent(dateStr, id, edit) {
         if (time.endsWith(":00:00")) time = time.replace(":00:00", ":00");
         if (endTime.endsWith(":00:00")) endTime = endTime.replace(":00:00", ":00");
 
+        let timeStr = ` - ${time}-${endTime} Uhr`;
+        if (type == "Putzdienst") timeStr = "";
+
         const options = {
            weekday: 'long',
            year: 'numeric',
@@ -557,7 +560,7 @@ function showEvent(dateStr, id, edit) {
 
                 + '<div class="create_event_wrapper">'
 
-                + `<div class="data_line"> <p> ${date} - ${time}-${endTime} Uhr </p></div>`
+                + `<div class="data_line"> <p> ${date} ${timeStr} </p></div>`
                 + (organizer != "" ? `<div class="data_line"> <p> Verantwortlich: ${organizer} </p></div>` : "")
                 + `<div class="data_line"> <p> ${venue} - ${address} </p></div>`
                 + `<div class="data_line"> <p> ${description} </p></div>`
@@ -1074,7 +1077,10 @@ function buildWeekSummaryHtml()
         let note = "";
         if (event.description.trim() !== "") note = "<br/> Anmerkung: " + event.description;
 
-        html += `<p>${date}: <strong>${event.title}</strong> ${time}-${endTime} <br/>Dienst: ${users} ${note} </p>`;
+        let timeStr = `${time}-${endTime}`;
+        if (event.type === "Putzdienst") timeStr = "";
+
+        html += `<p>${date}: <strong>${event.title}</strong> ${timeStr} <br/>Dienst: ${users} ${note} </p>`;
     }
 
     return html;
