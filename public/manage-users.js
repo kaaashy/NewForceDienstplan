@@ -89,10 +89,12 @@ function buildIndexHtml()
                                 || userData[loggedInUserId].permissions['admin_dev_maintenance']
                                 || userData[loggedInUserId].permissions['change_other_outline_schedule']);
 
-    if (!canViewUserManagement) return html;
+    if (userData[loggedInUserId].permissions['change_other_outline_schedule'])
+        html += buildOutlineScheduleHtml(sorted);
 
-    html += buildOutlineScheduleHtml(sorted);
-    html += buildUsersOverviewHtml(sorted);
+    if (canViewUserManagement) {
+        html += buildUsersOverviewHtml(sorted);
+    }
 
     if (userData[loggedInUserId].permissions['invite_users']
             || userData[loggedInUserId].permissions['manage_users'])
