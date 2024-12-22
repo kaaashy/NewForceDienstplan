@@ -70,7 +70,7 @@ function tryBuildPage()
         _("#user_index").innerHTML = buildIndexHtml();
 }
 
-function createStatistics()
+function createStatistics(eventType)
 {
     let statistics = {};
 
@@ -83,6 +83,7 @@ function createStatistics()
 
     for (let i in eventData) {
         let event = eventData[i];
+        if (event.type !== eventType) continue;
 
         console.log(event);
 
@@ -141,7 +142,12 @@ function buildIndexHtml()
                             || userData[loggedInUserId].permissions['admin_dev_maintenance']);
     if (!canViewStatistics) return html;
 
-    let statistics = createStatistics();
+    let shownTypes = ["Veranstaltung", "Putzdienst"];
+    let allStatistics = {};
+
+    for (const type of shownTypes) {
+        allStatistics[type] = createStatistics(type);
+    }
 
     const options = {
        weekday: 'long',
@@ -154,65 +160,70 @@ function buildIndexHtml()
     let endDateAsInputStr = getDateInputFormat(endDate);
 
     html += '<h2>Statistik</h2>';
-    html += '<span> Zeitraum: </span><br/>';
+    html += '<p>Zeigt an, wie oft die Mitarbeitenden im gewählten Zeitraum eingeteilt (nicht eingetragen) waren.</p>'
 
     html += '<label for="start">Startdatum:</label>';
     html += `<input type="date" id="start-date" name="start" value="${startDateAsInputStr}" onchange="refresh();" /><br/>`;
     html += '<label for="start">Enddatum:</label>';
-    html += `<input type="date" id="end-date" name="end" value="${endDateAsInputStr}" onchange="refresh();"/><br/><br/>`;
+    html += `<input type="date" id="end-date" name="end" value="${endDateAsInputStr}" onchange="refresh();"/><br/>`;
 
-    html += '<table class="statistics">';
-    html += '<tr>';
-    html += '<th></th>';
-    html += '<th title="Anzahl Dienste im gewählten Zeitraum">Dienste</th>';
-    html += '<th title="Doppel- oder Mehrfachdienste">Doppel+</th>';
-    html += '<th title="Dienste an Montagen">Mo</th>';
-    html += '<th title="Dienste an Dienstagen">Di</th>';
-    html += '<th title="Dienste an Mittwöchern">Mi</th>';
-    html += '<th title="Dienste an Donnerstagen">Do</th>';
-    html += '<th title="Dienste an Freitagen">Fr</th>';
-    html += '<th title="Dienste an Samstagen">Sa</th>';
-    html += '<th title="Dienste an Sonntagen">So</th>';
-    html += '</tr>';
+    for (const shownType of shownTypes) {
+        let statistics = allStatistics[shownType];
 
-    let sorted = [];
-    for (let id in userData) {
-        sorted.push(userData[id]);
-    }
+        html += `<h3>${shownType}</h3>`;
+        html += '<table class="statistics">';
+        html += '<tr>';
+        html += '<th></th>';
+        html += '<th title="Anzahl Dienste im gewählten Zeitraum">Anzahl</th>';
+        html += '<th title="Doppel- oder Mehrfachdienste">Doppel+</th>';
+        html += '<th title="Dienste an Montagen">Mo</th>';
+        html += '<th title="Dienste an Dienstagen">Di</th>';
+        html += '<th title="Dienste an Mittwöchern">Mi</th>';
+        html += '<th title="Dienste an Donnerstagen">Do</th>';
+        html += '<th title="Dienste an Freitagen">Fr</th>';
+        html += '<th title="Dienste an Samstagen">Sa</th>';
+        html += '<th title="Dienste an Sonntagen">So</th>';
+        html += '</tr>';
 
-    sorted.sort(function (a, b) {
-        let statsA = statistics[a.id];
-        let statsB = statistics[b.id];
-
-        let keyA = statsB.days + "-" + statsB.doubles + "-" + a.display_name;
-        let keyB = statsA.days + "-" + statsA.doubles + "-" + b.display_name;
-
-        return keyA.localeCompare(keyB);
-    });
-
-    for (const i in sorted) {
-        let user = sorted[i];
-        let id = user.id;
-
-        if (user.visible) {
-            let stats = statistics[id];
-
-            html += '<tr>';
-            html += '<td>' + user.display_name + '</td>';
-            html += '<td>' + stats.days + '</td>';
-            html += '<td>' + stats.doubles + '</td>';
-            html += '<td>' + (stats.weekDays[0] ? stats.weekDays[0] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[1] ? stats.weekDays[1] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[2] ? stats.weekDays[2] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[3] ? stats.weekDays[3] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[4] ? stats.weekDays[4] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[5] ? stats.weekDays[5] : "") + '</td>';
-            html += '<td>' + (stats.weekDays[6] ? stats.weekDays[6] : "") + '</td>';
-            html += '</tr>';
+        let sorted = [];
+        for (let id in userData) {
+            sorted.push(userData[id]);
         }
-    }
 
-    html += '</table>';
+        sorted.sort(function (a, b) {
+            let statsA = statistics[a.id];
+            let statsB = statistics[b.id];
+
+            let keyA = statsB.days + "-" + statsB.doubles + "-" + a.display_name;
+            let keyB = statsA.days + "-" + statsA.doubles + "-" + b.display_name;
+
+            return keyA.localeCompare(keyB);
+        });
+
+        for (const i in sorted) {
+            let user = sorted[i];
+            let id = user.id;
+
+            if (user.visible) {
+                let stats = statistics[id];
+
+                html += '<tr>';
+                html += '<td>' + user.display_name + '</td>';
+                html += '<td>' + stats.days + '</td>';
+                html += '<td>' + stats.doubles + '</td>';
+                html += '<td>' + (stats.weekDays[0] ? stats.weekDays[0] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[1] ? stats.weekDays[1] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[2] ? stats.weekDays[2] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[3] ? stats.weekDays[3] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[4] ? stats.weekDays[4] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[5] ? stats.weekDays[5] : "") + '</td>';
+                html += '<td>' + (stats.weekDays[6] ? stats.weekDays[6] : "") + '</td>';
+                html += '</tr>';
+            }
+        }
+
+        html += '</table>';
+    }
 
     return html;
 }
