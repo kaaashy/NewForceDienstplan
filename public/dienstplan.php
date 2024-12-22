@@ -22,9 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return;
         }
 
-        $type = "Veranstaltung";
-        $details = "";
-        
+        $type = filter_input(INPUT_POST, 'type');
         $date = filter_input(INPUT_POST, 'date');
         $title = filter_input(INPUT_POST, 'title');
         $description = filter_input(INPUT_POST, 'description');

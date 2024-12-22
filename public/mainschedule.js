@@ -232,6 +232,7 @@ function showEvent(dateStr, id, edit) {
 
     let headline = "Neue Veranstaltung";
     let title = "";
+    let type = "";
     let date = dateStr;
     let time = startTimes[getGermanWeekDay(new Date(dateStr))];
     let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
@@ -274,6 +275,7 @@ function showEvent(dateStr, id, edit) {
         currentEventId = id;
 
         title = event.title;
+        type = event.type;
         date = event.date;
         time = event.time;
         endTime = event.end_time;
@@ -373,6 +375,10 @@ function showEvent(dateStr, id, edit) {
     let data = '';
 
     if (edit) {
+        let veranstaltungSelected = (type == 'Veranstaltung') ? "selected" : "";
+        let putzdienstSelected = (type == 'Putzdienst') ? "selected" : "";
+        let mvSelected = (type == 'MV') ? "selected" : "";
+        let sonstigeSelected = (type == 'Sonstige') ? "selected" : "";
 
         // template info
         data = ''
@@ -388,6 +394,14 @@ function showEvent(dateStr, id, edit) {
                 + '<div class="input_line">'
                 + '<label for="title">Titel:</label>'
                 + '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="' + title + '" required>'
+                + '</div>'
+                + '<div class="input_line">'
+                + '<select name="type" required>'
+                + `  <option value="Veranstaltung" ${veranstaltungSelected}>Veranstaltung</option>`
+                + `  <option value="Putzdienst" ${putzdienstSelected}>Putzdienst</option>`
+                + `  <option value="MV" ${mvSelected}>Mitarbeitenden-Versammlung</option>`
+                + `  <option value="Sonstige" ${sonstigeSelected}>Sonstige</option>`
+                + '</select>'
                 + '</div>'
                 + '<div class="input_line">'
                 + '<label for="date">Datum:</label>'
