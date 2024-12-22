@@ -1,7 +1,5 @@
 TODO:  
 ### Core Functionality ########################
-* Separater Veranstaltungstyp Putzdienst
-* PW-Reset-Email verfallen lassen
 * Do: 2 MA, Fr+Sa: 4 MA
 * Email-Verification bei Änderung der Email
 * Angemeldet bleiben? -> Auswahl
@@ -15,9 +13,11 @@ TODO:
 * Logfiles
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
-* Registrierungs-Email: Passwort zurücksetzen
-* Berechtigungen für alle einsehbar machen
 * Rahmendienstplan Summe anzeigen
+* Statistiken: Eigene Statistik unabhängig von anderen einsehbar machen
+* Bug: Wochenübersicht hat unkorrekt ausgegraute Felder
+* Bug: Monatsübersicht kann zu kurz sein bei 6 angezeigten Wochen (Siehe Dez. 2024)
+
 
 ### Mobile-Version ########################
 * Exakte Details bisher unklar, muss aber vollständig über Mobile benutzbar sein
@@ -56,6 +56,12 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+* PW-Reset-Email verfallen lassen
+* Registrierungs-Email: "Passwort zurücksetzen"-Text
+* Berechtigungen für alle einsehbar machen
+* Separater Veranstaltungstyp Putzdienst
+* Statistik: MV etc. nicht als Doppeldienst per se werten
+* Statistik: Putzdienste speziell anzeigen
 * Beschreibung in Wochenansicht mit anzeigen
 * Eingeteilt vs. Eingetragen -> Markierung nicht "DIENST" sondern "EINGETRAGEN"
 * Verantwortliche Person in Wochenansicht anzeigen
