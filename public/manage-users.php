@@ -65,7 +65,7 @@ function handleUserCreation()
         // Email headers and content
         $mail->addAddress($email, '');
         $mail->Subject = 'New Force Dienstplan Account-Registrierung';
-        $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nViele Grüße\r\nDein NewForce Team";
+        $mail->Body = "Hi $login,\r\n\r\ndu wurdest zum Dienstplan des New Force Erlangen hinzugefügt. Um deine Registrierung abzuschließen, folge bitte diesem Link: $link\r\n\r\nBitte beachte: Dieser Link verfällt in 7 Tagen.\r\n\r\nViele Grüße\r\nDein NewForce Team";
 
         // Send email
         if (!$mail->send()) {

@@ -16,6 +16,13 @@ if (!isset($email) || !isset($login)) {
 list ($userId, $login) = fetchUserCredentialsByEmail($email);
 $userDetails = getUserDetails($userId);
 
+if (!$userDetails) {
+    $userDetails = array();
+    $userDetails['display_name'] = "";
+    $userDetails['first_name'] = "";
+    $userDetails['last_name'] = "";
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['init_user'])) {
         $display_name = trim($_POST['display_name']);
@@ -67,15 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="narrowwrapper">
         <div class="info_page">
-            <?php
-            if ($userDetails['display_name'] == "") {
-                echo '<h1>Registrierung Abschließen</h1>';
-            } else {
-                echo '<h1>Passwort zurücksetzen</h1>';
-            }
-            ?>
 
             <?php
+            echo '<h1>Registrierung Abschließen / Passwort zurücksetzen</h1>';
             echo "Login: $login <br/>";
             echo "Email: $email <br/><br/>";
             ?>

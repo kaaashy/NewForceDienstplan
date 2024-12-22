@@ -706,7 +706,12 @@ function fetchInitializationToken($token)
 {
     $pdo = connect();
 
-    $sql = "SELECT user_id FROM PasswordTokens WHERE token = :token";
+    $sql = "SELECT user_id
+            FROM PasswordTokens
+            WHERE
+                token = :token
+                AND last_updated >= NOW() - INTERVAL 7 DAY
+            ";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':token', $token);
     $stmt->execute();
