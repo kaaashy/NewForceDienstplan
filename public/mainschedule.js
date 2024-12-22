@@ -477,37 +477,36 @@ function showEvent(dateStr, id, edit) {
             editButtonHtml = `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
         }
 
-        let availableUsersSelect = '<select id="availableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
-        availableUsersSelect += `<option value=""></option>`;
-
-        for (let i in eventUsersSorted) {
-            let eventUser = eventUsersSorted[i];
-            let user = userData[eventUser.user_id];
-
-            availableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
-        }
-
-        availableUsersSelect += '</select>';
-
-        let unavailableUsersSelect = '<select id="unavailableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
-        unavailableUsersSelect += `<option value=""></option>`;
-
-        for (let i in allUsersSorted) {
-            let user = allUsersSorted[i];
-            if (!user.active || !user.visible) continue;
-
-            if (remainingUsers.has(user.id)) {
-                unavailableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
-            }
-        }
-        unavailableUsersSelect += '</select>';
-
-        let insertOtherButtonHtml = '<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>📅 Eintragen</button>';
-        let removeOtherButtonHtml = '<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>';
-
         let insertRemoveOthersHtml = '';
-
         if (userData[loggedInUserId].permissions['manage_other_schedules']) {
+            let availableUsersSelect = '<select id="availableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
+            availableUsersSelect += `<option value=""></option>`;
+
+            for (let i in eventUsersSorted) {
+                let eventUser = eventUsersSorted[i];
+                let user = userData[eventUser.user_id];
+
+                availableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
+            }
+
+            availableUsersSelect += '</select>';
+
+            let unavailableUsersSelect = '<select id="unavailableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
+            unavailableUsersSelect += `<option value=""></option>`;
+
+            for (let i in allUsersSorted) {
+                let user = allUsersSorted[i];
+                if (!user.active || !user.visible) continue;
+
+                if (remainingUsers.has(user.id)) {
+                    unavailableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
+                }
+            }
+            unavailableUsersSelect += '</select>';
+
+            let insertOtherButtonHtml = '<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>📅 Eintragen</button>';
+            let removeOtherButtonHtml = '<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>';
+
             insertRemoveOthersHtml = ''
                 + '<table class="userlist">'
                 + '<tr><th colspan="2">Andere Ein-/Austragen</th></tr>'
