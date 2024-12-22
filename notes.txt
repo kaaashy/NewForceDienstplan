@@ -14,7 +14,6 @@ TODO:
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
 * Rahmendienstplan Summe anzeigen
-* Statistiken: Eigene Statistik unabhängig von anderen einsehbar machen
 * Bug: Wochenübersicht hat unkorrekt ausgegraute Felder
 * Bug: Monatsübersicht kann zu kurz sein bei 6 angezeigten Wochen (Siehe Dez. 2024)
 
@@ -56,6 +55,7 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+* Statistiken: Eigene Statistik unabhängig von anderen einsehbar machen
 * PW-Reset-Email verfallen lassen
 * Registrierungs-Email: "Passwort zurücksetzen"-Text
 * Berechtigungen für alle einsehbar machen

@@ -140,7 +140,6 @@ function buildIndexHtml()
 
     let canViewStatistics = (userData[loggedInUserId].permissions['view_statistics']
                             || userData[loggedInUserId].permissions['admin_dev_maintenance']);
-    if (!canViewStatistics) return html;
 
     let shownTypes = ["Veranstaltung", "Putzdienst"];
     let allStatistics = {};
@@ -187,7 +186,8 @@ function buildIndexHtml()
 
         let sorted = [];
         for (let id in userData) {
-            sorted.push(userData[id]);
+            if (canViewStatistics || userData[id].id === loggedInUserId)
+                sorted.push(userData[id]);
         }
 
         sorted.sort(function (a, b) {

@@ -17,7 +17,7 @@ function buildNavHtml()
     html += '<a href="dienstplan.php">Dienstplan</a>';
     html += '<a href="users.php">Rahmendienstplan</a>';
     html += '<a href="manage-users.php">MA-Management</a>';
-    html += canViewStatistics ? '<a href="statistics.php">Statistiken</a>' : '';
+    html += '<a href="statistics.php">Statistiken</a>';
     html += canViewAdminPage ? '<a href="admin.php">Admin</a>' : '';
     html += '<a href="userprofile.php">Mein Profil (' + loggedInUserLogin + ') </a>';
 
