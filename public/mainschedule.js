@@ -709,6 +709,14 @@ function buildCalendarEventHtml(event) {
         icon = "📅";
     }
 
+    let time = '<span class="event_time">' + readableTime(event.time)
+        + " bis " + readableTime(event.end_time) + '</span>';
+
+    if (event.type === "Putzdienst") {
+        icon += "&#129529;";
+        time = "";
+    }
+
     let selfHighlightClass = "";
     if (selfScheduled)
         selfHighlightClass = "scheduled-highlight";
@@ -718,8 +726,7 @@ function buildCalendarEventHtml(event) {
     return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ', false)">'
             + `<span class="event_title">${icon} ${event.title}</span>`
             + (event.organizer !== "" ? `<span class="event_time">by ${event.organizer}</span>` : "")
-            + '<span class="event_time">' + readableTime(event.time)
-            + " bis " + readableTime(event.end_time) + '</span>'
+            + time
             + usersOverview(event)
             + highlightText
             + assignedUsers
