@@ -160,6 +160,29 @@ function initializeTables()
         echo "Table PasswordTokens created successfully";
     }
 
+    $createEventDefaultDataTable = "CREATE TABLE EventDefaultData (
+        id INT UNSIGNED PRIMARY KEY,
+
+        type VARCHAR(255),
+        time TIME,
+        end_time TIME,
+        minimum_users INT UNSIGNED,
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createEventDefaultDataTable) === TRUE) {
+        echo "Table EventDefaultData created successfully";
+    }
+
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('0', 'Veranstaltung', '20:00', '00:00', '0')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('1', 'Veranstaltung', '20:00', '00:00', '0')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('2', 'Veranstaltung', '20:00', '00:00', '0')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('3', 'Veranstaltung', '20:00', '00:00', '2')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('4', 'Veranstaltung', '20:00', '02:00', '4')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('5', 'Veranstaltung', '20:00', '02:00', '4')");
+    $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('6', 'Putzdienst', '15:00', '20:00', '2')");
+
 }
 
 function initialize()
@@ -192,7 +215,10 @@ function createExampleDB()
         if (rand() % 3 == 1) updateOutlineDay($id, 4, true);
         if (rand() % 3 == 1) updateOutlineDay($id, 5, true);
 
-        if ($name == "Domi") {
+        if ($name == "Domi"
+                || $name == "Sebi"
+                || $name == "Ben"
+                || $name == "Sophia") {
             updateUserStatus($id, false, false);
         }
 
@@ -229,53 +255,53 @@ function createExampleDB()
         }
     }
 
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-14");
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-16");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-15");
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-17");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-16");
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-01-18");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
 
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-21");
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-23");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-22");
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-24");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-23");
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-01-25");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
 
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-11-28");
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-30");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-11-29");
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-31");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-11-30");
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-01");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
 
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-12-05");
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-06");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2024-12-06");
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-02-07");
     updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2024-12-07");
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-08");
     updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
     
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2024-12-12");
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-13");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2024-12-13");
+    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2025-02-14");
     updateEvent($id, "Veranstaltung", "Spielmannstreiben", "Rudelgedudel", "20:00", "02:00", 4, "DomiTheWall", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Großputz", "2024-12-15");
-    updateEvent($id, "Veranstaltung", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    $id = addEvent("Sonstige", "Großputz", "2025-02-16");
+    updateEvent($id, "Sonstige", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 }
 
 // mostly for debugging / database altering
@@ -283,70 +309,33 @@ function updateDB()
 {
     $pdo = connect();
 
-    // Retrieve the outline schedule
-    $sql = "ALTER TABLE Events
-            ADD locked BOOL;";
-
-    $stmt = $pdo->prepare($sql);
-
     try {
-        $stmt->execute();
-    } catch(Exception $e) {
-        $msg = $e->getMessage();
-        echo "$msg";
-    }
-
-    try {
-        if ($pdo->query("DROP TABLE Permissions") === TRUE) {
-            echo "Table Permissions deleted successfully";
+        if ($pdo->query("DROP TABLE EventDefaultData") === TRUE) {
+            echo "Table EventDefaultData deleted successfully";
         }
 
-        $createPermissionsTable = "CREATE TABLE Permissions (
-            user_id INT UNSIGNED PRIMARY KEY,
+        $createEventDefaultDataTable = "CREATE TABLE EventDefaultData (
+            id INT UNSIGNED PRIMARY KEY,
 
-            lock_event_schedule BOOL,
-            manage_other_schedules BOOL,
-
-            manage_events BOOL,
-
-            change_other_outline_schedule BOOL,
-            view_statistics BOOL,
-
-            invite_users BOOL,
-            manage_users BOOL,
-            delete_users BOOL,
-
-            login_as_others BOOL,
-            manage_permissions BOOL,
-            admin_dev_maintenance BOOL,
+            type VARCHAR(255),
+            time TIME,
+            end_time TIME,
+            minimum_users INT UNSIGNED,
 
             creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
-
-        if ($pdo->query($createPermissionsTable) === TRUE) {
-            echo "Table Permissions created successfully";
+        if ($pdo->query($createEventDefaultDataTable) === TRUE) {
+            echo "Table EventDefaultData created successfully";
         }
 
-        $stmt = $pdo->prepare("INSERT INTO Permissions (user_id,
-            lock_event_schedule,
-            manage_other_schedules,
-            manage_events,
-            change_other_outline_schedule,
-            view_statistics,
-            invite_users,
-            manage_users,
-            delete_users,
-            login_as_others,
-            manage_permissions,
-            admin_dev_maintenance
-            ) VALUES (0, true, true, true, true, true, true, true, true, true, true, true)");
-        $stmt->execute();
-
-        for ($i = 1; $i < 10; ++$i) {
-            $stmt = $pdo->prepare("INSERT INTO Permissions (user_id) VALUES ($i)");
-            $stmt->execute();
-        }
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('0', 'Veranstaltung', '20:00', '00:00', '0')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('1', 'Veranstaltung', '20:00', '00:00', '0')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('2', 'Veranstaltung', '20:00', '00:00', '0')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('3', 'Veranstaltung', '20:00', '00:00', '2')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('4', 'Veranstaltung', '20:00', '02:00', '4')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('5', 'Veranstaltung', '20:00', '02:00', '4')");
+        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('6', 'Putzdienst', '15:00', '20:00', '2')");
 
     } catch(Exception $e) {
         $msg = $e->getMessage();
