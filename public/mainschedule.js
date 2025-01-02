@@ -187,6 +187,29 @@ function refreshInsertRemoveOthersButtons() {
     }
 }
 
+function onEventTypeChange() {
+    let select = _("#event_type_select");
+    let titleInput = _("#event_title_input");
+
+    console.log(select.value);
+    console.log(titleInput.value);
+
+    if (titleInput.value === "Putzdienst" && select.value !== "Putzdienst") {
+        titleInput.value = "";
+    }
+    if (titleInput.value === "MV" && select.value !== "MV") {
+        titleInput.value = "";
+    }
+
+    if (select.value === "Putzdienst" && titleInput.value === "") {
+        titleInput.value = "Putzdienst";
+    }
+
+    if (select.value === "MV" && titleInput.value === "") {
+        titleInput.value = "MV";
+    }
+}
+
 function findEvent(id) {
     if (id && eventData) {
         for (let key in eventData) {
@@ -396,7 +419,7 @@ function showEvent(dateStr, id, edit) {
                 + '<input type="text" id="event_title_input" name="title" placeholder="Titel" value="' + title + '" required>'
                 + '</div>'
                 + '<div class="input_line">'
-                + '<select name="type" required>'
+                + '<select name="type" required onchange="onEventTypeChange();" id="event_type_select">'
                 + `  <option value="Veranstaltung" ${veranstaltungSelected}>Veranstaltung</option>`
                 + `  <option value="Putzdienst" ${putzdienstSelected}>Putzdienst</option>`
                 + `  <option value="MV" ${mvSelected}>Mitarbeitenden-Versammlung</option>`
