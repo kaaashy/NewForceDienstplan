@@ -15,7 +15,7 @@ function buildNavHtml()
     let html = "";
     html += '<div class="link-container">';
     html += '<a href="dienstplan.php">Dienstplan</a>';
-    html += '<a href="users.php">Rahmendienstplan</a>';
+    html += '<a href="outline-schedule.php">Rahmendienstplan</a>';
     html += '<a href="manage-users.php">MA-Management</a>';
     html += '<a href="statistics.php">Statistiken</a>';
     html += canViewAdminPage ? '<a href="admin.php">Admin</a>' : '';
