@@ -21,6 +21,8 @@ let dataReceived = 0;
 
 let currentEventId = null;
 
+let eventDefaultData = {};
+
 // short querySelector
 function _(s) {
     return document.querySelector(s);
@@ -49,6 +51,7 @@ function refresh(callback) {
     // declare and fill event data
     eventData = {};
     userData = {};
+    eventDefaultData = {};
 
     let fromDate = getStartOfWeek(indexDate)
     let endDate = new Date(indexDate);
@@ -68,6 +71,10 @@ function refresh(callback) {
     refreshCounter++;
     let counter = refreshCounter;
     dataReceived = 0;
+
+    requestEventDefaultData(function (data) {
+        eventDefaultData = data;
+    });
 
     requestUsers(function (data) {
         console.log("received users");
@@ -226,40 +233,13 @@ function showEvent(dateStr, id, edit) {
         _("#calendar_data").classList.add("show_data");
     }
 
-    let startTimes = {};
-    startTimes[0] = "20:00";
-    startTimes[1] = "20:00";
-    startTimes[2] = "20:00";
-    startTimes[3] = "20:00";
-    startTimes[4] = "20:00";
-    startTimes[5] = "20:00";
-    startTimes[6] = "15:00";
-
-    let endTimes = {};
-    endTimes[0] = "00:00";
-    endTimes[1] = "00:00";
-    endTimes[2] = "00:00";
-    endTimes[3] = "00:00";
-    endTimes[4] = "02:00";
-    endTimes[5] = "02:00";
-    endTimes[6] = "19:00";
-
-    let minUsersOfDay = {};
-    minUsersOfDay[0] = "3";
-    minUsersOfDay[1] = "3";
-    minUsersOfDay[2] = "3";
-    minUsersOfDay[3] = "3";
-    minUsersOfDay[4] = "4";
-    minUsersOfDay[5] = "4";
-    minUsersOfDay[6] = "3";
-
     let headline = "Neue Veranstaltung";
     let title = "";
-    let type = "";
+    let type = eventDefaultData[getGermanWeekDay(new Date(dateStr))].type;
     let date = dateStr;
-    let time = startTimes[getGermanWeekDay(new Date(dateStr))];
-    let endTime = endTimes[getGermanWeekDay(new Date(dateStr))];
-    let minUsers = minUsersOfDay[getGermanWeekDay(new Date(dateStr))];
+    let time = eventDefaultData[getGermanWeekDay(new Date(dateStr))].time;
+    let endTime = eventDefaultData[getGermanWeekDay(new Date(dateStr))].end_time;
+    let minUsers = eventDefaultData[getGermanWeekDay(new Date(dateStr))].minimum_users;
     let organizer = "";
     let venue = "New Force";
     let address = "Buckenhofer Weg 69, 91058 Erlangen";
