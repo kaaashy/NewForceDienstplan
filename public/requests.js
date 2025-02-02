@@ -68,6 +68,19 @@ function sendEventLockedStatus(eventId, locked, callback) {
     sendRequest(data, callback);
 }
 
+function sendEventDefaultData(day, type, start, end, users, callback) {
+
+    var data = 'login=' + loggedInUserLogin;
+    data = data + "&update_event_default_data=y";
+    data = data + "&day=" + day;
+    data = data + "&type=" + type;
+    data = data + "&start=" + start;
+    data = data + "&end=" + end;
+    data = data + "&minimum_users=" + users;
+
+    sendRequest(data, callback);
+}
+
 function requestEvents(start, end, callback) {
 
     var data = 'login=' + loggedInUserLogin;
@@ -91,6 +104,15 @@ function requestUsers(callback) {
     // Set the request payload
     var data = 'login=' + loggedInUserLogin;
     data += "&users=y";
+
+    sendRequest(data, callback);
+}
+
+function requestEventDefaultData(callback) {
+
+    // Set the request payload
+    var data = 'login=' + loggedInUserLogin;
+    data += "&event_default_data=y";
 
     sendRequest(data, callback);
 }

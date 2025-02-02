@@ -34,6 +34,11 @@ if (isset($_POST['users'])) {
     return;
 }
 
+if (isset($_POST['event_default_data'])) {
+    respondEventDefaultData();
+    return;
+}
+
 if (isset($_POST['outline_schedule'])) {
     $userId = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $day = filter_input(INPUT_POST, 'day', FILTER_SANITIZE_NUMBER_INT);
@@ -171,6 +176,24 @@ if (isset($_POST['event_locked'])) {
     }
 
     setEventLockedStatus($eventId, $locked);
+    return;
+}
+
+if (isset($_POST['update_event_default_data'])) {
+    $day = filter_input(INPUT_POST, 'day', FILTER_SANITIZE_NUMBER_INT);
+    $type = trim($_POST['type']);
+    $start = trim($_POST['start']);
+    $end = trim($_POST['end']);
+    $users = filter_input(INPUT_POST, 'minimum_users', FILTER_SANITIZE_NUMBER_INT);
+
+    $callingUser = $_SESSION['user_id'];
+    $managingPermitted = getUserHasPermission($callingUser, 'manage_events');
+    if (!$managingPermitted) {
+        echo 'ERROR_NO_PERMISSION_FOR_EVENT_DEFAULT_DATA';
+        return;
+    }
+
+    updateEventDefaultData($day, $type, $start, $end, $users);
     return;
 }
 

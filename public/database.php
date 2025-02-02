@@ -800,6 +800,35 @@ function getEventDetails($eventId)
     return $row;
 }
 
+function updateEventDefaultData($day, $type, $start, $end, $users)
+{
+    $pdo = connect();
+
+    // Prepare the SQL statement
+    $sql = "UPDATE EventDefaultData
+            SET
+                type = :type,
+                time = :time,
+                end_time = :end_time,
+                minimum_users = :minimum_users
+            WHERE id = :id";
+
+    // Prepare the statement and bind the parameters
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $day);
+    $stmt->bindValue(':type', $type);
+    $stmt->bindValue(':time', $start);
+    $stmt->bindValue(':end_time', $end);
+    $stmt->bindValue(':minimum_users', $users);
+    $stmt->execute();
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        // echo "EventDefaultData updated successfully.";
+    } else {
+        // echo "Error updating EventDefaultData.";
+    }
+}
 
 function respondEvents($startDate, $endDate) {
     $pdo = connect();
@@ -874,6 +903,25 @@ function echoEvents($pdo, $stmt)
     }
 
     // var_dump($rows);
+
+    echo json_encode($rows);
+}
+
+function respondEventDefaultData()
+{
+    $pdo = connect();
+
+    // Retrieve the data from the database
+    $sql = "SELECT * FROM EventDefaultData;";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $rows = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $row['minimum_users'] = intval($row['minimum_users']);
+        $rows[] = $row;
+    }
 
     echo json_encode($rows);
 }

@@ -1,6 +1,7 @@
 
 let userData = {};
-
+let eventDefaultData = {};
+let dataReceived = 0;
 
 // short querySelector
 function _(s) {
@@ -10,6 +11,8 @@ function _(s) {
 function refresh() {
     // declare and fill event data
     userData = {};
+    eventDefaultData = {};
+    dataReceived = 0;
 
     requestUsers(function (data) {
         userData = {};
@@ -18,7 +21,15 @@ function refresh() {
             userData[user.id] = user;
         }
 
-        _("#outline_schedule").innerHTML = buildHtml();
+        if (++dataReceived == 2)
+            _("#outline_schedule").innerHTML = buildHtml();
+    });
+
+    requestEventDefaultData(function (data) {
+        eventDefaultData = data;
+
+        if (++dataReceived == 2)
+            _("#outline_schedule").innerHTML = buildHtml();
     });
 }
 
@@ -91,9 +102,28 @@ function buildOutlineScheduleHtml()
     return html;
 }
 
-function sendEventDefaultDataChange()
+function sendEventDefaultDataChange(day)
 {
-    console.log("send change");
+    let typeSelectId = 'select-' + day;
+    let typeSelect = _("#" + typeSelectId);
+
+    let startTimeInputId = 'start-' + day;
+    let startTimeInput = _("#" + startTimeInputId);
+
+    let endTimeInputId = 'end-' + day;
+    let endTimeInput = _("#" + endTimeInputId);
+
+    let usersInputId = 'users-' + day;
+    let usersInput = _("#" + usersInputId);
+
+    let eventType = typeSelect.value;
+    let users = usersInput.value;
+    let startTime = startTimeInput.value;
+    let endTime = endTimeInput.value;
+
+    sendEventDefaultData(day, eventType, startTime, endTime, users, function () {
+        refresh();
+    });
 }
 
 function buildOutlineEventsHtml()
@@ -111,13 +141,13 @@ function buildOutlineEventsHtml()
     html += '<th>Mindest-MA</th>';
     html += '</tr>';
 
-    let makeTypeSelect = function(value, day) {
+    let makeTypeSelect = function (value, day) {
         let veranstaltungSelected = (value === 'Veranstaltung') ? "selected" : "";
         let putzdienstSelected = (value === 'Putzdienst') ? "selected" : "";
         let mvSelected = (value === 'MV') ? "selected" : "";
         let sonstigeSelected = (value === 'Sonstige') ? "selected" : "";
 
-        return `<select onchange="sendEventDefaultDataChange();">
+        return `<select id="select-${day}" onchange="sendEventDefaultDataChange(${day});">
                   <option value="Veranstaltung" ${veranstaltungSelected}>Veranstaltung</option>
                   <option value="Putzdienst" ${putzdienstSelected}>Putzdienst</option>
                   <option value="MV" ${mvSelected}>Mitarbeitenden-Versammlung</option>
@@ -125,23 +155,25 @@ function buildOutlineEventsHtml()
                 </select>`;
     }
 
-    let makeTimeSelect = function(time, day) {
-        return '<input type="time" id="time" name="time" value="' + time + '" onchange="sendEventDefaultDataChange();">';
+    let makeTimeSelect = function (id, time, day) {
+        return `<input type="time" id="${id}-${day}" name="time" value="` + time + `" onchange="sendEventDefaultDataChange(${day});">`;
     }
 
-    let makeNumberSelect = function(value, day) {
-        return '<input type="number" id="" name="minimum_users" min="0" value="' + value + '" onchange="sendEventDefaultDataChange();">';
+    let makeNumberSelect = function (id, value, day) {
+        return `<input type="number" id="${id}-${day}" name="minimum_users" min="0" value="` + value + `" onchange="sendEventDefaultDataChange(${day});">`;
     }
 
     let daysOfWeek = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
 
     for (let i = 0; i < 7; ++i) {
+        let data = eventDefaultData[i];
+
         html += '<tr>';
         html += '<td>' + daysOfWeek[i] + '</td>';
-        html += '<td>' + makeTypeSelect("Veranstaltung", 0) + '</td>';
-        html += '<td>' + makeTimeSelect("20:00", 0) + '</td>';
-        html += '<td>' + makeTimeSelect("02:00", 0) + '</td>';
-        html += '<td>' + makeNumberSelect("2", 0) + '</td>';
+        html += '<td>' + makeTypeSelect(data.type, i) + '</td>';
+        html += '<td>' + makeTimeSelect("start", data.time, i) + '</td>';
+        html += '<td>' + makeTimeSelect("end", data.end_time, i) + '</td>';
+        html += '<td>' + makeNumberSelect("users", data.minimum_users, i) + '</td>';
         html += '</tr>';
     }
 
