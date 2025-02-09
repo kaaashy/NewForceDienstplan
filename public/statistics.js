@@ -85,8 +85,6 @@ function createStatistics(eventType)
         let event = eventData[i];
         if (event.type !== eventType) continue;
 
-        console.log(event);
-
         let date = new Date(event.date);
         let dayOfWeek = getGermanWeekDay(date);
         let week = getStartOfWeek(date);
@@ -119,8 +117,6 @@ function createStatistics(eventType)
                 stats.doubles++;
         }
     }
-
-    console.log(statistics);
 
     return statistics;
 }
