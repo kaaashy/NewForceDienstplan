@@ -752,6 +752,78 @@ function removeInitializationToken($userId, $token)
     $stmt->execute();
 }
 
+function createEmailToken($userId, $newEmail)
+{
+    $pdo = connect();
+
+    // Encode some random bytes using base64
+    $token = base64_encode(random_bytes(32));
+
+    // Remove characters that are not URL-safe
+    $token = str_replace(['+', '/', '='], ['-', '_', ''], $token);
+
+    // create a registration token to change the users password
+    $stmt = $pdo->prepare('INSERT INTO EmailTokens (user_id, token, email) '
+            . 'VALUES (:user_id, :token, :email)');
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->bindValue(':token', $token);
+    $stmt->bindValue(':email', $newEmail);
+    $stmt->execute();
+
+    return $token;
+}
+
+function confirmEmailToken($token)
+{
+    $pdo = connect();
+
+    $sql = "SELECT user_id, email
+            FROM EmailTokens
+            WHERE
+                token = :token
+                AND last_updated >= NOW() - INTERVAL 7 DAY
+            ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row)
+    {
+        $user_id = $row["user_id"];
+        $email = $row["email"];
+
+        $sql = "UPDATE Users SET email = :email WHERE id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+
+        removeEmailToken($user_id, $token);
+
+        return true;
+    }
+
+    removeEmailToken("", $token);
+
+    return false;
+}
+
+function removeEmailToken($userId, $token)
+{
+    $pdo = connect();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM EmailTokens WHERE token = :token');
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM EmailTokens WHERE user_id = :user_id');
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->execute();
+}
+
 function getNumUsersAvailableAtEvent($eventId)
 {
     $pdo = connect();

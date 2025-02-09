@@ -160,6 +160,18 @@ function initializeTables()
         echo "Table PasswordTokens created successfully";
     }
 
+    $createEmailTokensTable = "CREATE TABLE EmailTokens (
+        user_id INT UNSIGNED,
+        token VARCHAR(255),
+        email VARCHAR(255),
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createEmailTokensTable) === TRUE) {
+        echo "Table EmailTokens created successfully";
+    }
+
     $createEventDefaultDataTable = "CREATE TABLE EventDefaultData (
         id INT UNSIGNED PRIMARY KEY,
 

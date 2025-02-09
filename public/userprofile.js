@@ -138,6 +138,18 @@ function buildIndexHtml()
         html += '</div>';
     }
 
+    if (typeof userUpdateInfo !== "undefined") {
+        html += '    <div class="info-box">';
+        html += `    <p>${userUpdateInfo}</p>`;
+        html += '    </div>';
+    }
+
+    if (typeof userUpdateError !== "undefined") {
+        html += '    <div class="error-box">';
+        html += `    <p>${userUpdateError}</p>`;
+        html += '    </div>';
+    }
+
     html += '<input type="submit" name="update_userprofile" value="Speichern">';
     html += '</form>';
 
