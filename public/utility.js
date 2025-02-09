@@ -61,3 +61,27 @@ function getStartOfWeek(date) {
 
     return result;
 }
+
+function getOutlineScheduleUsersOfDayStr(users, day)
+{
+    let count = 0;
+
+    for (const i in users) {
+        let user = users[i];
+        if (!user.visible) continue;
+
+        if (user.day_0 && day === 0) count++;
+        if (user.day_1 && day === 1) count++;
+        if (user.day_2 && day === 2) count++;
+        if (user.day_3 && day === 3) count++;
+        if (user.day_4 && day === 4) count++;
+        if (user.day_5 && day === 5) count++;
+        if (user.day_6 && day === 6) count++;
+    }
+
+    if (count > 0) {
+        return " (" + count + ")";
+    }
+
+    return "";
+}

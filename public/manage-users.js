@@ -188,13 +188,13 @@ function buildOutlineScheduleHtml(users)
     html += '<table class="outline_schedule">';
     html += '<tr>';
     html += '<th></th>';
-    html += '<th>Montag</th>';
-    html += '<th>Dienstag</th>';
-    html += '<th>Mittwoch</th>';
-    html += '<th>Donnerstag</th>';
-    html += '<th>Freitag</th>';
-    html += '<th>Samstag</th>';
-    html += '<th>Sonntag</th>';
+    html += '<th>Montag' + getOutlineScheduleUsersOfDayStr(userData, 0) + '</th>';
+    html += '<th>Dienstag' + getOutlineScheduleUsersOfDayStr(userData, 1) + '</th>';
+    html += '<th>Mittwoch' + getOutlineScheduleUsersOfDayStr(userData, 2) + '</th>';
+    html += '<th>Donnerstag' + getOutlineScheduleUsersOfDayStr(userData, 3) + '</th>';
+    html += '<th>Freitag' + getOutlineScheduleUsersOfDayStr(userData, 4) + '</th>';
+    html += '<th>Samstag' + getOutlineScheduleUsersOfDayStr(userData, 5) + '</th>';
+    html += '<th>Sonntag' + getOutlineScheduleUsersOfDayStr(userData, 6) + '</th>';
     html += '</tr>';
 
     let outlineDay = function (value, id, day, attributes) {

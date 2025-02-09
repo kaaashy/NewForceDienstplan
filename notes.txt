@@ -1,12 +1,10 @@
 TODO:  
 ### Core Functionality ########################
-* MA-Übersicht: Haken für "inaktive MA ausblenden"
 * Veranstaltung nach Bearbeiten nicht unbedingt schließen
 * Error handling: Richtige Fehlermeldungen, kein echo in .php files
 * Logfiles
 * Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
-* Rahmendienstplan Summe anzeigen
 * Bug: Wochenübersicht hat unkorrekt ausgegraute Felder
 * Bug: Monatsübersicht kann zu kurz sein bei 6 angezeigten Wochen (Siehe Dez. 2024)
 * Angemeldet bleiben? -> Auswahl (wird aber von browsern teils automatisch gemacht, deswegen erst mal hintenangestellt)
@@ -49,6 +47,8 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+* Rahmendienstplan Summe anzeigen
+* MA-Übersicht: Haken für "inaktive MA ausblenden"
 * Doppeldienste in einer Woche hervorheben
 * MA löschen+einladen+verwalten -> 1 Berechtigung
 * Dienste planen + sperren -> 1 Berechtigung
