@@ -533,6 +533,7 @@ function showEvent(dateStr, id, edit) {
             for (let i in eventUsersSorted) {
                 let eventUser = eventUsersSorted[i];
                 let user = userData[eventUser.user_id];
+                if (!user.active || !user.visible) continue;
 
                 availableUsersSelect += `<option value="${user.id}">${user.display_name}</option>`;
             }
