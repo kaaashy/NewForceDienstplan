@@ -228,6 +228,27 @@ function findEvent(id) {
     }
 }
 
+function isDoubleScheduledThisView(userId)
+{
+    let schedules = 0;
+
+    for (let i in eventData) {
+        let event = eventData[i];
+        if (event.type !== "Veranstaltung") continue;
+
+        for (let j in event.users) {
+            let user = event.users[j];
+            if (user.scheduled && user.user_id === userId)
+            {
+                if (++schedules >= 2)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function showEvent(dateStr, id, edit) {
     if (!_("#calendar_data").classList.contains("show_data")) {
         _("#calendar_data").classList.add("show_data");
@@ -634,7 +655,14 @@ function buildEventAvailabilityOverview(event) {
 
         if (showUser && user) {
             if (eventUser.scheduled) {
-                html += '<tr><td><div title="Für Dienst eingeteilt" class="scheduled_event_user ' + selfClass + '"> ✅ ' + user.display_name + '</div></td></tr>';
+                let icon = "✅ ";
+                let title = "Für Dienst eingeteilt";
+                if (isDoubleScheduledThisView(eventUser.user_id)) {
+                    icon = "✅⚠️ ";
+                    title = "Achtung, für Doppeldienst eingeteilt!";
+                }
+
+                html += `<tr><td><div title="${title}" class="scheduled_event_user ${selfClass}">${icon} ${user.display_name}</div></td></tr>`;
             } else if (eventUser.deliberate) {
                 html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
             } else if (user.active && user.visible){
