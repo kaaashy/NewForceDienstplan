@@ -1,6 +1,6 @@
 
 let userData = {};
-
+let sortedUserData = {}
 
 // short querySelector
 function _(s) {
@@ -12,12 +12,29 @@ function refresh() {
     userData = {};
 
     requestUsers(function (data) {
-        console.log("received users");
         userData = {};
         for (let i in data) {
             let user = data[i];
             userData[user.id] = user;
         }
+
+        sortedUserData = [];
+        for (let id in userData) {
+            sortedUserData.push(userData[id]);
+        }
+
+        sortedUserData.sort(function (a, b) {
+            let nameA = a.display_name;
+            let nameB = b.display_name;
+
+            if (!a.active) nameA = "zzzzzz" + nameA;
+            else if (!a.visible) nameA = "zzzzzy" + nameA;
+
+            if (!b.active) nameB = "zzzzzz" + nameB;
+            else if (!b.visible) nameB = "zzzzzy" + nameB;
+
+            return nameA.localeCompare(nameB);
+        });
 
         _("#user_index").innerHTML = buildIndexHtml();
     });
@@ -63,34 +80,16 @@ function buildIndexHtml()
 
     html += buildNavHtml();
 
-    let sorted = [];
-    for (let id in userData) {
-        sorted.push(userData[id]);
-    }
-
-    sorted.sort(function (a, b) {
-        let nameA = a.display_name;
-        let nameB = b.display_name;
-
-        if (!a.active) nameA = "zzzzzz" + nameA;
-        else if (!a.visible) nameA = "zzzzzy" + nameA;
-
-        if (!b.active) nameB = "zzzzzz" + nameB;
-        else if (!b.visible) nameB = "zzzzzy" + nameB;
-
-        return nameA.localeCompare(nameB);
-    });
-
     let canViewUserManagement = (userData[loggedInUserId].permissions['manage_users']
                                 || userData[loggedInUserId].permissions['manage_permissions']
                                 || userData[loggedInUserId].permissions['admin_dev_maintenance']
                                 || userData[loggedInUserId].permissions['change_other_outline_schedule']);
 
     if (userData[loggedInUserId].permissions['change_other_outline_schedule'])
-        html += buildOutlineScheduleHtml(sorted);
+        html += buildOutlineScheduleHtml(sortedUserData);
 
     if (canViewUserManagement) {
-        html += buildUsersOverviewHtml(sorted);
+        html += buildUsersOverviewHtml(sortedUserData);
     }
 
     if (userData[loggedInUserId].permissions['manage_users']) {
@@ -106,12 +105,9 @@ function buildIndexHtml()
     return html;
 }
 
-function buildUsersOverviewHtml(users)
+function buildUsersOverviewTable(withInactive)
 {
     let html = '';
-
-    html += '<h2>Mitarbeitendenübersicht</h2>';
-    html += '<table class="user_overview">';
     html += '<tr>';
     html += '<th>Id</th>';
     html += '<th>Anzeigename</th>';
@@ -128,9 +124,15 @@ function buildUsersOverviewHtml(users)
         return "-";
     };
 
-    for (const i in users) {
-        let user = users[i];
+    for (const i in sortedUserData) {
+        let user = sortedUserData[i];
         let id = user.id;
+
+        if (!user.visible || !user.active)
+        {
+            if (!withInactive)
+                continue;
+        }
 
         html += '<tr>';
         html += '<td>' + id + '</td>';
@@ -150,7 +152,31 @@ function buildUsersOverviewHtml(users)
         html += '</tr>';
     }
 
+    return html;
+}
+
+function rebuildUsersList()
+{
+    let check = _("#show_inactive");
+
+    _("#users_list").innerHTML = buildUsersOverviewTable(check.checked);
+}
+
+function buildUsersOverviewHtml(users)
+{
+    let html = '';
+
+    html += '<h2>Mitarbeitendenübersicht</h2>';
+
+    html += '<p>';
+    html += '<input type="checkbox" id="show_inactive" onclick="rebuildUsersList();">';
+    html += '<label for="show_inactive">Zeige Inaktive & Unsichtbare</label>';
+    html += '</p>';
+
+    html += '<table id="users_list" class="user_overview">';
+    html += buildUsersOverviewTable(false);
     html += '</table>';
+
     return html;
 }
 
