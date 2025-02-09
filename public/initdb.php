@@ -99,9 +99,7 @@ function initializeTables()
         change_other_outline_schedule BOOL,
         view_statistics BOOL,
 
-        invite_users BOOL,
         manage_users BOOL,
-        delete_users BOOL,
 
         login_as_others BOOL,
         manage_permissions BOOL,
@@ -240,9 +238,7 @@ function createExampleDB()
             updateUserPermission($id, 'manage_events', true);
             updateUserPermission($id, 'change_other_outline_schedule', true);
             updateUserPermission($id, 'view_statistics', true);
-            updateUserPermission($id, 'invite_users', true);
             updateUserPermission($id, 'manage_users', true);
-            updateUserPermission($id, 'delete_users', true);
             updateUserPermission($id, 'login_as_others', true);
             updateUserPermission($id, 'manage_permissions', true);
         }
@@ -254,9 +250,7 @@ function createExampleDB()
         }
 
         if ($name == "Max") {
-            updateUserPermission($id, 'invite_users', true);
             updateUserPermission($id, 'manage_users', true);
-            updateUserPermission($id, 'delete_users', true);
             updateUserPermission($id, 'login_as_others', true);
             updateUserPermission($id, 'manage_permissions', true);
             updateUserPermission($id, 'admin_dev_maintenance', true);

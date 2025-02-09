@@ -39,13 +39,12 @@ function handleUserCreation()
     if ($loginExistsAlready) {
         // if the login exists, it counts as user management
         // however, inviters should be able to change their invited users' email
-        $operationPermitted = getUserHasPermission($callingUser, 'invite_users')
-                              || getUserHasPermission($callingUser, 'manage_users');
+        $operationPermitted = getUserHasPermission($callingUser, 'manage_users');
         if (!$operationPermitted) {
             return array(false, "Keine Berechtigung.");
         }
     } else {
-        $operationPermitted = getUserHasPermission($callingUser, 'invite_users');
+        $operationPermitted = getUserHasPermission($callingUser, 'manage_users');
         if (!$operationPermitted) {
             return array(false, "Keine Berechtigung.");
         }
@@ -91,7 +90,7 @@ function handleUserDeletion()
     $login = trim($_POST['login']);
 
     $callingUser = $_SESSION['user_id'];
-    $operationPermitted = getUserHasPermission($callingUser, 'delete_users');
+    $operationPermitted = getUserHasPermission($callingUser, 'manage_users');
     if (!$operationPermitted) {
         return array(false, "Keine Berechtigung.");
     }

@@ -81,9 +81,7 @@ function buildIndexHtml()
         return nameA.localeCompare(nameB);
     });
 
-    let canViewUserManagement = (userData[loggedInUserId].permissions['invite_users']
-                                || userData[loggedInUserId].permissions['manage_users']
-                                || userData[loggedInUserId].permissions['delete_users']
+    let canViewUserManagement = (userData[loggedInUserId].permissions['manage_users']
                                 || userData[loggedInUserId].permissions['login_as_others']
                                 || userData[loggedInUserId].permissions['manage_permissions']
                                 || userData[loggedInUserId].permissions['admin_dev_maintenance']
@@ -96,12 +94,10 @@ function buildIndexHtml()
         html += buildUsersOverviewHtml(sorted);
     }
 
-    if (userData[loggedInUserId].permissions['invite_users']
-            || userData[loggedInUserId].permissions['manage_users'])
+    if (userData[loggedInUserId].permissions['manage_users']) {
         html += buildInviteUsersHtml();
-
-    if (userData[loggedInUserId].permissions['delete_users'])
         html += buildDeleteUsersHtml();
+    }
 
     if (userData[loggedInUserId].permissions['login_as_others'])
         html += buildLoginAsOthersHtml();
@@ -297,9 +293,7 @@ function buildPermissionsHtml()
     names['manage_events'] = "Veranstaltungen Planen";
     names['change_other_outline_schedule'] = "Rahmendienstplan Ändern";
     names['view_statistics'] = "Statistiken Einsehen";
-    names['invite_users'] = "MA Einladen";
     names['manage_users'] = "MA Verwalten";
-    names['delete_users'] = "MA Löschen";
     names['login_as_others'] = "Als andere Einloggen &#x1F3C6;";
     names['manage_permissions'] = "Rechte Verwalten &#x1F3C6;";
     names['admin_dev_maintenance'] = "Dev/Admin Maintenance";
@@ -310,9 +304,7 @@ function buildPermissionsHtml()
     titles['manage_events'] = "Veranstaltungen erstellen, bearbeiten und löschen";
     titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitenden ändern";
     titles['view_statistics'] = "Statistiken über wer hat wann wie viele Dienste gemacht";
-    titles['invite_users'] = "Neue Mitarbeitende einladen, Email-Adressen neu setzen";
-    titles['manage_users'] = "Email-Adressen neu setzen, Mitarbeitende ausblenden oder deaktivieren";
-    titles['delete_users'] = "Mitarbeitende löschen";
+    titles['manage_users'] = "Neue Mitarbeitende einladen, Email-Adressen neu setzen, Mitarbeitende ausblenden, deaktivieren oder löschen";
     titles['login_as_others'] = "Als andere Mitarbeitende einloggen (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
     titles['manage_permissions'] = "Berechtigungen anderer Mitarbeitender können hierdurch erlaubt oder entzogen werden (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
     titles['admin_dev_maintenance'] = "Zugriff auf Dev/Admin Maintenance Seite";
