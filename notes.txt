@@ -1,12 +1,5 @@
 TODO:  
 ### Core Functionality ########################
-* Do: 2 MA, Fr+Sa: 4 MA
-* Email-Verification bei Änderung der Email
-* Angemeldet bleiben? -> Auswahl
-* MA löschen+einladen+verwalten -> 1 Berechtigung
-* Dienste planen + sperren -> 1 Berechtigung
-* Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
-* Doppeldienste in einer Woche hervorheben
 * MA-Übersicht: Haken für "inaktive MA ausblenden"
 * Veranstaltung nach Bearbeiten nicht unbedingt schließen
 * Error handling: Richtige Fehlermeldungen, kein echo in .php files
@@ -16,6 +9,7 @@ TODO:
 * Rahmendienstplan Summe anzeigen
 * Bug: Wochenübersicht hat unkorrekt ausgegraute Felder
 * Bug: Monatsübersicht kann zu kurz sein bei 6 angezeigten Wochen (Siehe Dez. 2024)
+* Angemeldet bleiben? -> Auswahl (wird aber von browsern teils automatisch gemacht, deswegen erst mal hintenangestellt)
 
 
 ### Mobile-Version ########################
@@ -55,6 +49,12 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+* Doppeldienste in einer Woche hervorheben
+* MA löschen+einladen+verwalten -> 1 Berechtigung
+* Dienste planen + sperren -> 1 Berechtigung
+* Als andere einloggen + Rechte Verwalten -> 1 Berechtigung
+* Email-Verification bei Änderung der Email
+* Do: 2 MA, Fr+Sa: 4 MA
 * Statistiken: Eigene Statistik unabhängig von anderen einsehbar machen
 * PW-Reset-Email verfallen lassen
 * Registrierungs-Email: "Passwort zurücksetzen"-Text
