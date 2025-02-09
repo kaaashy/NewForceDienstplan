@@ -91,8 +91,7 @@ function initializeTables()
     $createPermissionsTable = "CREATE TABLE Permissions (
         user_id INT UNSIGNED PRIMARY KEY,
 
-        lock_event_schedule BOOL,
-        manage_other_schedules BOOL,
+        manage_schedule BOOL,
 
         manage_events BOOL,
 
@@ -101,7 +100,6 @@ function initializeTables()
 
         manage_users BOOL,
 
-        login_as_others BOOL,
         manage_permissions BOOL,
         admin_dev_maintenance BOOL,
 
@@ -233,25 +231,21 @@ function createExampleDB()
         }
 
         if ($name == "Andi" || $name == "Johannes") {
-            updateUserPermission($id, 'lock_event_schedule', true);
-            updateUserPermission($id, 'manage_other_schedules', true);
+            updateUserPermission($id, 'manage_schedule', true);
             updateUserPermission($id, 'manage_events', true);
             updateUserPermission($id, 'change_other_outline_schedule', true);
             updateUserPermission($id, 'view_statistics', true);
             updateUserPermission($id, 'manage_users', true);
-            updateUserPermission($id, 'login_as_others', true);
             updateUserPermission($id, 'manage_permissions', true);
         }
 
         if ($name == "Oli") {
-            updateUserPermission($id, 'lock_event_schedule', true);
-            updateUserPermission($id, 'manage_other_schedules', true);
+            updateUserPermission($id, 'manage_schedule', true);
             updateUserPermission($id, 'change_other_outline_schedule', true);
         }
 
         if ($name == "Max") {
             updateUserPermission($id, 'manage_users', true);
-            updateUserPermission($id, 'login_as_others', true);
             updateUserPermission($id, 'manage_permissions', true);
             updateUserPermission($id, 'admin_dev_maintenance', true);
         }

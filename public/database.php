@@ -425,15 +425,11 @@ function updateUserStatus($id, $visible, $active)
 }
 
 function updateUserPermissions($user_id,
-        $lock_event_schedule,
-        $manage_other_schedules,
+        $manage_schedule,
         $manage_events,
         $change_other_outline_schedule,
         $view_statistics,
-        $invite_users,
         $manage_users,
-        $delete_users,
-        $login_as_others,
         $manage_permissions,
         $admin_dev_maintenance)
 {
@@ -442,15 +438,11 @@ function updateUserPermissions($user_id,
     // Prepare the SQL statement
     $sql = "UPDATE Permissions
             SET
-                lock_event_schedule = :lock_event_schedule,
-                manage_other_schedules = :manage_other_schedules,
+                manage_schedule = :manage_schedule,
                 manage_events = :manage_events,
                 change_other_outline_schedule = :change_other_outline_schedule,
                 view_statistics = :view_statistics,
-                invite_users = :invite_users,
                 manage_users = :manage_users,
-                delete_users = :delete_users,
-                login_as_others = :login_as_others,
                 manage_permissions = :manage_permissions,
                 admin_dev_maintenance = :admin_dev_maintenance
             WHERE user_id = :id";
@@ -458,15 +450,11 @@ function updateUserPermissions($user_id,
     // Prepare the statement and bind the parameters
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':id', $user_id);
-    $stmt->bindValue(':lock_event_schedule', $lock_event_schedule ? 1 : 0);
-    $stmt->bindValue(':manage_other_schedules', $manage_other_schedules ? 1 : 0);
+    $stmt->bindValue(':manage_schedule', $manage_schedule ? 1 : 0);
     $stmt->bindValue(':manage_events', $manage_events ? 1 : 0);
     $stmt->bindValue(':change_other_outline_schedule', $change_other_outline_schedule ? 1 : 0);
     $stmt->bindValue(':view_statistics', $view_statistics ? 1 : 0);
-    $stmt->bindValue(':invite_users', $invite_users ? 1 : 0);
     $stmt->bindValue(':manage_users', $manage_users ? 1 : 0);
-    $stmt->bindValue(':delete_users', $delete_users ? 1 : 0);
-    $stmt->bindValue(':login_as_others', $login_as_others ? 1 : 0);
     $stmt->bindValue(':manage_permissions', $manage_permissions ? 1 : 0);
     $stmt->bindValue(':admin_dev_maintenance', $admin_dev_maintenance ? 1 : 0);
     $stmt->execute();
@@ -481,15 +469,11 @@ function updateUserPermissions($user_id,
 
 function isChangeablePermission($permission)
 {
-    if ($permission == 'lock_event_schedule') return true;
-    if ($permission == 'manage_other_schedules') return true;
+    if ($permission == 'manage_schedule') return true;
     if ($permission == 'manage_events') return true;
     if ($permission == 'change_other_outline_schedule') return true;
     if ($permission == 'view_statistics') return true;
-    if ($permission == 'invite_users') return true;
     if ($permission == 'manage_users') return true;
-    if ($permission == 'delete_users') return true;
-    if ($permission == 'login_as_others') return true;
     if ($permission == 'manage_permissions') return true;
     if ($permission == 'admin_dev_maintenance') return true;
 
@@ -1042,15 +1026,11 @@ function respondUsers() {
 
         $permissions = array();
         while ($permissionRow = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-            $permissions['lock_event_schedule'] = intval($permissionRow['lock_event_schedule']);
-            $permissions['manage_other_schedules'] = intval($permissionRow['manage_other_schedules']);
+            $permissions['manage_schedule'] = intval($permissionRow['manage_schedule']);
             $permissions['manage_events'] = intval($permissionRow['manage_events']);
             $permissions['change_other_outline_schedule'] = intval($permissionRow['change_other_outline_schedule']);
             $permissions['view_statistics'] = intval($permissionRow['view_statistics']);
-            $permissions['invite_users'] = intval($permissionRow['invite_users']);
             $permissions['manage_users'] = intval($permissionRow['manage_users']);
-            $permissions['delete_users'] = intval($permissionRow['delete_users']);
-            $permissions['login_as_others'] = intval($permissionRow['login_as_others']);
             $permissions['manage_permissions'] = intval($permissionRow['manage_permissions']);
             $permissions['admin_dev_maintenance'] = intval($permissionRow['admin_dev_maintenance']);
         }

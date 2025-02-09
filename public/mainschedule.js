@@ -235,11 +235,11 @@ function showEvent(dateStr, id, edit) {
 
     let headline = "Neue Veranstaltung";
     let title = "";
-    let type = eventDefaultData[getGermanWeekDay(new Date(dateStr))].type;
+    let type = "";
     let date = dateStr;
-    let time = eventDefaultData[getGermanWeekDay(new Date(dateStr))].time;
-    let endTime = eventDefaultData[getGermanWeekDay(new Date(dateStr))].end_time;
-    let minUsers = eventDefaultData[getGermanWeekDay(new Date(dateStr))].minimum_users;
+    let time = "20:00";
+    let endTime = "02:00";
+    let minUsers = 2;
     let organizer = "";
     let venue = "New Force";
     let address = "Buckenhofer Weg 69, 91058 Erlangen";
@@ -308,7 +308,7 @@ function showEvent(dateStr, id, edit) {
         });
 
         let handStyle = '';
-        if (!edit && userData[loggedInUserId].permissions['manage_other_schedules']) {
+        if (!edit && userData[loggedInUserId].permissions['manage_schedule']) {
             handStyle = ' style="cursor: pointer;" '
         }
 
@@ -373,6 +373,13 @@ function showEvent(dateStr, id, edit) {
         let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, ${editable})});}`;
 
         lockButtonHtml = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
+    }
+    else
+    {
+        type = eventDefaultData[getGermanWeekDay(new Date(dateStr))].type;
+        time = eventDefaultData[getGermanWeekDay(new Date(dateStr))].time;
+        endTime = eventDefaultData[getGermanWeekDay(new Date(dateStr))].end_time;
+        minUsers = eventDefaultData[getGermanWeekDay(new Date(dateStr))].minimum_users;
     }
 
     let data = '';
@@ -498,7 +505,7 @@ function showEvent(dateStr, id, edit) {
         }
 
         let insertRemoveOthersHtml = '';
-        if (userData[loggedInUserId].permissions['manage_other_schedules']) {
+        if (userData[loggedInUserId].permissions['manage_schedule']) {
             let availableUsersSelect = '<select id="availableUsersSelect" onchange="refreshInsertRemoveOthersButtons();">';
             availableUsersSelect += `<option value=""></option>`;
 

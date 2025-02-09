@@ -82,7 +82,6 @@ function buildIndexHtml()
     });
 
     let canViewUserManagement = (userData[loggedInUserId].permissions['manage_users']
-                                || userData[loggedInUserId].permissions['login_as_others']
                                 || userData[loggedInUserId].permissions['manage_permissions']
                                 || userData[loggedInUserId].permissions['admin_dev_maintenance']
                                 || userData[loggedInUserId].permissions['change_other_outline_schedule']);
@@ -99,7 +98,7 @@ function buildIndexHtml()
         html += buildDeleteUsersHtml();
     }
 
-    if (userData[loggedInUserId].permissions['login_as_others'])
+    if (userData[loggedInUserId].permissions['manage_permissions'])
         html += buildLoginAsOthersHtml();
 
     html += buildPermissionsHtml();
@@ -288,24 +287,20 @@ function buildPermissionsHtml()
     let html = '';
 
     let names = Array();
-    names['lock_event_schedule'] = "Dienste Sperren";
-    names['manage_other_schedules'] = "Dienste Planen";
+    names['manage_schedule'] = "Dienste Planen";
     names['manage_events'] = "Veranstaltungen Planen";
     names['change_other_outline_schedule'] = "Rahmendienstplan Ändern";
     names['view_statistics'] = "Statistiken Einsehen";
     names['manage_users'] = "MA Verwalten";
-    names['login_as_others'] = "Als andere Einloggen &#x1F3C6;";
     names['manage_permissions'] = "Rechte Verwalten &#x1F3C6;";
     names['admin_dev_maintenance'] = "Dev/Admin Maintenance";
 
     let titles = Array();
-    titles['lock_event_schedule'] = "Dienste von Veranstaltungen sperren und entsperren, sodass sich niemand mehr ein/austragen kann";
-    titles['manage_other_schedules'] = "Andere Mitarbeitende in Veranstaltungen ein- oder austragen";
+    titles['manage_schedule'] = "Dienste planen, Dienste von Veranstaltungen sperren und entsperren, sodass sich niemand mehr ein/austragen kann, andere Mitarbeitende in Veranstaltungen ein- oder austragen";
     titles['manage_events'] = "Veranstaltungen erstellen, bearbeiten und löschen";
     titles['change_other_outline_schedule'] = "Rahmendienstplan aller Mitarbeitenden ändern";
     titles['view_statistics'] = "Statistiken über wer hat wann wie viele Dienste gemacht";
     titles['manage_users'] = "Neue Mitarbeitende einladen, Email-Adressen neu setzen, Mitarbeitende ausblenden, deaktivieren oder löschen";
-    titles['login_as_others'] = "Als andere Mitarbeitende einloggen (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
     titles['manage_permissions'] = "Berechtigungen anderer Mitarbeitender können hierdurch erlaubt oder entzogen werden (&#x1F3C6; Super-Berechtigung: Alle anderen Berechtigungen könnten hiermit indirekt ebenfalls möglich sein)";
     titles['admin_dev_maintenance'] = "Zugriff auf Dev/Admin Maintenance Seite";
 

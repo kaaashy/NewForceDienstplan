@@ -115,7 +115,7 @@ if (isset($_POST['event_availability'])) {
     $deliberate = true;
     
     $callingUser = $_SESSION['user_id'];
-    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_other_schedules');
+    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_schedule');
 
     if (!$managingPermitted) {
         echo 'ERROR_NO_PERMISSION_FOR_EVENT_SCHEDULING';
@@ -148,7 +148,7 @@ if (isset($_POST['event_scheduled'])) {
     $scheduled = filter_input(INPUT_POST, 'scheduled', FILTER_SANITIZE_NUMBER_INT) > 0;
 
     $callingUser = $_SESSION['user_id'];
-    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_other_schedules');
+    $managingPermitted = ($userId == $callingUser) || getUserHasPermission($callingUser, 'manage_schedule');
 
     if (!$managingPermitted) {
         echo 'ERROR_NO_PERMISSION_FOR_EVENT_SCHEDULING';
@@ -169,7 +169,7 @@ if (isset($_POST['event_locked'])) {
     $locked = filter_input(INPUT_POST, 'locked', FILTER_SANITIZE_NUMBER_INT) > 0;
 
     $callingUser = $_SESSION['user_id'];
-    $managingPermitted = getUserHasPermission($callingUser, 'lock_event_schedule');
+    $managingPermitted = getUserHasPermission($callingUser, 'manage_schedule');
     if (!$managingPermitted) {
         echo 'ERROR_NO_PERMISSION_FOR_EVENT_LOCKING';
         return;
