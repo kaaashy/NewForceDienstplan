@@ -852,6 +852,7 @@ function gotoToday() {
         indexDate.setDate(1);
     }
 
+    sessionStorage.setItem("scrollPosition", 0);
     sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
 
     refresh();
@@ -864,6 +865,7 @@ function gotoPrevious() {
         indexDate.setMonth(indexDate.getMonth() - 1);
     }
 
+    sessionStorage.setItem("scrollPosition", 0);
     sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
 
     refresh();
@@ -876,6 +878,7 @@ function gotoNext() {
         indexDate.setMonth(indexDate.getMonth() + 1);
     }
 
+    sessionStorage.setItem("scrollPosition", 0);
     sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
 
     refresh();
@@ -904,6 +907,9 @@ function setMode(newMode) {
 // toggle event show or hide
 function hideEvent() {
     _("#calendar_data").classList.remove("show_data");
+
+    rememberScrollPosition();
+    refresh();
 }
 
 function buildCalendarHtml() {
