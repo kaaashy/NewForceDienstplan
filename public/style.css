@@ -15,9 +15,11 @@ body {
 }
 
 .widewrapper {
+    background: #fff;
 }
 
 .narrowwrapper {
+    background: #fff;
 }
 
 @media (min-width: 768px) {
@@ -29,7 +31,6 @@ body {
         bottom: 0;
         width: 80%;
         height: 1150px;
-        background: #fff;
         margin: 1em auto;
         border: 4px solid #e2e2e2;
         box-shadow: 0 10px 9px -6px #c5c5c5;
@@ -41,7 +42,6 @@ body {
 
     .narrowwrapper {
         width: 50%;
-        background: #fff;
         margin: 1em auto;
         border: 4px solid #e2e2e2;
         box-shadow: 0 10px 9px -6px #c5c5c5;
@@ -551,6 +551,10 @@ tbody.days_cal .calendar_event span {
 
 .outline_schedule {
     border: 1px solid #d0d0d0;
+}
+
+.scrollable {
+    overflow-x: auto;
 }
 
 .outline_schedule td {

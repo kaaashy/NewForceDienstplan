@@ -51,16 +51,17 @@ function buildOutlineScheduleHtml()
     let html = "";
 
     html += '<h2>Rahmendienstplan</h2>';
+    html += '<div class="scrollable">';
     html += '<table class="outline_schedule">';
     html += '<tr>';
     html += '<th></th>';
-    html += '<th>Montag' + getOutlineScheduleUsersOfDayStr(userData, 0) + '</th>';
-    html += '<th>Dienstag' + getOutlineScheduleUsersOfDayStr(userData, 1) + '</th>';
-    html += '<th>Mittwoch' + getOutlineScheduleUsersOfDayStr(userData, 2) + '</th>';
-    html += '<th>Donnerstag' + getOutlineScheduleUsersOfDayStr(userData, 3) + '</th>';
-    html += '<th>Freitag' + getOutlineScheduleUsersOfDayStr(userData, 4) + '</th>';
-    html += '<th>Samstag' + getOutlineScheduleUsersOfDayStr(userData, 5) + '</th>';
-    html += '<th>Sonntag' + getOutlineScheduleUsersOfDayStr(userData, 6) + '</th>';
+    html += '<th>Mo' + getOutlineScheduleUsersOfDayStr(userData, 0) + '</th>';
+    html += '<th>Di' + getOutlineScheduleUsersOfDayStr(userData, 1) + '</th>';
+    html += '<th>Mi' + getOutlineScheduleUsersOfDayStr(userData, 2) + '</th>';
+    html += '<th>Do' + getOutlineScheduleUsersOfDayStr(userData, 3) + '</th>';
+    html += '<th>Fr' + getOutlineScheduleUsersOfDayStr(userData, 4) + '</th>';
+    html += '<th>Sa' + getOutlineScheduleUsersOfDayStr(userData, 5) + '</th>';
+    html += '<th>So' + getOutlineScheduleUsersOfDayStr(userData, 6) + '</th>';
     html += '</tr>';
 
     let outlineDay = function (value, id, day) {
@@ -98,6 +99,7 @@ function buildOutlineScheduleHtml()
     }
 
     html += '</table>';
+    html += '</div>';
 
     return html;
 }
@@ -132,6 +134,7 @@ function buildOutlineEventsHtml()
 
     html += '<h2>Event-Daten</h2>';
     html += '<p>Angaben, die bei neuen Veranstaltungen bereits voreingefüllt sind.</p>';
+    html += '<div class="scrollable">';
     html += '<table class="outline_schedule">';
     html += '<tr>';
     html += '<th></th>';
@@ -178,6 +181,7 @@ function buildOutlineEventsHtml()
     }
 
     html += '</table>';
+    html += '</div>';
 
     return html;
 }

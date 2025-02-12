@@ -48,16 +48,17 @@ function buildIndexHtml()
     html += buildNavHtml();
 
     html += '<h2>Mein Rahmendienstplan</h2>';
+    html += '<div class="scrollable">';
     html += '<table class="outline_schedule">';
     html += '<tr>';
     html += '<th>Name</th>';
-    html += '<th>Montag</th>';
-    html += '<th>Dienstag</th>';
-    html += '<th>Mittwoch</th>';
-    html += '<th>Donnerstag</th>';
-    html += '<th>Freitag</th>';
-    html += '<th>Samstag</th>';
-    html += '<th>Sonntag</th>';
+    html += '<th>Mo</th>';
+    html += '<th>Di</th>';
+    html += '<th>Mi</th>';
+    html += '<th>Do</th>';
+    html += '<th>Fr</th>';
+    html += '<th>Sa</th>';
+    html += '<th>So</th>';
     html += '</tr>';
 
     let outlineDay = function (value, id, day) {
@@ -84,6 +85,7 @@ function buildIndexHtml()
     }
 
     html += '</table>';
+    html += '</div>';
 
     html += '<h2>Mein Profil</h2>';
 

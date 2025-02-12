@@ -18,8 +18,14 @@ function ensureLoggedIn()
 
 function backToLogin($msg = "not logged in")
 {
+    echo '<html><head>';
+    echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+    echo '</head>';
+
+    echo '<body>';
     echo $msg;
     echo '<a href="index.php">Back To Login</a>';
+    echo '</body></html>';
 }
 
 function jsUserId()
