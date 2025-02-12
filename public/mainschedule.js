@@ -245,25 +245,23 @@ function findEvent(id) {
     }
 }
 
-function isDoubleScheduledThisView(userId)
+function countSchedulesThisView(userId, skippedEventId)
 {
     let schedules = 0;
 
     for (let i in eventData) {
         let event = eventData[i];
         if (event.type !== "Veranstaltung") continue;
+        if (event.id === skippedEventId) continue
 
         for (let j in event.users) {
             let user = event.users[j];
             if (user.scheduled && user.user_id === userId)
-            {
-                if (++schedules >= 2)
-                    return true;
-            }
+                ++schedules;
         }
     }
 
-    return false;
+    return schedules;
 }
 
 function showEvent(dateStr, id, edit) {
@@ -285,7 +283,6 @@ function showEvent(dateStr, id, edit) {
     let buttonCaption = "Veranstaltung Anlegen";
 
     let scheduledUserCount = 0;
-    let availableUserCount = 0;
     let scheduledUsersHtml = "";
     let availableUsersHtml = "";
     let deleteButtonHtml = "";
@@ -358,8 +355,14 @@ function showEvent(dateStr, id, edit) {
                 selfInScheduledList = true;
 
             if (user && eventUser.scheduled) {
+                let schedulesThisView = countSchedulesThisView(eventUser.user_id);
+                let warningIcon = "";
+
+                if (schedulesThisView >= 2)
+                    warningIcon = "⚠️";
+
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
-                scheduledUsersHtml += '<div ' + unscheduleOnClick + handStyle + ' class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅ ' + user.display_name + '</div>';
+                scheduledUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅${warningIcon} ${user.display_name}</div>`;
 
                 scheduledUserCount++;
             }
@@ -384,23 +387,30 @@ function showEvent(dateStr, id, edit) {
             if (user) {
                 let scheduleOnClick = edit ? '' : ` onclick="scheduleForEvent(${user.id}); "`;
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
+                let warningIcon = "";
+
+                let schedulesThisView = countSchedulesThisView(eventUser.user_id);
 
                 if (eventUser.scheduled) {
-                    availableUsersHtml += '<div ' + unscheduleOnClick + handStyle + ' class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅ ' + user.display_name + '</div>';
-                    availableUserCount++;
+                    if (schedulesThisView >= 2)
+                        warningIcon = "⚠️";
+                } else {
+                    if (schedulesThisView >= 1)
+                        warningIcon = "⚠️";
+                }
+
+                if (eventUser.scheduled) {
+                    availableUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅${warningIcon} ${user.display_name}</div>`;
                 } else if (eventUser.deliberate) {
-                    availableUsersHtml += '<div ' + scheduleOnClick + handStyle + ' class="deliberate_event_user" title="Hat sich selbst eingetragen"> 📅 ' + user.display_name + '</div>';
-                    availableUserCount++;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="deliberate_event_user" title="Hat sich selbst eingetragen"> 📅${warningIcon} ${user.display_name}</div>`;
                 } else if (user.active && user.visible){
-                    availableUsersHtml += '<div ' + scheduleOnClick + handStyle + ' class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅 ' + user.display_name + '</div>';
-                    availableUserCount++;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅${warningIcon} ${user.display_name}</div>`;
                 }
             }
         }
 
         let newAvailability = !selfInAvailabilityList;
         let buttonText = selfInAvailabilityList ? "Mich Austragen" : "📅 Mich Eintragen";
-
 
         addRemoveButtonsHtml += '<tr>'
                 + `<td><button type="button" class="schedule_insert" onclick="return sendSelfAvailability(${newAvailability});">${buttonText}</button></td>`
@@ -676,7 +686,8 @@ function buildEventAvailabilityOverview(event) {
             if (eventUser.scheduled) {
                 let icon = "✅ ";
                 let title = "Für Dienst eingeteilt";
-                if (isDoubleScheduledThisView(eventUser.user_id)) {
+
+                if (countSchedulesThisView(eventUser.user_id) >= 2) {
                     icon = "✅⚠️ ";
                     title = "Achtung, für Doppeldienst eingeteilt!";
                 }
