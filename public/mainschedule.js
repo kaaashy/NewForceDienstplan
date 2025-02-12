@@ -1,4 +1,6 @@
 
+let mobile = window.matchMedia("(max-width: 767px)").matches;
+
 const monthMode = "month";
 const weekMode = "week";
 
@@ -6,7 +8,7 @@ const weekMode = "week";
 let indexDate = new Date();
 indexDate.setDate(1);
 
-let mode = monthMode;
+let mode = mobile ? weekMode : monthMode;
 
 if (sessionStorage.getItem('mode') && sessionStorage.getItem('indexDate')) {
     mode = sessionStorage.getItem('mode');
@@ -22,6 +24,10 @@ let dataReceived = 0;
 let currentEventId = null;
 
 let eventDefaultData = {};
+
+let day_of_week = Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
+let month_of_year = Array("Januar", "Februar", "März", "April", "Mai", "Juni",
+        "Juli", "August", "September", "Oktober", "November", "Dezember");
 
 // short querySelector
 function _(s) {
@@ -95,6 +101,7 @@ function refresh(callback) {
 
         onEventsReceived(counter, callback);
     });
+
 }
 
 refresh();
@@ -919,12 +926,16 @@ function buildWeeklyCalendarHtml(startDate) {
         let paddedMonth = String(date.getMonth() + 1).padStart(2, '0');
         let dateStr = getPaddedDateString(date);
 
+        if (mobile) html += "<tr>";
+
+        let dayName = mobile ? day_of_week[i] : "";
+
         if (getPaddedDateString(today) === getPaddedDateString(date)) {
-            html += '<td class="today"><div class="calendar_day" data-id="' + dateStr + '">'
-                    + "<span>" + paddedDay + "." + paddedMonth + "." + "</span>";
+            html += `<td class="today"><div class="calendar_day" data-id="${dateStr}">`
+                    + `<span>${dayName} ${paddedDay}.${paddedMonth}.</span>`;
         } else {
-            html += '<td><div class="calendar_day" data-id="' + dateStr + '">'
-                    + "<span>" + paddedDay + "." + paddedMonth + "." + "</span>";
+            html += `<td ><div class="calendar_day" data-id="${dateStr}">`
+                    + `<span>${dayName} ${paddedDay}.${paddedMonth}.</span>`;
 
             if (today.getTime() > date.getTime()) {
                 html += '<div class="past_day_overlay"></div>';
@@ -932,6 +943,8 @@ function buildWeeklyCalendarHtml(startDate) {
         }
 
         html += "</div></td>";
+
+        if (mobile) html += "</tr>";
 
         date.setDate(date.getDate() + 1);
     }
@@ -1018,46 +1031,75 @@ function buildCalendarHead(month1, month2, year) {
     const today = new Date();
     const weekday = getGermanWeekDay(today);
 
-    let day_of_week = Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
-    let month_of_year = Array("Januar", "Februar", "März", "April", "Mai", "Juni",
-            "Juli", "August", "September", "Oktober", "November", "Dezember");
+    if (mobile)
+    {
+        // head
+        html += "<thead>";
 
-    // head
-    html += "<thead>";
-    html += '<tr class="head_cal">';
-    html += '<th colspan="2"><table>';
-    html += '<th><a href="#" class="goto_today" onclick="return gotoToday();">Heute</a></th>';
-    html += '<th><a href="#" class="cycle_month" onclick="return gotoPrevious();">&lt;</a></th>';
-    html += '<th><a href="#" class="cycle_month" onclick="return gotoNext();">&gt;</a></th>';
-    html += '</table></th>';
-
-    if (month1 === month2) {
-        html += '<th colspan="3">' + month_of_year[month1] + "</th>";
-    } else {
-        html += '<th colspan="3">' + month_of_year[month1] + " - " + month_of_year[month2] + "</th>";
-    }
-
-    let week = (mode === weekMode) ? " enabled" : " ";
-    let month = (mode === monthMode) ? " enabled" : " ";
-
-    let weekOrMonth = '<a href="#" class="week_or_month' + week + '" onclick="setMode(weekMode);">Woche <br/> </a>'
-            + '<a href="#" class="week_or_month' + month + '" onclick="setMode(monthMode);">Monat</a>';
-
-    html += '<th colspan="2">' + weekOrMonth + '</th>';
-    html += '</tr>';
-
-    html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
-    html += '<tr class="week_cal">';
-    for (let index = 0; index < 7; index++) {
-        if (weekday === index && (month1 === today.getMonth() || month2 === today.getMonth())) {
-            html += '<th class="week_event">' + day_of_week[index] + "</th>";
+        // month(s)
+        html += '<tr class="head_cal">';
+        if (month1 === month2) {
+            html += '<th>' + month_of_year[month1] + "</th>";
         } else {
-            html += "<th>" + day_of_week[index] + "</th>";
+            html += '<th>' + month_of_year[month1] + " - " + month_of_year[month2] + "</th>";
         }
-    }
+        html += '</tr>';
 
-    html += "</tr>";
-    html += "</thead>";
+        // today + arrows
+        html += '<tr class="head_cal">';
+        html += '<th><table>';
+        html += '<th><a href="#" class="goto_today" onclick="return gotoToday();">Heute</a></th>';
+        html += '<th><a href="#" class="cycle_month" onclick="return gotoPrevious();">&lt;</a></th>';
+        html += '<th><a href="#" class="cycle_month" onclick="return gotoNext();">&gt;</a></th>';
+        html += '</table></th></tr>';
+
+        html += '<tr class="subhead_cal"><th>' + year + "</th></tr>";
+
+        html += "</thead>";
+    }
+    else
+    {
+        // head
+        html += "<thead>";
+        html += '<tr class="head_cal">';
+        html += '<th colspan="2"><table>';
+        html += '<th><a href="#" class="goto_today" onclick="return gotoToday();">Heute</a></th>';
+        html += '<th><a href="#" class="cycle_month" onclick="return gotoPrevious();">&lt;</a></th>';
+        html += '<th><a href="#" class="cycle_month" onclick="return gotoNext();">&gt;</a></th>';
+        html += '</table></th>';
+
+        if (month1 === month2) {
+            html += '<th colspan="3">' + month_of_year[month1] + "</th>";
+        } else {
+            html += '<th colspan="3">' + month_of_year[month1] + " - " + month_of_year[month2] + "</th>";
+        }
+
+        let week = (mode === weekMode) ? " enabled" : " ";
+        let month = (mode === monthMode) ? " enabled" : " ";
+
+        let weekOrMonth = '<a href="#" class="week_or_month' + week + '" onclick="setMode(weekMode);">Woche <br/> </a>'
+                + '<a href="#" class="week_or_month' + month + '" onclick="setMode(monthMode);">Monat</a>';
+
+        html += '<th colspan="2">' + weekOrMonth + '</th>';
+        html += '</tr>';
+
+        html += '<tr class="subhead_cal"><th colspan="7">' + year + "</th></tr>";
+
+        if (!mobile) {
+            html += '<tr class="week_cal">';
+            for (let index = 0; index < 7; index++) {
+                if (weekday === index && (month1 === today.getMonth() || month2 === today.getMonth())) {
+                    html += '<th class="week_event">' + day_of_week[index] + "</th>";
+                } else {
+                    html += "<th>" + day_of_week[index] + "</th>";
+                }
+            }
+
+            html += "</tr>";
+        }
+
+        html += "</thead>";
+    }
 
     return html;
 }

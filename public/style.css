@@ -15,32 +15,40 @@ body {
 }
 
 .widewrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 80%;
-    height: 1150px;
-    background: #fff;
-    margin: 1em auto;
-    border: 4px solid #e2e2e2;
-    box-shadow: 0 10px 9px -6px #c5c5c5;
-    border-top-width: 25px;
-    border-bottom-width: 32px;
-    border-radius: 8px;
-    overflow: hidden;
 }
 
 .narrowwrapper {
-    width: 50%;
-    background: #fff;
-    margin: 1em auto;
-    border: 4px solid #e2e2e2;
-    box-shadow: 0 10px 9px -6px #c5c5c5;
-    border-top-width: 25px;
-    border-bottom-width: 32px;
-    border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+    .widewrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 80%;
+        height: 1150px;
+        background: #fff;
+        margin: 1em auto;
+        border: 4px solid #e2e2e2;
+        box-shadow: 0 10px 9px -6px #c5c5c5;
+        border-top-width: 25px;
+        border-bottom-width: 32px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .narrowwrapper {
+        width: 50%;
+        background: #fff;
+        margin: 1em auto;
+        border: 4px solid #e2e2e2;
+        box-shadow: 0 10px 9px -6px #c5c5c5;
+        border-top-width: 25px;
+        border-bottom-width: 32px;
+        border-radius: 8px;
+    }
 }
 
 div#calendar {
@@ -62,7 +70,7 @@ table {
     background: #fff;
     color: #85baff;
     font-size: 2rem;
-    line-height: 5rem;
+    line-height: 3rem;
     text-transform: uppercase;
 }
 
@@ -374,7 +382,7 @@ input.delete_event:hover {
     font-family: sans-serif;
     
     background: #666;  /* hehe */
-    font-size: 0.75rem;
+    font-size: 1.0rem;
     color: white;
     border: none;
 }
@@ -392,7 +400,7 @@ input.delete_event:hover {
     font-family: sans-serif;
 
     background: #666;  /* hehe */
-    font-size: 0.75rem;
+    font-size: 1.0rem;
     color: lightgreen;
     border: none;
 }
@@ -410,7 +418,7 @@ input.delete_event:hover {
     font-family: sans-serif;
     
     background: #666; 
-    font-size: 0.75rem;
+    font-size: 1.0rem;
     color: #ccc;
     border: none;
 }
@@ -463,9 +471,9 @@ tbody.days_cal .calendar_event .info {
 }
 
 tbody.days_cal .calendar_event span {
-    background: none; 
-    color: white; 
-    line-height: 1.0rem;
+    background: none;
+    color: white;
+    line-height: 1.25rem;
 }
 
 .calendar_event .event_title {
@@ -502,7 +510,7 @@ tbody.days_cal .calendar_event span {
     font-family: sans-serif;
     
     background: #444; 
-    font-size: 0.75rem;
+    font-size: 1.0rem;
     color: white;
 }
 
@@ -527,7 +535,8 @@ tbody.days_cal .calendar_event span {
     font-family: sans-serif;
     
     background: #444; 
-    font-size: 0.75rem;
+    font-size: 1.0rem;
+    line-height: 1.25rem;
     color: white;
 }
 
@@ -622,19 +631,35 @@ tr.spacer-row {
 }
 
 .link-container {
-  display: flex; /* or use display: inline */
-  text-decoration: none; /* Remove underline */
-  padding: 10px; /* Add some padding for a better look */
+    text-decoration: none; /* Remove underline */
+    padding: 10px; /* Add some padding for a better look */
+    font-size: 1.25rem;
 }
 
 .link-container a {
-  display: inline-block; /* or use display: inline */
-  margin-right: 10px; /* Add spacing between the links */
-  text-decoration: none; /* Remove underline */
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 20px; /* Add spacing between the links */
+    margin-bottom: 10px; /* Add spacing between the links */
+    text-decoration: none; /* Remove underline */
 }
 
-.link-container a:last-child {
-  margin-left: auto; /* Remove right margin from the last link */
+@media (min-width: 768px) {
+    .link-container {
+      display: flex; /* or use display: inline */
+      text-decoration: none; /* Remove underline */
+      padding: 10px; /* Add some padding for a better look */
+    }
+
+    .link-container a {
+      display: inline-block; /* or use display: inline */
+      margin-right: 10px; /* Add spacing between the links */
+      text-decoration: none; /* Remove underline */
+    }
+
+    .link-container a:last-child {
+      margin-left: auto; /* Remove right margin from the last link */
+    }
 }
 
 .error-box {
