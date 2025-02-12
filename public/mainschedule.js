@@ -34,6 +34,10 @@ function _(s) {
     return document.querySelector(s);
 }
 
+function rememberScrollPosition() {
+    sessionStorage.setItem("scrollPosition", window.scrollY);
+}
+
 function onEventsReceived(refresh, callback) {
     if (refresh !== refreshCounter)
         return;
@@ -49,11 +53,17 @@ function onEventsReceived(refresh, callback) {
         else
             _("#schedule_summary").innerHTML = "";
 
+        const scrollPos = sessionStorage.getItem("scrollPosition");
+        if (scrollPos !== null) {
+            window.scrollTo(0, parseInt(scrollPos, 10));
+        }
+
         if (callback) callback();
     }
 }
 
 function refresh(callback) {
+
     // declare and fill event data
     eventData = {};
     userData = {};
@@ -391,6 +401,7 @@ function showEvent(dateStr, id, edit) {
         let newAvailability = !selfInAvailabilityList;
         let buttonText = selfInAvailabilityList ? "Mich Austragen" : "📅 Mich Eintragen";
 
+
         addRemoveButtonsHtml += '<tr>'
                 + `<td><button type="button" class="schedule_insert" onclick="return sendSelfAvailability(${newAvailability});">${buttonText}</button></td>`
                 + '</tr>';
@@ -400,7 +411,7 @@ function showEvent(dateStr, id, edit) {
         let lockIcon = locked ? "&#128274" : "&#128275";
         let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, ${editable})});}`;
 
-        lockButtonHtml = `<a href="#" onclick="return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
+        lockButtonHtml = `<a href="javascript:void(0)" onclick="rememberScrollPosition(); return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
     }
     else
     {
@@ -423,7 +434,7 @@ function showEvent(dateStr, id, edit) {
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
                 + lockButtonHtml
-                + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
+                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 
                 + '<div class="create_event_wrapper">'
@@ -458,7 +469,7 @@ function showEvent(dateStr, id, edit) {
                 + '<input type="text" id="organizer" name="organizer" placeholder="Verantwortlich" value="' + organizer + '">'
                 + '</div>'
                 + '<div class="input_line">'
-                + '<label for="minimum_users">Mindest-Mitarbeitende:</label>'
+                + '<label for="minimum_users">Mindest-MA:</label>'
                 + '<input type="number" id="minimum_users" name="minimum_users" min="0" value="' + minUsers + '">'
                 + '</div>'
                 + '<div class="input_line">'
@@ -529,7 +540,7 @@ function showEvent(dateStr, id, edit) {
 
         let editButtonHtml = "";
         if (userData[loggedInUserId].permissions['manage_events']) {
-            editButtonHtml = `<a href="#" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+            editButtonHtml = `<a href="javascript:void(0)" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
         }
 
         let insertRemoveOthersHtml = '';
@@ -594,7 +605,7 @@ function showEvent(dateStr, id, edit) {
                 + `<span> ${headline} </span>`
                 + editButtonHtml
                 + lockButtonHtml
-                + `<a class="close" href="#" onclick="return hideEvent();"> &times</a>`
+                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> &times</a>`
                 + '</div>'
 
                 + '<div class="create_event_wrapper">'
@@ -772,7 +783,7 @@ function buildCalendarEventHtml(event) {
     else if (selfAvailable && !event.locked)
         selfHighlightClass = "assigned-highlight";
 
-    return '<a class="' + selfHighlightClass + '" href="#" onclick="return showEvent(\'\', ' + event.id + ', false)">'
+    return '<a class="' + selfHighlightClass + '" href="javascript:void(0)" onclick="return showEvent(\'\', ' + event.id + ', false)">'
             + `<span class="event_title">${icon} ${event.title}</span>`
             + (event.organizer !== "" ? `<span class="event_time">by ${event.organizer}</span>` : "")
             + time
@@ -809,7 +820,7 @@ function addEvents(eventData, startDate) {
             if (_('[data-id="' + dateStr + '"]')) {
                 let div = document.createElement("div");
                 div.classList.add("calendar_event_adder");
-                div.innerHTML = '<a href="#" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
+                div.innerHTML = '<a href="javascript:void(0)" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
                         + "+ Neue Veranstaltung"
                         + "</a>";
 

@@ -215,11 +215,12 @@ tbody.days_cal .today {
 #calendar_data {
     margin: auto;
     padding: 0;
-    top: 4rem;
+    top: 5%;
     left: 2%;
     width: 96%;
+    min-height: 90%;
+    position: fixed;
 
-    position: absolute;
     background: #fff;
     color: #c5c5c5;
     opacity: 0;
@@ -233,6 +234,7 @@ tbody.days_cal .today {
 
 @media (min-width: 768px) {
     #calendar_data {
+        position: absolute;
         top: 5%;
         left: 5%;
         width: 60%;
