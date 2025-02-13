@@ -79,6 +79,7 @@ function onEventsReceived(refresh, callback) {
         const scrollPos = sessionStorage.getItem("scrollPosition");
         if (scrollPos !== null) {
             window.scrollTo(0, parseInt(scrollPos, 10));
+            sessionStorage.removeItem("scrollPosition");
         }
 
         if (callback) callback();
