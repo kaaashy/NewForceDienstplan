@@ -1323,7 +1323,7 @@ function buildLegendHtml()
     html += `<table class="userlist">`;
     html += `<tr><th>Legende</th></tr>`;
     html += `<tr><td><div class="scheduled_event_user ">${calendarCheckEmoji} Eingeteilt für Dienst</div></td></tr>`;
-    html += `<tr><td><div class="deliberate_event_user "> ${greenCalendarPlusEmoji} Selbst freiwillig eingetragen </div></td> </tr>`;
+    html += `<tr><td><div class="deliberate_event_user "> ${greenCalendarPlusEmoji} Manuell eingetragen </div></td> </tr>`;
     html += `<tr><td><div class="event_user "> ${calendarEmoji} Durch Rahmendienstplan eingetragen </div></td> </tr>`;
     html += `<tr><td><div class="deliberate_event_user "> ${warningEmoji} (Drohender) Doppeldienst </div></td> </tr>`;
     html += `<tr><td><div class="deliberate_event_user "> ${lockedLockEmoji} Veranstaltung endgültig festgelegt: Ein-/austragen gesperrt </div></td> </tr>`;
