@@ -116,7 +116,7 @@ function refresh(callback) {
     });
 
     requestUsers(function (data) {
-        console.log("received users");
+        // console.log("received users");
         userData = {};
         for (let i in data) {
             let user = data[i];
@@ -127,7 +127,7 @@ function refresh(callback) {
     });
 
     requestEvents(from, to, function (data) {
-        console.log("received events");
+        // console.log("received events");
 
         // after querying events, rebuild calendar
         eventData = data;
@@ -912,11 +912,14 @@ function gotoNext() {
 }
 
 function setMode(newMode) {
+    let oldMode = mode;
     mode = newMode;
 
     if (mode === weekMode) {
         let today = new Date();
-        if (today.getMonth() === indexDate.getMonth()) {
+
+        // when switching from month to week view, use today's week
+        if (oldMode === monthMode && today.getMonth() === indexDate.getMonth()) {
             indexDate = getStartOfWeek(today);
         } else {
             indexDate = getStartOfWeek(indexDate);
