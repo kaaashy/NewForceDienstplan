@@ -7,20 +7,37 @@ include_once 'database.php';
 include_once 'pages.php';
 include_once 'requests.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+function handleRequest()
+{
+    if (!isset($_POST['password'])) {
+        return array(false, "No password");
+    }
 
-    if (isset($_POST['reinit_everything'])) {
+    $installInfo = getInstallInfo();
 
+    if ($_POST['password'] != $installInfo->installPassword) {
+        return array(false, "Wrong password");
+    }
+
+    if (isset($_POST['reinit_clean'])) {
+        initialize();
+        return array("Datenbanken wurden auf Werkseinstellungen zurückgesetzt.", false);
+    }
+
+    if (isset($_POST['reinit_with_examples'])) {
         initialize();
         createExampleDB();
-        session_destroy();
-        header('Location: index.php');
-        die();
-    } elseif (isset($_POST['update_db'])) {
-
-        updateDB();
-
+        return array("Datenbanken wurden auf Werkseinstellungen zurückgesetzt.", false);
     }
+
+    return array(false, false);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    list($infoMessage, $errorMessage) = handleRequest();
+
+    if ($infoMessage) jsMessage("infoMessage", $infoMessage);
+    if ($errorMessage) jsMessage("errorMessage", $errorMessage);
 }
 
 ?>

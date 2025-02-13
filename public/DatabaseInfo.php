@@ -24,6 +24,22 @@ function getDatabaseInfo()
     return $result; 
 }
 
+class InstallInfo
+{
+    public $adminPassword;
+    public $adminEmail;
+    public $installPassword;
+}
+
+function getInstallInfo()
+{
+    $result = new InstallInfo();
+    $result->installPassword = "SuperSecret|Install.P4ssw0rd"; // Password that is required to operate install.php page
+    $result->adminPassword = "adminPW"; // Initial password for admin account when resetting/installing
+    $result->adminEmail = "admin@newforcedienstplan.de"; // Initial email for admin account when resetting/installing
+    return $result;
+}
+
 function makePHPMail()
 {
     $mail = new PHPMailer(true);

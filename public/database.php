@@ -1110,5 +1110,23 @@ function dumpPendingUsers() {
     echo '</table>';
 }
 
+function respondInstallationStatus()
+{
+    $pdo = connect();
+
+    $sql = "SELECT * FROM Users;";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $users = 0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $users++;
+    }
+
+    $data = array();
+    $data["users"] = $users;
+
+    echo json_encode($data);
+}
 
 ?>

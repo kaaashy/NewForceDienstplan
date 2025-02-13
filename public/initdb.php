@@ -198,7 +198,8 @@ function initialize()
     initializeDatabase();
     initializeTables();
 
-    addUser("admin", "adminPW", "admin@newforcedienstplan.de", "", "");
+    $installInfo = getInstallInfo();
+    addUser("admin", $installInfo->adminPassword, $installInfo->adminEmail, "", "");
 
     // set admin user to invisible & allow everything
     updateUserStatus(1, false, true);
@@ -255,52 +256,52 @@ function createExampleDB()
         }
     }
 
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-16");
-    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-17");
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-01-18");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-23");
-    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-24");
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-01-25");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-01-30");
-    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-01-31");
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-01");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-
-    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-06");
-    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-
-    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-02-07");
-    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
-    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-08");
-    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
-    
     $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-13");
     updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2025-02-14");
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-02-14");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-15");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-20");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-02-21");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-02-22");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-02-27");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-02-28");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-03-01");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-03-06");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Masters Of Metal", "2025-03-07");
+    updateEvent($id, "Veranstaltung", "Masters Of Metal", "Heavy, Pagan, Power", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Blasts in Brucklyn", "2025-03-08");
+    updateEvent($id, "Veranstaltung", "Blasts in Brucklyn", "Death, Black, Core & More", "20:00", "02:00", 3,"", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+    
+    $id = addEvent("Veranstaltung", "Donnerstagsgedöns", "2025-03-13");
+    updateEvent($id, "Veranstaltung", "Donnerstagsgedöns", "Jede Woche wechselnde Specials", "20:00", "00:00", 3, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
+
+    $id = addEvent("Veranstaltung", "Spielmannstreiben", "2025-03-14");
     updateEvent($id, "Veranstaltung", "Spielmannstreiben", "Rudelgedudel", "20:00", "02:00", 4, "DomiTheWall", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 
-    $id = addEvent("Sonstige", "Großputz", "2025-02-16");
+    $id = addEvent("Sonstige", "Großputz", "2025-03-16");
     updateEvent($id, "Sonstige", "Großputz", "Wir putzen ihr Spasten", "14:00", "19:00", 8, "", "New Force", "Buckenhofer Weg 69, 91058 Erlangen");
 }
 

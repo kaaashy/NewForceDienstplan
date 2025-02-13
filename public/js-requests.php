@@ -7,6 +7,12 @@ ini_set('display_errors', 'on');
 
 include_once 'initdb.php';
 
+// installation status has priority
+if (isset($_POST['installation_status'])) {
+    respondInstallationStatus();
+    return;
+}
+
 if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
     echo 'ERROR_NOT_LOGGED_IN';
     exit;

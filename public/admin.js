@@ -30,21 +30,24 @@ function buildIndexHtml()
 
     html += buildNavHtml();
 
-    html += '<h1>Dev Maintenance</h1>';
-    html += '<h2>Testmail</h2>';
-    html += '<p>Verschickt eine Test-Mail an den Admin-Account</p>';
+    html += '<h1>Admin Maintenance</h1>';
+
+    if (typeof infoMessage !== "undefined") {
+        html += '    <div class="info-box">';
+        html += `    <p>${infoMessage}</p>`;
+        html += '    </div>';
+    }
+
+    if (typeof errorMessage !== "undefined") {
+        html += '    <div class="error-box">';
+        html += `    <p>${errorMessage}</p>`;
+        html += '    </div>';
+    }
+
+    html += '<h2>Test-Email</h2>';
+    html += '<p>Verschickt eine Test-Email an den Admin-Account.</p>';
     html += '<form method="POST" action="">';
     html += '    <input type="submit" name="send_testmail" value="Test-Email verschicken"></input>';
-    html += '</form>';
-
-    html += '<h2>Update DB</h2>';
-    html += '<form method="POST" action="">';
-    html += '    <input type="submit" name="update_db" value="Update Database Schema"></input>';
-    html += '</form>';
-
-    html += '<h2>Auf Werkseinstellungen Zurücksetzen</h2>';
-    html += '<form method="POST" action="">';
-    html += '    <input type="submit" name="reinit_everything" value="Auf Werkseinstellungen zurücksetzen"></input>';
     html += '</form>';
 
     return html;

@@ -1,9 +1,8 @@
-TODO:  
+TODO:
 ### Core Functionality ########################
 * Veranstaltung nach Bearbeiten nicht unbedingt schließen
 * Error handling: Richtige Fehlermeldungen, kein echo in .php files
 * Logfiles
-* Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
 * Datenbank-Infos & Technisches verwalten (Admin)
 * Bug: Wochenübersicht hat unkorrekt ausgegraute Felder
 * Bug: Monatsübersicht kann zu kurz sein bei 6 angezeigten Wochen (Siehe Dez. 2024)
@@ -43,6 +42,9 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+* Doppeldienste nach Woche zeigen
+* Bug: Switchen zwischen Monat und Woche switcht manchmal in den falschen Monat/Woche
+
 ### Mobile-Version ########################
 * Vollständig über Mobile benutzbar !!
 

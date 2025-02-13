@@ -117,6 +117,14 @@ function requestEventDefaultData(callback) {
     sendRequest(data, callback);
 }
 
+function requestInstallationStatus(callback) {
+
+    // Set the request payload
+    var data = 'installation_status=y';
+
+    sendRequest(data, callback);
+}
+
 function sendRequest(data, callback) {
     // Create a new XMLHttpRequest object
     var xhr = new XMLHttpRequest();

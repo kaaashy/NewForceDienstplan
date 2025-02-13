@@ -9,25 +9,15 @@ include_once 'requests.php';
 
 ensureLoggedIn();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+function handleRequest()
+{
     $callingUser = $_SESSION['user_id'];
     $operationPermitted = getUserHasPermission($callingUser, 'admin_dev_maintenance');
     if (!$operationPermitted) {
-        echo "Keine Berechtigung.";
+        return array(false, "Keine Berechtigung.");
     }
 
-    if (isset($_POST['reinit_everything'])) {
-
-        initialize();
-        createExampleDB();
-        session_destroy();
-        header('Location: index.php');
-        die();
-    } elseif (isset($_POST['update_db'])) {
-
-        updateDB();
-
-    } elseif (isset($_POST['send_testmail'])) {
+    if (isset($_POST['send_testmail'])) {
 
         $details = getUserDetails(1);
         $address = $details['email'];
@@ -42,11 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Send email
             $mail->send();
-            echo "Test-Message has been sent to '$address'";
+            return array("Test-Message has been sent to '$address'", false);
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            return array(false, "Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
         }
     }
+
+    return array(false, false);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    list($infoMessage, $errorMessage) = handleRequest();
+
+    if ($infoMessage) jsMessage("infoMessage", $infoMessage);
+    if ($errorMessage) jsMessage("errorMessage", $errorMessage);
 }
 
 ?>
