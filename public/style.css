@@ -381,6 +381,10 @@ input.delete_event:hover {
     padding: 20px;
 }
 
+#legend {
+    padding: 20px;
+}
+
 .scheduled_event_user {
     display: inline-block;
     border-radius: 4px;

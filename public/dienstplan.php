@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="calendar"></div>
         <div id="calendar_data"></div>
         <div id="schedule_summary"></div>
+        <div id="legend"></div>
     </div>
       
   </body>

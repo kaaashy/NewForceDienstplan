@@ -74,6 +74,8 @@ function onEventsReceived(refresh, callback) {
         else
             _("#schedule_summary").innerHTML = "";
 
+        _("#legend").innerHTML = buildLegendHtml();
+
         const scrollPos = sessionStorage.getItem("scrollPosition");
         if (scrollPos !== null) {
             window.scrollTo(0, parseInt(scrollPos, 10));
@@ -669,6 +671,8 @@ function showEvent(dateStr, id, edit) {
 
     }
 
+    data += buildLegendHtml();
+
     return (_("#calendar_data").innerHTML = data);
 }
 
@@ -1215,6 +1219,22 @@ function buildWeekSummaryHtml()
 
         html += `<p>${date}: <strong>${event.title}</strong> ${timeStr} <br/>Dienst: ${users} ${note} </p>`;
     }
+
+    return html;
+}
+
+function buildLegendHtml()
+{
+    let html = "";
+
+    html += `<table class="userlist">`;
+    html += `<tr><th>Legende</th></tr>`;
+    html += `<tr><td><div class="scheduled_event_user ">${calendarCheckEmoji} Eingeteilt für Dienst</div></td></tr>`;
+    html += `<tr><td><div class="deliberate_event_user "> ${greenCalendarPlusEmoji} Selbst freiwillig eingetragen </div></td> </tr>`;
+    html += `<tr><td><div class="event_user "> ${calendarEmoji} Durch Rahmendienstplan eingetragen </div></td> </tr>`;
+    html += `<tr><td><div class="deliberate_event_user "> ${warningEmoji} (Drohender) Doppeldienst </div></td> </tr>`;
+    html += `<tr><td><div class="deliberate_event_user "> ${lockedLockEmoji} Veranstaltung endgültig festgelegt: Ein-/austragen gesperrt </div></td> </tr>`;
+    html += `</table>`;
 
     return html;
 }
