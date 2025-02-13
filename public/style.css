@@ -202,7 +202,6 @@ tbody.days_cal tr td {
 }
 
 tbody.days_cal .today {
-    font-weight: bold;
     transition: all 0.1s ease;
     border: 3px solid #0069b6;
     color: #85baff !important;
@@ -396,8 +395,13 @@ input.delete_event:hover {
     
     background: #666;  /* hehe */
     font-size: 1.0rem;
-    color: white;
+    font-weight: bold;
+    color: lightgreen;
     border: none;
+}
+
+.scheduled_event_user i {
+    color: lightgreen;
 }
 
 .deliberate_event_user {
@@ -414,8 +418,12 @@ input.delete_event:hover {
 
     background: #666;  /* hehe */
     font-size: 1.0rem;
-    color: lightgreen;
+    color: white;
     border: none;
+}
+
+.deliberate_event_user i {
+    color: white;
 }
 
 .event_user {
@@ -432,7 +440,7 @@ input.delete_event:hover {
     
     background: #666; 
     font-size: 1.0rem;
-    color: #ccc;
+    color: #bbb;
     border: none;
 }
 
@@ -637,6 +645,7 @@ tbody.days_cal .calendar_event span {
 .schedule_insert {
     height: 2rem;
     width: 100%;
+    font-size: 1rem;
 }
 .schedule_remove {
     height: 2rem;
