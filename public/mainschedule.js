@@ -860,7 +860,6 @@ function addEvents(eventData, startDate) {
                 let div = document.createElement("div");
                 div.classList.add("calendar_event_adder");
                 div.innerHTML = '<a href="javascript:void(0)" onclick="return showEvent(\'' + dateStr + "', '', true);\">"
-                        + "+ Neue Veranstaltung"
                         + "</a>";
 
                 _('[data-id="' + dateStr + '"]').appendChild(div);

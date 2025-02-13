@@ -508,10 +508,6 @@ tbody.days_cal .calendar_event span {
     color: white; 
 }
 
-.days_cal td:hover .calendar_event_adder a {
-    visibility: visible;
-}
-
 .calendar_event:hover a {
     background: #666; /* hehe */
 }
@@ -540,34 +536,59 @@ tbody.days_cal .calendar_event span {
 }
 
 .calendar_event_adder {
-    background: #fff; 
+/*    background: #fff; */
     line-height: 1rem;
 }
 
 .calendar_event_adder a {
-    visibility: hidden;
     display: inline-block;
     border-radius: 4px;
     margin-top: 2px;
     margin-bottom: 10px;
     margin-left: 5px; 
     margin-right: 5px;
-    padding: 5px;
+    padding: 0.5rem;
 
-    width: 90%;
-    
     text-decoration: none;
     font-family: sans-serif;
     
     background: #444; 
-    font-size: 1.0rem;
-    line-height: 1.25rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
     color: white;
+
+    height: 2.5rem;
+    width: 2.5rem;
 }
 
-.calendar_event_adder:hover a {
-    text-decoration: underline;
-    background: #666 !important; /* hehe */
+@media (max-width: 767px) {
+
+    .calendar_event_adder a::before {
+        content: "+";
+    }
+
+}
+
+@media (min-width: 768px) {
+    .calendar_event_adder a {
+        visibility: hidden;
+        width: 90%;
+        font-size: 1.0rem;
+    }
+
+    .calendar_event_adder a::before {
+        content: "+ Neue Veranstaltung";
+    }
+
+    .days_cal td:hover .calendar_event_adder a {
+        visibility: visible;
+    }
+
+    .calendar_event_adder:hover a {
+        text-decoration: underline;
+        background: #666 !important; /* hehe */
+    }
+
 }
 
 .info_page {
