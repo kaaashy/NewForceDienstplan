@@ -277,7 +277,9 @@ function countSchedulesThisWeek(date) {
 
     for (let i in eventData) {
         let event = eventData[i];
-        if (event.date < startDate || event.date > endDate) continue;
+        let eventDate = new Date(event.date);
+
+        if (eventDate < startDate || eventDate > endDate) continue;
         if (event.type !== "Veranstaltung") continue;
 
         for (let j in event.users) {
@@ -305,7 +307,9 @@ function findDoubleScheduleCandidatesInWeek(date) {
 
     for (let i in eventData) {
         let event = eventData[i];
-        if (event.date < startDate || event.date > endDate) continue;
+        let eventDate = new Date(event.date);
+
+        if (eventDate < startDate || eventDate > endDate) continue;
         if (event.type !== "Veranstaltung") continue;
 
         requiredUsersThisWeek += event.minimum_users;
@@ -860,17 +864,31 @@ function buildCalendarEventHtml(event) {
         let locked = event.locked ? lockedLockEmoji : "";
         let availableStr = scheduledUsers > 0 ? "eingeteilt" : "eingetragen";
 
-        html += `<span class="${allGood}"> ${usersStr} MA ${availableStr} ${locked}</span>`;
+        let doubleCandidates = findDoubleScheduleCandidatesInWeek(event.date);
+        let shifts = countSchedulesThisWeek(event.date);
+
+        let warningIcon = "";
+        for (const i in event.users) {
+            if (!userData[event.users[i].user_id].visible) continue;
+
+            if (event.locked && event.users[i].scheduled && shifts[event.users[i].user_id] >= 2) {
+                warningIcon = warningEmoji;
+            } else if (!event.locked && doubleCandidates[event.users[i].user_id] >= 1) {
+                warningIcon = warningEmoji;
+            }
+        }
+
+        html += `<span class="${allGood}"> ${usersStr} MA ${availableStr} ${locked} ${warningIcon}</span>`;
 
         return html;
     };
 
+    let highlightText = "";
+    let icon = "";
+
     let assignedUsers = "";
     if (mode === weekMode)
         assignedUsers = buildEventAvailabilityOverview(event);
-
-    let highlightText = "";
-    let icon = "";
 
     if (selfScheduled) {
         highlightText = '<span class="event_title">Dienst!</span>';
