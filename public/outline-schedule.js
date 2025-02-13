@@ -41,7 +41,9 @@ function buildHtml()
 
     html += buildNavHtml();
     html += buildOutlineScheduleHtml();
-    html += buildOutlineEventsHtml();
+
+    if (userData[loggedInUserId].permissions['manage_events'])
+        html += buildOutlineEventsHtml();
 
     return html;
 }
