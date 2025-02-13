@@ -6,6 +6,22 @@ let day_of_week = Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
 let month_of_year = Array("Januar", "Februar", "März", "April", "Mai", "Juni",
         "Juli", "August", "September", "Oktober", "November", "Dezember");
 
+const warningEmoji = "⚠️";
+//const calendarEmoji = "&#xF1F6";
+const calendarEmoji = "📅";
+const calendarCheckEmoji = "&#xF1E2;";
+const checkmarkEmoji = "✅";
+const lockedLockEmoji = "&#128274";
+const unlockedLockEmoji = "&#128275";
+const pencilEmoji = "✏️";
+const xEmoji = "&times";
+const broomEmoji = "&#129529;";
+
+
+// const calendarEmoji = '<i style="" class="fa">&#xf274;</i>';
+
+
+
 let eventDefaultData = {};
 
 let mobile = window.matchMedia("(max-width: 767px)").matches;
@@ -204,11 +220,11 @@ function refreshInsertRemoveOthersButtons() {
     removeButton.disabled = (availableUsersSelect.value === "");
 
     if (!insertButton.disabled) {
-        insertButton.innerText = "📅 " + userData[unavailableUsersSelect.value].display_name + " Eintragen";
+        insertButton.innerText = `${calendarEmoji} ` + userData[unavailableUsersSelect.value].display_name + " Eintragen";
     }
 
     if (!removeButton.disabled) {
-        removeButton.innerText = userData[availableUsersSelect.value].display_name + " Austragen";
+        removeButton.innerHtml = userData[availableUsersSelect.value].display_name + " Austragen";
     }
 }
 
@@ -360,10 +376,10 @@ function showEvent(dateStr, id, edit) {
                 let warningIcon = "";
 
                 if (schedulesThisView >= 2)
-                    warningIcon = "⚠️";
+                    warningIcon = warningEmoji;
 
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
-                scheduledUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅${warningIcon} ${user.display_name}</div>`;
+                scheduledUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ${checkmarkEmoji}${warningIcon} ${user.display_name}</div>`;
 
                 scheduledUserCount++;
             }
@@ -394,24 +410,24 @@ function showEvent(dateStr, id, edit) {
 
                 if (eventUser.scheduled) {
                     if (schedulesThisView >= 2)
-                        warningIcon = "⚠️";
+                        warningIcon = warningEmoji;
                 } else {
                     if (schedulesThisView >= 1)
-                        warningIcon = "⚠️";
+                        warningIcon = warningEmoji;
                 }
 
                 if (eventUser.scheduled) {
-                    availableUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ✅${warningIcon} ${user.display_name}</div>`;
+                    availableUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ${checkmarkEmoji}${warningIcon} ${user.display_name}</div>`;
                 } else if (eventUser.deliberate) {
-                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="deliberate_event_user" title="Hat sich selbst eingetragen"> 📅${warningIcon} ${user.display_name}</div>`;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="deliberate_event_user" title="Hat sich selbst eingetragen"> ${calendarEmoji}${warningIcon} ${user.display_name}</div>`;
                 } else if (user.active && user.visible){
-                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="event_user" title="Ist durch Rahmendienstplan eingetragen"> 📅${warningIcon} ${user.display_name}</div>`;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="event_user" title="Ist durch Rahmendienstplan eingetragen"> ${calendarEmoji}${warningIcon} ${user.display_name}</div>`;
                 }
             }
         }
 
         let newAvailability = !selfInAvailabilityList;
-        let buttonText = selfInAvailabilityList ? "Mich Austragen" : "📅 Mich Eintragen";
+        let buttonText = selfInAvailabilityList ? "Mich Austragen" : `${calendarEmoji} Mich Eintragen`;
 
         addRemoveButtonsHtml += '<tr>'
                 + `<td><button type="button" class="schedule_insert" onclick="return sendSelfAvailability(${newAvailability});">${buttonText}</button></td>`
@@ -419,7 +435,7 @@ function showEvent(dateStr, id, edit) {
 
         let editable = edit ? "true" : "false";
         let sentEventLockedStatus = !locked;
-        let lockIcon = locked ? "&#128274" : "&#128275";
+        let lockIcon = locked ? lockedLockEmoji : unlockedLockEmoji;
         let callback = `function() {refresh(function() {showEvent('${dateStr}', ${id}, ${editable})});}`;
 
         lockButtonHtml = `<a href="javascript:void(0)" onclick="rememberScrollPosition(); return sendEventLockedStatus(${id}, ${sentEventLockedStatus}, ${callback});"> ${lockIcon} </a>`;
@@ -445,7 +461,7 @@ function showEvent(dateStr, id, edit) {
                 + '<div class="headline-container">'
                 + `<span> ${headline} </span>`
                 + lockButtonHtml
-                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> &times</a>`
+                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> ${xEmoji}</a>`
                 + '</div>'
 
                 + '<div class="create_event_wrapper">'
@@ -551,7 +567,7 @@ function showEvent(dateStr, id, edit) {
 
         let editButtonHtml = "";
         if (userData[loggedInUserId].permissions['manage_events']) {
-            editButtonHtml = `<a href="javascript:void(0)" onclick="return showEvent('${dateStr}', ${id}, true);"> ✏️ </a>`
+            editButtonHtml = `<a href="javascript:void(0)" onclick="return showEvent('${dateStr}', ${id}, true);"> ${pencilEmoji} </a>`
         }
 
         let insertRemoveOthersHtml = '';
@@ -582,8 +598,8 @@ function showEvent(dateStr, id, edit) {
             }
             unavailableUsersSelect += '</select>';
 
-            let insertOtherButtonHtml = '<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>📅 Eintragen</button>';
-            let removeOtherButtonHtml = '<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>';
+            let insertOtherButtonHtml = `<button id="insertOtherButton" type="button" class="schedule_insert" onclick="return insertOtherIntoAvailabilityList();" disabled>${calendarEmoji} Eintragen</button>`;
+            let removeOtherButtonHtml = `<button id="removeOtherButton" type="button" class="schedule_remove" onclick="return removeOtherFromAvailabilityList();" disabled>Austragen</button>`;
 
             insertRemoveOthersHtml = ''
                 + '<table class="userlist">'
@@ -616,7 +632,7 @@ function showEvent(dateStr, id, edit) {
                 + `<span> ${headline} </span>`
                 + editButtonHtml
                 + lockButtonHtml
-                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> &times</a>`
+                + `<a class="close" href="javascript:void(0)" onclick="return hideEvent();"> ${xEmoji}</a>`
                 + '</div>'
 
                 + '<div class="create_event_wrapper">'
@@ -685,19 +701,19 @@ function buildEventAvailabilityOverview(event) {
 
         if (showUser && user) {
             if (eventUser.scheduled) {
-                let icon = "✅ ";
+                let icon = `${checkmarkEmoji} `;
                 let title = "Für Dienst eingeteilt";
 
                 if (countSchedulesThisView(eventUser.user_id) >= 2) {
-                    icon = "✅⚠️ ";
+                    icon = `${checkmarkEmoji}${warningEmoji} `;
                     title = "Achtung, für Doppeldienst eingeteilt!";
                 }
 
                 html += `<tr><td><div title="${title}" class="scheduled_event_user ${selfClass}">${icon} ${user.display_name}</div></td></tr>`;
             } else if (eventUser.deliberate) {
-                html += '<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
+                html += `<tr><td><div title="Hat sich selbst eingetragen" class="deliberate_event_user ${selfClass}"> ${calendarEmoji} ${user.display_name} </div></td></tr>`;
             } else if (user.active && user.visible){
-                html += '<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ' + selfClass + '"> 📅 ' + user.display_name + '</div></td></tr>';
+                html += `<tr><td><div title="Ist durch Rahmendienstplan eingetragen" class="event_user ${selfClass}"> ${calendarEmoji} ${user.display_name} </div></td></tr>`;
             }
         }
     }
@@ -758,7 +774,7 @@ function buildCalendarEventHtml(event) {
         let html = '<span class="' + allGood + '">';
         let usersStr = users > min ? users : users + '/' + min;
 
-        let locked = event.locked ? "&#128274" : "";
+        let locked = event.locked ? lockedLockEmoji : "";
         let availableStr = scheduledUsers > 0 ? "eingeteilt" : "eingetragen";
 
         html += `<span class="${allGood}"> ${usersStr} MA ${availableStr} ${locked}</span>`;
@@ -775,17 +791,17 @@ function buildCalendarEventHtml(event) {
 
     if (selfScheduled) {
         highlightText = '<span class="event_title">Dienst!</span>';
-        icon = "✅";
+        icon = checkmarkEmoji;
     } else if (selfAvailable && !event.locked) {
         highlightText = '<span class="event_title">Eingetragen!</span>';
-        icon = "📅";
+        icon = calendarEmoji;
     }
 
     let time = '<span class="event_time">' + readableTime(event.time)
         + " bis " + readableTime(event.end_time) + '</span>';
 
     if (event.type === "Putzdienst") {
-        icon += "&#129529;";
+        icon += broomEmoji;
         time = "";
     }
 
