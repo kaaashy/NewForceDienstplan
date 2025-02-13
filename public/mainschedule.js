@@ -268,24 +268,79 @@ function findEvent(id) {
     }
 }
 
-function countSchedulesThisView(userId, skippedEventId)
-{
-    let schedules = 0;
+function countSchedulesThisWeek(date) {
+    let startDate = getStartOfWeek(date);
+    let endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 6);
+
+    let users = {}
 
     for (let i in eventData) {
         let event = eventData[i];
+        if (event.date < startDate || event.date > endDate) continue;
         if (event.type !== "Veranstaltung") continue;
-        if (event.id === skippedEventId) continue
 
         for (let j in event.users) {
             let user = event.users[j];
-            if (user.scheduled && user.user_id === userId)
-                ++schedules;
+            if (!user.scheduled) continue;
+            if (!userData[user.user_id].visible) continue;
+
+            if (users[user.user_id])
+                users[user.user_id]++;
+            else
+                users[user.user_id] = 1;
         }
     }
 
-    return schedules;
+    return users;
 }
+
+function findDoubleScheduleCandidatesInWeek(date) {
+    let startDate = getStartOfWeek(date);
+    let endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 6);
+
+    let users = {}
+    let requiredUsersThisWeek = 0;
+
+    for (let i in eventData) {
+        let event = eventData[i];
+        if (event.date < startDate || event.date > endDate) continue;
+        if (event.type !== "Veranstaltung") continue;
+
+        requiredUsersThisWeek += event.minimum_users;
+
+        for (let j in event.users) {
+            let user = event.users[j];
+            if (!userData[user.user_id].visible) continue;
+
+            // for locked events, we only count scheduled users
+            if (!event.locked || user.scheduled)
+            {
+                if (users[user.user_id])
+                    users[user.user_id]++;
+                else
+                    users[user.user_id] = 1;
+            }
+        }
+    }
+
+    let uniqueUsersThisWeek = 0;
+
+    for (let u in users)
+        uniqueUsersThisWeek++;
+
+    let result = {};
+    if (uniqueUsersThisWeek < requiredUsersThisWeek) {
+        for (let ui in users) {
+            if (users[ui] >= 2)
+                result[ui] = 1;
+        }
+    }
+
+    return result;
+}
+
 
 function showEvent(dateStr, id, edit) {
     if (!_("#calendar_data").classList.contains("show_data")) {
@@ -370,6 +425,8 @@ function showEvent(dateStr, id, edit) {
             handStyle = ' style="cursor: pointer;" '
         }
 
+        let schedules = countSchedulesThisWeek(event.date);
+
         for (let i in eventUsersSorted) {
             let eventUser = eventUsersSorted[i];
             let user = userData[eventUser.user_id];
@@ -378,10 +435,9 @@ function showEvent(dateStr, id, edit) {
                 selfInScheduledList = true;
 
             if (user && eventUser.scheduled) {
-                let schedulesThisView = countSchedulesThisView(eventUser.user_id);
                 let warningIcon = "";
 
-                if (schedulesThisView >= 2)
+                if (schedules[eventUser.user_id] >= 2)
                     warningIcon = warningEmoji;
 
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
@@ -412,7 +468,7 @@ function showEvent(dateStr, id, edit) {
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
                 let warningIcon = "";
 
-                let schedulesThisView = countSchedulesThisView(eventUser.user_id);
+                let schedulesThisView = schedules[eventUser.user_id];
 
                 if (userData[loggedInUserId].permissions['manage_schedule']) {
                     if (eventUser.scheduled) {
@@ -680,9 +736,9 @@ function showEvent(dateStr, id, edit) {
 }
 
 function buildEventAvailabilityOverview(event) {
-    let html = "";
 
-    html += '<table class="user_listing">';
+    // find issues this week
+    let doubleScheduleCandidates = findDoubleScheduleCandidatesInWeek(event.date);
 
     let sorted = [...event.users];
     sorted.sort(function (a, b) {
@@ -702,6 +758,12 @@ function buildEventAvailabilityOverview(event) {
         }
     }
 
+    let html = "";
+
+    html += '<table class="user_listing">';
+
+    let schedules = countSchedulesThisWeek(event.date);
+
     for (let i in sorted) {
         let eventUser = sorted[i];
         let user = userData[eventUser.user_id];
@@ -714,11 +776,17 @@ function buildEventAvailabilityOverview(event) {
 
         if (showUser && user) {
             let warningIcon = "";
+            let title = "";
+
+            if (doubleScheduleCandidates[eventUser.user_id]) {
+                warningIcon = warningEmoji;
+                title = "Achtung, Doppeldienst womöglich nötig!";
+            }
 
             if (eventUser.scheduled) {
-                let title = "Für Dienst eingeteilt";
+                title = "Für Dienst eingeteilt";
 
-                if (countSchedulesThisView(eventUser.user_id) >= 2) {
+                if (schedules[eventUser.user_id] >= 2) {
                     warningIcon = warningEmoji;
                     title = "Achtung, für Doppeldienst eingeteilt!";
                 }
@@ -739,6 +807,7 @@ function buildEventAvailabilityOverview(event) {
 
 function buildCalendarEventHtml(event) {
 
+    // check infos about self
     let selfAvailable = false;
     let selfScheduled = false;
     for (let i in event.users) {
