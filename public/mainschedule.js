@@ -1,10 +1,20 @@
 
-let mobile = window.matchMedia("(max-width: 767px)").matches;
-
 const monthMode = "month";
 const weekMode = "week";
 
-// index date
+let day_of_week = Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
+let month_of_year = Array("Januar", "Februar", "März", "April", "Mai", "Juni",
+        "Juli", "August", "September", "Oktober", "November", "Dezember");
+
+let eventDefaultData = {};
+
+let mobile = window.matchMedia("(max-width: 767px)").matches;
+
+let refreshCounter = 0;
+let dataReceived = 0;
+
+let currentEventId = null;
+
 let indexDate = new Date();
 indexDate.setDate(1);
 
@@ -18,16 +28,7 @@ if (sessionStorage.getItem('mode') && sessionStorage.getItem('indexDate')) {
     sessionStorage.setItem('indexDate', getPaddedDateString(indexDate));
 }
 
-let refreshCounter = 0;
-let dataReceived = 0;
-
-let currentEventId = null;
-
-let eventDefaultData = {};
-
-let day_of_week = Array("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So");
-let month_of_year = Array("Januar", "Februar", "März", "April", "Mai", "Juni",
-        "Juli", "August", "September", "Oktober", "November", "Dezember");
+if (mobile) setMode(weekMode);
 
 // short querySelector
 function _(s) {
@@ -940,7 +941,7 @@ function buildWeeklyCalendarHtml(startDate) {
     // start in 1 and this month
     let date = new Date(startDate);
 
-    // white zone
+    // white zone, won't do anything on mobile because in week mode this for-loop doesn't do a single iteration
     for (let i = 0; i < getGermanWeekDay(date); i++) {
         html += '<td class="white_cal"> </td>';
     }

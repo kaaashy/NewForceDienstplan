@@ -10,12 +10,8 @@ TODO:
 * Angemeldet bleiben? -> Auswahl (wird aber von browsern teils automatisch gemacht, deswegen erst mal hintenangestellt)
 
 
-### Mobile-Version ########################
-* Exakte Details bisher unklar, muss aber vollständig über Mobile benutzbar sein
-
 ### Sperrungen ########################
 * ABGELEHNT: Wochenlimit uniquer User, die sich ab einer Woche nicht mehr austragen können
-
 
 ### Doku ########################
 * Wie installieren? 
@@ -47,6 +43,9 @@ Mitarbeiterrechte lt Oli
 
 
 DONE: 
+### Mobile-Version ########################
+* Vollständig über Mobile benutzbar !!
+
 * Rahmendienstplan Summe anzeigen
 * MA-Übersicht: Haken für "inaktive MA ausblenden"
 * Doppeldienste in einer Woche hervorheben
