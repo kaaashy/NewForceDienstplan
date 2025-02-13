@@ -14,6 +14,8 @@
 * Dann sollte ein Manager-User erstellt werden, der dann weiterhin genutzt wird, um sämtliche weiteren Einstellungen zu konfigurieren
 * Fertig!
 
+# Allgemeine Infos
+* Der Dienstplan liegt in einem github Repository, unter: https://github.com/kaaashy/NewForceDienstplan (Feel free to clone!)
 
 # Allgemeine Infos
 * Der Dienstplan liegt in einem github Repository, unter: https://github.com/kaaashy/NewForceDienstplan (Feel free to clone!)
