@@ -464,6 +464,9 @@ function showEvent(dateStr, id, edit) {
         let mvSelected = (type == 'MV') ? "selected" : "";
         let sonstigeSelected = (type == 'Sonstige') ? "selected" : "";
 
+        if (title == "" && putzdienstSelected)
+            title = "Putzdienst";
+
         // template info
         data = ''
                 + '<div class="headline-container">'
