@@ -35,19 +35,26 @@ function buildIndexHtml()
     html += '<h1>Dienstplan-Installer</h1>';
     html += '<p>In <code>DatabaseInfo.php</code> können sämtliche wichtigen Informationen konfiguriert werden.</p>';
 
-    let message = "";
+    console.log(statusData);
 
     if (statusData) {
+
+        let dbIcon = statusData.db_status ? checkmarkEmoji : warningEmoji;
+        html += `<p> DB-Status: ${dbIcon} ${statusData.db_status_msg} </p>`;
+
+        if (!statusData.db_status) {
+            html += "<p> Fehler bei der Datenbank-Verbindung: In der Javascript-Konsole können Sie ausführliche Fehlermeldungen einsehen. </p>";
+        }
+
         if (statusData.users > 0) {
-            message = `Installations-Status: ${checkmarkEmoji} Installiert. ${statusData.users} Benutzer registriert.`;
+            html += `<p> Installations-Status: ${checkmarkEmoji} Installiert. ${statusData.users} Benutzer registriert.</p>`;
         } else {
-            message = `Installations-Status: ${warningEmoji} Nicht Initialisiert.`;
+            html += `<p> Installations-Status: ${warningEmoji} Nicht Initialisiert.</p>`;
         }
     } else {
-        message = `Installations-Status: ${warningEmoji} Nicht installiert.`;
+        html += `<p> Installations-Status: ${warningEmoji} Konnte Status nicht abfragen.</p>`;
+        html += "<p> Fehler möglicherweise bei PHP: In der Javascript-Konsole können Sie ausführliche Fehlermeldungen einsehen. </p>";
     }
-
-    html += `<p> ${message}</p>`;
 
     if (typeof infoMessage !== "undefined") {
         html += '    <div class="info-box">';
@@ -63,6 +70,7 @@ function buildIndexHtml()
 
     html += '<h2>Datenbanken initialisieren & zurücksetzen</h2>';
     html += '<form method="POST" action="">';
+    html += '    <label for="password">Installations-Passwort:</label>';
     html += '    <input type="password" name="password" value=""></input><br/><br/>';
 
     html += '    <input type="submit" name="reinit_clean" value="Auf Werkseinstellungen zurücksetzen"></input>';

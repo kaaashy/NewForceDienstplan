@@ -1112,19 +1112,27 @@ function dumpPendingUsers() {
 
 function respondInstallationStatus()
 {
-    $pdo = connect();
-
-    $sql = "SELECT * FROM Users;";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $users = 0;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $users++;
-    }
-
     $data = array();
-    $data["users"] = $users;
+
+    $pdo = connect();
+    if (!$pdo) {
+        $data["db_status"] = 0;
+        $data["db_status_msg"] = "Couldn't connect to database.";
+    } else {
+        $data["db_status"] = 1;
+        $data["db_status_msg"] = "Database Connection established.";
+
+        $sql = "SELECT * FROM Users;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        $users = 0;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $users++;
+        }
+
+        $data["users"] = $users;
+    }
 
     echo json_encode($data);
 }
