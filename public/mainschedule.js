@@ -36,9 +36,10 @@ let dataReceived = 0;
 let currentEventId = null;
 
 let indexDate = new Date();
-indexDate.setDate(1);
-
 let mode = mobile ? weekMode : monthMode;
+
+if (mode === monthMode)
+    indexDate.setDate(1);
 
 if (sessionStorage.getItem('mode') && sessionStorage.getItem('indexDate')) {
     mode = sessionStorage.getItem('mode');
