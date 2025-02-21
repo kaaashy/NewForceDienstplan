@@ -60,8 +60,8 @@ function handleUserProfileUpdate()
             $mail = makePHPMail();
 
             try {
-                $link = "dienstplan.newforce.de/userprofile.php?token=$token";
-                $link = "$link localhost/nf-dienstplan/userprofile.php?token=$token";
+                $installInfo = getInstallInfo();
+                $link = $installInfo->emailUrl . "/userprofile.php?token=$token";
 
                 // Email headers and content
                 $mail->addAddress($email, '');

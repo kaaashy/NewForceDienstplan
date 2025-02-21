@@ -29,6 +29,7 @@ class InstallInfo
     public $adminPassword;
     public $adminEmail;
     public $installPassword;
+    public $emailUrl;
 }
 
 function getInstallInfo()
@@ -37,6 +38,10 @@ function getInstallInfo()
     $result->installPassword = "SuperSecret|Install.P4ssw0rd"; // Password that is required to operate install.php page
     $result->adminPassword = "adminPW"; // Initial password for admin account when resetting/installing
     $result->adminEmail = "admin@newforcedienstplan.de"; // Initial email for admin account when resetting/installing
+
+    // Prefix for email-links, must be in form like "https://my-url.net", without slash at the end.
+    // will be used like https://my-url.net/userprofile.php?token=abc
+    $result->emailUrl = "localhost/nf-dienstplan";
     return $result;
 }
 

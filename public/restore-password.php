@@ -21,9 +21,8 @@ function validateReset()
             $mail = makePHPMail();
 
             try {
-
-                $link = "dienstplan.newforce.de/finish-registration.php?token=$token";
-                $link = "$link localhost/nf-dienstplan/finish-registration.php?token=$token";
+                $installInfo = getInstallInfo();
+                $link = $installInfo->emailUrl . "/finish-registration.php?token=$token";
 
                 // Email headers and content
                 $mail->addAddress($email, '');
