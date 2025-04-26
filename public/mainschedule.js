@@ -371,6 +371,12 @@ function showEvent(dateStr, id, edit) {
         _("#calendar_data").classList.add("show_data");
     }
 
+    {
+        // position the event basied on current y scroll position
+        const scrollY = window.scrollY;
+        _("#calendar_data").style.top = `${scrollY}px`;
+    }
+
     let headline = "Neue Veranstaltung";
     let title = "";
     let type = "";
