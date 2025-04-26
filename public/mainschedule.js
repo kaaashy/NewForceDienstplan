@@ -36,6 +36,10 @@ let dataReceived = 0;
 let currentEventId = null;
 
 let indexDate = new Date();
+indexDate.setHours(0);
+indexDate.setMinutes(0);
+indexDate.setSeconds(0);
+
 let mode = mobile ? weekMode : monthMode;
 
 if (mode === monthMode)
@@ -273,7 +277,7 @@ function findEvent(id) {
 function countSchedulesThisWeek(date) {
     let startDate = getStartOfWeek(date);
     let endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 6);
+    endDate.setDate(endDate.getDate() + 7);
 
     let users = {}
 
@@ -302,7 +306,7 @@ function countSchedulesThisWeek(date) {
 function findDoubleScheduleCandidatesInEvent(event) {
     let startDate = getStartOfWeek(event.date);
     let endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 6);
+    endDate.setDate(endDate.getDate() + 7);
 
     let eventsInRange = [];
 
@@ -988,6 +992,9 @@ function addEvents(eventData, startDate) {
 
 function gotoToday() {
     indexDate = new Date();
+    indexDate.setHours(0);
+    indexDate.setMinutes(0);
+    indexDate.setSeconds(0);
 
     if (mode === weekMode) {
         indexDate = getStartOfWeek(new Date());
@@ -1075,7 +1082,7 @@ function buildWeeklyCalendarHtml(startDate) {
     html += "<table>";
 
     let weekEnding = new Date(startDate);
-    weekEnding.setDate(weekEnding.getDate() + 6);
+    weekEnding.setDate(weekEnding.getDate() + 7);
     html += buildCalendarHead(startDate.getMonth(), weekEnding.getMonth(), startDate.getFullYear());
 
     // body
@@ -1150,14 +1157,14 @@ function buildMonthlyCalendarHtml(indexDate) {
     let date = getStartOfWeek(indexDate);
 
     let endDate = new Date(indexDate);
-    endDate.setMonth(endDate.getMonth()+1);
+    endDate.setMonth(endDate.getMonth() + 1);
 
     for (i = 0; i < 7; ++i)
     {
         if (getGermanWeekDay(endDate) === 0)
             break;
 
-        endDate.setDate(endDate.getDate()+1);
+        endDate.setDate(endDate.getDate() + 1);
     }
 
     for (i = 0; i < 42; i++) {
@@ -1282,7 +1289,7 @@ function buildWeekSummaryHtml()
 {
     let fromDate = getStartOfWeek(indexDate)
     let endDate = new Date(indexDate);
-    endDate.setDate(endDate.getDate() + 6);
+    endDate.setDate(endDate.getDate() + 7);
 
     let sortedEvents = [...eventData];
     sortedEvents.sort(function (a, b) {

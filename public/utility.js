@@ -59,6 +59,10 @@ function getStartOfWeek(date) {
         result.setDate(result.getDate()-1);
     }
 
+    result.setHours(0);
+    result.setMinutes(0);
+    result.setSeconds(0);
+
     return result;
 }
 
