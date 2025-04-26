@@ -459,6 +459,8 @@ function showEvent(dateStr, id, edit) {
             handStyle = ' style="cursor: pointer;" '
         }
 
+        // find issues this week
+        let doubleScheduleCandidates = findDoubleScheduleCandidatesInEvent(event);
         let schedules = countSchedulesThisWeek(event.date);
 
         for (let i in eventUsersSorted) {
@@ -501,25 +503,37 @@ function showEvent(dateStr, id, edit) {
                 let scheduleOnClick = edit ? '' : ` onclick="scheduleForEvent(${user.id}); "`;
                 let unscheduleOnClick = edit ? '' : ` onclick="unscheduleFromEvent(${user.id}); "`;
                 let warningIcon = "";
+                let warningText = "";
 
-                let schedulesThisView = schedules[eventUser.user_id];
+                if (doubleScheduleCandidates[eventUser.user_id]) {
+                    warningIcon = warningEmoji;
+                    warningText = "\nDoppeldienst womöglich nötig!";
+                }
 
                 if (userData[loggedInUserId].permissions['manage_schedule']) {
+                    let schedulesThisView = schedules[eventUser.user_id];
                     if (eventUser.scheduled) {
-                        if (schedulesThisView >= 2)
+                        if (schedulesThisView >= 2) {
                             warningIcon = warningEmoji;
+                            warningText = "\nDoppeldienst!";
+                        }
                     } else {
-                        if (schedulesThisView >= 1)
+                        if (schedulesThisView >= 1) {
                             warningIcon = warningEmoji;
+                            warningText = "\nDoppeldienst womöglich nötig!";
+                        }
                     }
                 }
 
                 if (eventUser.scheduled) {
-                    availableUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="Für Dienst eingeteilt"> ${calendarCheckEmoji} ${user.display_name} ${warningIcon}</div>`;
+                    title = "Für Dienst eingeteilt" + warningText;
+                    availableUsersHtml += `<div ${unscheduleOnClick} ${handStyle} class="scheduled_event_user" title="${title}"> ${calendarCheckEmoji} ${user.display_name} ${warningIcon}</div>`;
                 } else if (eventUser.deliberate) {
-                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="deliberate_event_user" title="Hat sich selbst eingetragen"> ${greenCalendarPlusEmoji} ${user.display_name} ${warningIcon}</div>`;
+                    title = "Hat sich selbst eingetragen" + warningText;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="deliberate_event_user" title="${title}"> ${greenCalendarPlusEmoji} ${user.display_name} ${warningIcon}</div>`;
                 } else if (user.active && user.visible){
-                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="event_user" title="Ist durch Rahmendienstplan eingetragen"> ${calendarEmoji} ${user.display_name} ${warningIcon}</div>`;
+                    title = "Ist durch Rahmendienstplan eingetragen" + warningText;
+                    availableUsersHtml += `<div ${scheduleOnClick} ${handStyle} class="event_user" title="${title}"> ${calendarEmoji} ${user.display_name} ${warningIcon}</div>`;
                 }
             }
         }
