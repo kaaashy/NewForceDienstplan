@@ -24,7 +24,7 @@ const calendarCheckEmoji = '<i class="fa fa-calendar-check-o" ></i>';
 const calendarPlusEmoji = '<i class="fa fa-calendar-plus-o"></i>';
 const greenCalendarPlusEmoji = '<i class="fa fa-calendar-plus-o" style="color:lightgreen"></i>';
 
-
+let weekSummary = "";
 
 let eventDefaultData = {};
 
@@ -1300,6 +1300,7 @@ function buildWeekSummaryHtml()
     });
 
     let html = "";
+    weekSummary = "";
 
     for (let key in sortedEvents) {
         let event = sortedEvents[key];
@@ -1343,7 +1344,10 @@ function buildWeekSummaryHtml()
         if (event.type === "Putzdienst") timeStr = "";
 
         html += `<p>${date}: <strong>${event.title}</strong> ${timeStr} <br/>Dienst: ${users} ${note} </p>`;
+        weekSummary += `${date}: ${event.title} ${timeStr}\nDienst: ${users} ${note}\n\n`;
     }
+
+    html += `<button onclick="navigator.clipboard.writeText(weekSummary);">Kopieren</button>`;
 
     return html;
 }
