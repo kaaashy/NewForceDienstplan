@@ -58,6 +58,7 @@ $loginError = validateLogin();
 <head>
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="index.js" defer> </script>
 </head>
 <body>
     <h2>Login</h2>
@@ -72,6 +73,7 @@ $loginError = validateLogin();
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
+            <button type="button" id="togglePasswordBtn">👁️</button>
         </div>
         <label><input type="checkbox" name="remember"> Angemeldet bleiben</label>
         <div>
