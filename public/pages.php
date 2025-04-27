@@ -2,6 +2,11 @@
 
 include_once 'database.php';
 
+function isLoggedIn()
+{
+    return (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true);
+}
+
 function ensureLoggedIn()
 {
     if (isset($_SESSION['user_id'])) {
@@ -10,13 +15,13 @@ function ensureLoggedIn()
         }
     }
 
-    if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)){
+    if (!isLoggedIn()) {
         backToLogin();
         exit;
     }
 }
 
-function backToLogin($msg = "not logged in")
+function backToLogin($msg = "Not logged in.")
 {
     echo '<html><head>';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
@@ -24,6 +29,7 @@ function backToLogin($msg = "not logged in")
 
     echo '<body>';
     echo $msg;
+    echo '<br/>';
     echo '<a href="index.php">Back To Login</a>';
     echo '</body></html>';
 }

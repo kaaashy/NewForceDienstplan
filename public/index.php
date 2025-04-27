@@ -5,10 +5,11 @@ ini_set('display_errors', 'on');
 
 session_start();
 
-include_once 'initdb.php';
+include_once 'pages.php';
+include_once 'database.php';
 
 // Check if the user is already logged in
-if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
+if (isLoggedIn()) {
     header('Location: dienstplan.php');
     exit;
 }
@@ -67,6 +68,7 @@ $loginError = validateLogin();
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
+        <label><input type="checkbox" name="remember"> Angemeldet bleiben</label>
         <div>
             <input type="submit" value="Login">
         </div>
