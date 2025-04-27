@@ -39,6 +39,11 @@ function validateLogin()
         $_SESSION['login'] = $login;
         $_SESSION['user_id'] = $userId;
 
+        if (isset($_POST['remember'])) {
+            $token = createLoginToken($userId);
+            setcookie("loginToken", $token, time() + (24 * 60 * 60 * 30), "/", "", true, true);
+        }
+
         header('Location: dienstplan.php');
         exit;
     }

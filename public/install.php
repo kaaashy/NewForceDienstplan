@@ -30,6 +30,11 @@ function handleRequest()
         return array("Datenbanken wurden auf Werkseinstellungen zurückgesetzt.", false);
     }
 
+    if (isset($_POST['update_db'])) {
+        updateDB();
+        return array("Datenbanken wurden auf die neueste Version updated.", false);
+    }
+
     return array(false, false);
 }
 

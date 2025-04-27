@@ -105,7 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($userUpdateError) jsMessage("userUpdateError", $userUpdateError);
 
     } elseif (isset($_POST['logout'])) {
+        removeContextualLoginToken();
         session_destroy();
+        setcookie("loginToken", "", time() - 3600, "/", "", true, true);
         header('Location: index.php');
         die();
     }

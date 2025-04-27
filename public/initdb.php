@@ -168,6 +168,17 @@ function initializeTables()
         echo "Table EmailTokens created successfully";
     }
 
+    $createLoginTokensTable = "CREATE TABLE LoginTokens (
+        user_id INT UNSIGNED,
+        token VARCHAR(255),
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createLoginTokensTable) === TRUE) {
+        echo "Table LoginTokens created successfully";
+    }
+
     $createEventDefaultDataTable = "CREATE TABLE EventDefaultData (
         id INT UNSIGNED PRIMARY KEY,
 
@@ -191,6 +202,18 @@ function initializeTables()
     $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('5', 'Veranstaltung', '20:00', '02:00', '4')");
     $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('6', 'Putzdienst', '15:00', '20:00', '2')");
 
+
+    $createMetaTable = "CREATE TABLE Meta (
+        version INT UNSIGNED,
+
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+    if ($pdo->query($createMetaTable) === TRUE) {
+        echo "Table Meta created successfully";
+    }
+
+    $pdo->query("INSERT INTO Meta (version) VALUES('1')");
 }
 
 function initialize()
@@ -311,32 +334,28 @@ function updateDB()
     $pdo = connect();
 
     try {
-        if ($pdo->query("DROP TABLE EventDefaultData") === TRUE) {
-            echo "Table EventDefaultData deleted successfully";
-        }
-
-        $createEventDefaultDataTable = "CREATE TABLE EventDefaultData (
-            id INT UNSIGNED PRIMARY KEY,
-
-            type VARCHAR(255),
-            time TIME,
-            end_time TIME,
-            minimum_users INT UNSIGNED,
+        $createLoginTokensTable = "CREATE TABLE LoginTokens (
+            user_id INT UNSIGNED,
+            token VARCHAR(255),
 
             creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
-        if ($pdo->query($createEventDefaultDataTable) === TRUE) {
-            echo "Table EventDefaultData created successfully";
+        if ($pdo->query($createLoginTokensTable) === TRUE) {
+            echo "Table LoginTokens created successfully";
         }
 
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('0', 'Veranstaltung', '20:00', '00:00', '0')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('1', 'Veranstaltung', '20:00', '00:00', '0')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('2', 'Veranstaltung', '20:00', '00:00', '0')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('3', 'Veranstaltung', '20:00', '00:00', '2')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('4', 'Veranstaltung', '20:00', '02:00', '4')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('5', 'Veranstaltung', '20:00', '02:00', '4')");
-        $pdo->query("INSERT INTO EventDefaultData (id, type, time, end_time, minimum_users) VALUES('6', 'Putzdienst', '15:00', '20:00', '2')");
+        $createMetaTable = "CREATE TABLE Meta (
+            version INT UNSIGNED,
+
+            creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+        if ($pdo->query($createMetaTable) === TRUE) {
+            echo "Table Meta created successfully";
+        }
+
+        $pdo->query("INSERT INTO Meta (version) VALUES('1')");
 
     } catch(Exception $e) {
         $msg = $e->getMessage();

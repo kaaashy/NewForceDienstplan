@@ -48,6 +48,7 @@ function buildIndexHtml()
 
         if (statusData.users > 0) {
             html += `<p> Installations-Status: ${checkmarkEmoji} Installiert. ${statusData.users} Benutzer registriert.</p>`;
+            html += `<p> Version: ${statusData.db_version} </p>`;
         } else {
             html += `<p> Installations-Status: ${warningEmoji} Nicht Initialisiert.</p>`;
         }
@@ -75,6 +76,10 @@ function buildIndexHtml()
 
     html += '    <input type="submit" name="reinit_clean" value="Auf Werkseinstellungen zurücksetzen"></input>';
     html += '    <input type="submit" name="reinit_with_examples" value="Auf Beispiel-DB zurücksetzen"></input>';
+
+    if (statusData["db_version"] < 1)
+        html += '    <input type="submit" name="update_db" value="Datenbank-Update (nur bei Patches nötig)"></input>';
+
     html += '</form>';
 
     return html;
