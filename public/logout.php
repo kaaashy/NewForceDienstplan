@@ -14,7 +14,9 @@ ensureLoggedIn();
 if ($_SESSION['overrider_id']) {
     logOutFromUser();
 } else {
+    removeContextualLoginToken();
     session_destroy();
+    setcookie("loginToken", "", time() - 3600, "/", "", true, true);
 }
 
 header('Location: index.php');

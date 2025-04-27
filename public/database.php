@@ -808,6 +808,81 @@ function removeEmailToken($userId, $token)
     $stmt->execute();
 }
 
+function createLoginToken($userId)
+{
+    $pdo = connect();
+
+    // Encode some random bytes using base64
+    $token = base64_encode(random_bytes(32));
+
+    // Remove characters that are not URL-safe
+    $token = str_replace(['+', '/', '='], ['-', '_', ''], $token);
+
+    // create a registration token to change the users password
+    $stmt = $pdo->prepare('INSERT INTO LoginTokens (user_id, token) '
+            . 'VALUES (:user_id, :token)');
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    return $token;
+}
+
+function isValidLoginToken($userId, $token)
+{
+    $pdo = connect();
+
+    $sql = "SELECT *
+            FROM LoginTokens
+            WHERE
+                token = :token
+                AND user_id = :user_id
+                AND last_updated >= NOW() - INTERVAL 30 DAY
+            ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':token', $token);
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row)
+        return true;
+
+    // just to be safe, remove any login tokens
+    removeLoginToken($userId, $token);
+
+    return false;
+}
+
+function removeLoginToken($userId, $token)
+{
+    $pdo = connect();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM LoginTokens WHERE token = :token');
+    $stmt->bindValue(':token', $token);
+    $stmt->execute();
+
+    // Prepare and execute the SQL statement
+    $stmt = $pdo->prepare('DELETE FROM LoginTokens WHERE user_id = :user_id');
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->execute();
+}
+
+function removeContextualLoginToken()
+{
+    $userId = "";
+    $token = "";
+
+    if (isset($_SESSION['user_id']))
+        $userId = $_SESSION['user_id'];
+
+    if (isset($_COOKIE['loginToken']))
+        $token = $_COOKIE['loginToken'];
+
+    removeLoginToken($userId, $token);
+}
+
 function getNumUsersAvailableAtEvent($eventId)
 {
     $pdo = connect();
@@ -1120,6 +1195,7 @@ function respondInstallationStatus()
         $data["db_status_msg"] = "Couldn't connect to database.";
     } else {
         $data["db_status"] = 1;
+        $data["db_version"] = getDBVersion();
         $data["db_status_msg"] = "Database Connection established.";
 
         $sql = "SELECT * FROM Users;";
@@ -1136,5 +1212,22 @@ function respondInstallationStatus()
 
     echo json_encode($data);
 }
+
+
+function getDBVersion()
+{
+    $pdo = connect();
+
+    $sql = "SELECT version FROM Meta;";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        return $row['version'];
+    }
+
+    return 0;
+}
+
 
 ?>

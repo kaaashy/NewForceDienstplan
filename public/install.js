@@ -75,6 +75,10 @@ function buildIndexHtml()
 
     html += '    <input type="submit" name="reinit_clean" value="Auf Werkseinstellungen zurücksetzen"></input>';
     html += '    <input type="submit" name="reinit_with_examples" value="Auf Beispiel-DB zurücksetzen"></input>';
+
+    if (statusData["db_version"] < 1)
+        html += '    <input type="submit" name="update_db" value="Datenbank-Update (nur bei Patches nötig)"></input>';
+
     html += '</form>';
 
     return html;

@@ -4,14 +4,27 @@ include_once 'database.php';
 
 function isLoggedIn()
 {
+    if (isset($_COOKIE['loginToken'])) {
+        if (isset($_SESSION['user_id'])) {
+
+            $userId = $_SESSION['user_id'];
+            $loginToken = $_COOKIE['loginToken'];
+
+            if (isValidLoginToken($userId, $loginToken))
+                return true;
+        }
+    }
+
     return (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true);
 }
 
 function ensureLoggedIn()
 {
     if (isset($_SESSION['user_id'])) {
-        if (!getUserActive($_SESSION['user_id'])){
+        if (!getUserActive($_SESSION['user_id'])) {
+            removeContextualLoginToken();
             session_destroy();
+            setcookie("loginToken", "", time() - 3600, "/", "", true, true);
         }
     }
 
