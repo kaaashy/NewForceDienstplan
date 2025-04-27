@@ -102,6 +102,7 @@ function refresh(callback) {
     let endDate = new Date(indexDate);
 
     if (mode === weekMode) {
+        endDate = new Date(fromDate);
         endDate.setDate(endDate.getDate() + 7);
     } else {
         fromDate.setDate(1);
@@ -1303,7 +1304,7 @@ function buildCalendarHead(month1, month2, year) {
 function buildWeekSummaryHtml()
 {
     let fromDate = getStartOfWeek(indexDate)
-    let endDate = new Date(indexDate);
+    let endDate = new Date(fromDate);
     endDate.setDate(endDate.getDate() + 7);
 
     let sortedEvents = [...eventData];
